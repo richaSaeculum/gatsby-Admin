@@ -1,0 +1,44 @@
+/* Root Text Editor Div */
+.RichTextEditor__root___2QXK- {
+    min-height: 200px;
+    max-height: 313px;
+    border: 1px solid #313B54 !important;
+    border-radius: 0.475rem !important;
+    font-family: "Poppins", "Helvetica", "sans-serif" !important;
+}
+
+/* Text Editor Toolbar Div */
+.EditorToolbar__root___3_Aqz {
+    background-color: #fff;
+    margin: 0 !important;
+    padding: 10px 10px 5px !important;
+    border-top-left-radius: 0.475rem !important;
+    border-top-right-radius: 0.475rem !important;
+    border-bottom: 1px solid #313B54 !important;
+}
+
+/* Text Editor Main Editor Div */
+.RichTextEditor__editor___1QqIU {
+    max-height: calc(313px - 53px);
+    overflow: auto;
+}
+
+.IconButton__isActive___2Ey8p {
+    background-color: #6FD6FF !important;
+    color: #fff !important;
+}
+
+.Button__root___1gz0c {
+    border: 1px solid #313B54 !important;
+}
+
+.ButtonGroup__root___3lEAn>div:not(:first-child)>button {
+    border-left: 0 !important;
+}
+
+.Dropdown__root___3ALmx>select {
+    border: 1px solid #313B54 !important;
+    border-radius: 2px !important;
+    padding: 0 10px !important;
+    width: 100px!important;
+}

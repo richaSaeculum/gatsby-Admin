@@ -1,0 +1,64 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "title": "Hello world!",
+            "views": "190k",
+            "ctr": "50.45%"
+        },
+        {
+            "id": 2,
+            "title": "Libero rerum reprehenderit consequatur tenetur velit recusandae",
+            "views": "12k",
+            "ctr": "80.45%"
+        },
+        {
+            "id": 3,
+            "title": "Deserunt numquam molestiae atque veritatis ipsa",
+            "views": "20k",
+            "ctr": "50.45%"
+        },
+        {
+            "id": 4,
+            "title": "Vel voluptas odio minus consequatur repellendus",
+            "views": "10k",
+            "ctr": "45.23%"
+        },
+        {
+            "id": 5,
+            "title": "Omnis sed quam occaecati quam ea",
+            "views": "45k",
+            "ctr": "50.45%"
+        },
+        {
+            "id": 6,
+            "title": "Facilis quas quis qui unde consequatur",
+            "views": "100k",
+            "ctr": "30.45%"
+        },
+        {
+            "id": 7,
+            "title": "Omnis sed quam occaecati quam ea",
+            "views": "23k",
+            "ctr": "60.45%"
+        },
+        {
+            "id": 7,
+            "title": "Omnis sed quam occaecati quam ea",
+            "views": "23k",
+            "ctr": "60.45%"
+        },
+        {
+            "id": 7,
+            "title": "Omnis sed quam occaecati quam ea",
+            "views": "23k",
+            "ctr": "60.45%"
+        },
+        {
+            "id": 7,
+            "title": "Omnis sed quam occaecati quam ea",
+            "views": "23k",
+            "ctr": "60.45%"
+        }
+    ]
+}
