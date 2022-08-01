@@ -3,7 +3,9 @@ import { Modal } from 'react-bootstrap'
 import { useAuth } from '../../../auth'
 import { } from '../../../../api'
 import { useLayout } from '../../../../../_metronic/layout/core'
+import { PayoffFormFieldsTypes, PayoffsInitValues as initialValues } from './_payoffs'
 import PayoffsTable from './payoffstable/PayoffsTable'
+import { useFormik } from 'formik'
 
 const data = [
     {
@@ -48,14 +50,16 @@ const Payoffs = () => {
 
     const { setLoader } = useLayout()
     const [open, setOpen] = useState<boolean>(false)
+    const formik = useFormik<PayoffFormFieldsTypes>({
+        initialValues: initialValues,
+        onSubmit: (values: any) => {
+            console.log(values)
+        }
+    })
 
     const onEdit = async (row: any) => {
         setLoader(false)
         setOpen(true);
-    }
-
-    const onSubmit = async () => {
-        setOpen(false);
     }
 
     const onDelete = async (row: any) => {
@@ -64,11 +68,11 @@ const Payoffs = () => {
 
     const onCloseModal = () => {
         setOpen(false);
+        formik.resetForm();
     }
 
     return (
         <div>
-
             <div className='d-flex justify-content-between align-items-center mb-5'>
                 <div>
                     <h1 className='fs-2hx fw-bold text-dark mb-0'>Payoffs</h1>
@@ -98,12 +102,15 @@ const Payoffs = () => {
                         </button>
                     </div>
                     <div className="modal-body py-0">
-                        <form className="form" onSubmit={e => e.preventDefault()}>
+                        <form id="payoffForm" className="form" onSubmit={formik.handleSubmit}>
                             <div className="fv-row mb-5">
                                 <label className="required fs-5 fw-semibold mb-2">Month</label>
                                 <div className='row'>
                                     <div className="col-6">
-                                        <select className="form-select form-control">
+                                        <select
+                                            className="form-select form-control"
+                                            {...formik.getFieldProps('month')}
+                                        >
                                             <option value="january">January</option>
                                             <option value="february">February</option>
                                             <option value="march">March</option>
@@ -121,7 +128,12 @@ const Payoffs = () => {
                                         </div>
                                     </div>
                                     <div className="col-6">
-                                        <input type="text" className="form-control" placeholder="Month" name="month" />
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Year"
+                                            {...formik.getFieldProps('year')}
+                                        />
                                         <div className="fv-plugins-message-container invalid-feedback">
                                         </div>
                                     </div>
@@ -129,20 +141,31 @@ const Payoffs = () => {
                             </div>
                             <div className="fv-row mb-5">
                                 <label className="required fs-5 fw-semibold mb-2">Total Revenue</label>
-                                <input type="text" className="form-control" placeholder="Total Revenue" name="name" />
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    placeholder="Total Revenue"
+                                    {...formik.getFieldProps('revenue')}
+                                />
                                 <div className="fv-plugins-message-container invalid-feedback">
                                 </div>
                             </div>
                             <div className="fv-row">
-                                <label className="required fs-5 fw-semibold mb-2">Amount (Per Article)</label>
-                                <input type="text" className="form-control" placeholder="Amount" name="name" />
+                                <label className="fs-5 fw-semibold mb-2">Amount (Per Article)</label>
+                                <input
+                                    type="number"
+                                    disabled
+                                    className="form-control"
+                                    placeholder="Amount"
+                                    {...formik.getFieldProps('amount')}
+                                />
                                 <div className="fv-plugins-message-container invalid-feedback">
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div className="modal-footer">
-                        <button type='button' className="btn btn-secondary btn-sm" onClick={onSubmit}>
+                        <button form='payoffForm' type='submit' className="btn btn-secondary btn-sm">
                             Submit
                         </button>
                     </div>

@@ -102,7 +102,7 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                                     <th className='rounded-start'>No.</th>
                                     <th>Month</th>
                                     <th className='text-center'>Total Revenue</th>
-                                    <th className='text-center'>Amount PerArticle</th>
+                                    <th className='text-center'>Amount Per Article</th>
                                 </tr>
                             </thead>
                             {/* end::Table head */}
