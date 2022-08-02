@@ -3,13 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { useLayout } from '../../../../_metronic/layout/core'
 import { getUsersListApi } from '../../../api';
+import { useAuth } from '../../auth';
 import UserTable from './usertable/UserTable';
 
 const UserList = () => {
 
+  const { wpAuth } = useAuth();
   const { setLoader } = useLayout();
   const [usersData, setUsersData] = useState<any>();
-
+  const wpAuthToken = wpAuth?.token
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,11 +21,11 @@ const UserList = () => {
 
   const getAllUsers = async () => {
     setLoader(true)
-    let response = await getUsersListApi();
+    let response = await getUsersListApi({ wpAuthToken });
     if (response && response.status === 200) {
       console.log(response?.data)
       setUsersData(response?.data)
-      setLoader(false)
+      setLoader(false) 
     }
   }
 

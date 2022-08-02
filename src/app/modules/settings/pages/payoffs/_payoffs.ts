@@ -1,7 +1,7 @@
 export interface PayoffFormFieldsTypes {
     month: string
     year: string
-    revenue: number | null
+    revenue: string | undefined
     amount: number | null
 }
 
@@ -9,6 +9,6 @@ export interface PayoffFormFieldsTypes {
 export const PayoffsInitValues: PayoffFormFieldsTypes = {
     month: '',
     year: '',
-    revenue: null,
+    revenue: '',
     amount:  null,
 }

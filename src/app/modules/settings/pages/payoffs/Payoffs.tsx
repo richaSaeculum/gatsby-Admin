@@ -71,6 +71,16 @@ const Payoffs = () => {
         formik.resetForm();
     }
 
+    const handleRevenueChange = (e: any) => {
+        formik.handleChange(e);
+        let amount = calculateAmountPerArticle(e.target.value);
+        formik.setFieldValue('amount', amount)
+    }
+
+    const calculateAmountPerArticle = (revenue: number) => {
+        return ((revenue - (revenue * 10) / 100) / 9)
+    }
+
     return (
         <div>
             <div className='d-flex justify-content-between align-items-center mb-5'>
@@ -129,7 +139,7 @@ const Payoffs = () => {
                                     </div>
                                     <div className="col-6">
                                         <input
-                                            type="text"
+                                            type="number"
                                             className="form-control"
                                             placeholder="Year"
                                             {...formik.getFieldProps('year')}
@@ -145,13 +155,16 @@ const Payoffs = () => {
                                     type="number"
                                     className="form-control"
                                     placeholder="Total Revenue"
-                                    {...formik.getFieldProps('revenue')}
+                                    name='revenue'
+                                    value={formik.values.revenue}
+                                    onChange={handleRevenueChange}
                                 />
                                 <div className="fv-plugins-message-container invalid-feedback">
                                 </div>
                             </div>
                             <div className="fv-row">
                                 <label className="fs-5 fw-semibold mb-2">Amount (Per Article)</label>
+                                <label className="fs-6 mb-2">(Total revenue - margin) / Total No. of Articles</label>
                                 <input
                                     type="number"
                                     disabled

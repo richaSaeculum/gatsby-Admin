@@ -23,7 +23,7 @@ const userDetailsSchema = Yup.object().shape({
 const AddUser = () => {
 
   const { wpAuth } = useAuth();
-  const [wpAuthtoken, setWpAuthToken] = useState<string | ''>('')
+  const [wpAuthToken, setWpAuthToken] = useState<string | ''>('')
   const { setLoader } = useLayout();
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const AddUser = () => {
           //edit user API call (POST)
         } else {
           //add user API call (POST)
-          let response = await addUserApi({ wpAuthtoken, payload })
+          let response = await addUserApi({ wpAuthToken, payload })
           if (response && response.statusText === 'Success') {
             console.log("success")
           }

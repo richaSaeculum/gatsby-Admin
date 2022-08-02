@@ -17,6 +17,7 @@ const AddArticle = () => {
   const param = useParams()
   const { setLoader } = useLayout();
   const { wpAuth } = useAuth()
+  const wpAuthToken = wpAuth?.token;
 
   const [category, setCategory] = useState<number | undefined>();
   const [categoryList, setCategoryList] = useState<any>();
@@ -25,18 +26,9 @@ const AddArticle = () => {
   const [content, setContent] = useState<EditorValue>(RichTextEditor.createEmptyValue())
   const [seoScore, setSeoScore] = useState<number | undefined>();
   const [seoTips, setSeoTips] = useState<string | undefined>('');
-  const [wpAuthtoken, setWpAuthToken] = useState<string | ''>('')
 
   useEffect(() => {
-    // console.log(wpAuth.token)
-    if (wpAuth && wpAuth.token) {
-      setWpAuthToken(wpAuth.token)
-    }
-  }, [])
-
-  useEffect(() => { getCategories(); }, [])
-
-  useEffect(() => {
+    getCategories();
     const { id } = param;
     if (id) {
       editId(id)
@@ -45,7 +37,7 @@ const AddArticle = () => {
 
   const getCategories = async () => {
     setLoader(true)
-    let response = await getCategoriesListApi();
+    let response = await getCategoriesListApi({ wpAuthToken });
     if (response && response.status === 200) {
       let arr = response.data;
       console.log(arr)
@@ -124,7 +116,7 @@ const AddArticle = () => {
       tags: [],
     }
     const headers = {
-      Authorization: `Bearer ${wpAuthtoken}`
+      Authorization: `Bearer ${wpAuthToken}`
       // Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvZ2F0c2J5LnNhZWN1bHVtc29sdXRpb25zLmNvbSIsImlhdCI6MTY1OTAwNjMyMiwibmJmIjoxNjU5MDA2MzIyLCJleHAiOjE2NTk2MTExMjIsImRhdGEiOnsidXNlciI6eyJpZCI6IjEifX19.VGl_YnAnkKD_merAIXGB8NGnawf1lEiQvRpbMG0Onco`
     }
     let res = await axios.post('https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts', payload, { headers })

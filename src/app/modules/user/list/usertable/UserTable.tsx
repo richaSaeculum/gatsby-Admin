@@ -33,6 +33,11 @@ const UserTable = ({ onEditRow, onDeleteRow, data }: Props) => {
             arr.push(<tr key={index + 1}>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
+                        {index + 1}
+                    </span>
+                </td>
+                <td>
+                    <span className='fw-semibold d-block fs-7'>
                         {row.id}
                     </span>
                 </td>
@@ -83,6 +88,7 @@ const UserTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                             {/* begin::Table head */}
                             <thead>
                                 <tr className='fw-bold text-muted'>
+                                    <th>No.</th>
                                     <th>Id</th>
                                     <th>Name</th>
                                     <th className='text-end'>Actions</th>

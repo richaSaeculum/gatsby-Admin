@@ -10,23 +10,16 @@ const Category = () => {
 
     const { wpAuth } = useAuth();
     const { setLoader } = useLayout()
+    const wpAuthToken = wpAuth?.token;
     const [categories, setCategories] = useState();
     const [open, setOpen] = useState<boolean>(false)
     const [isError, setIsError] = useState<boolean>(false)
     const [title, setTitle] = useState<string | ''>('')
-    const [wpAuthtoken, setWpAuthToken] = useState<string | ''>('')
     const [category, setCategory] = useState<any>(null);
-
-    useEffect(() => {
-        // console.log(wpAuth.token)
-        if (wpAuth && wpAuth.token) {
-            setWpAuthToken(wpAuth.token)
-        }
-    }, [])
 
     const onEdit = async (row: any) => {
         setLoader(true)
-        const res = await getSingleCategoryApi({ id: row.id })
+        const res = await getSingleCategoryApi({ wpAuthToken, id: row.id })
         // console.log(res)
         if (res && res.status === 200) {
             setTitle(res.data.name)
@@ -42,7 +35,7 @@ const Category = () => {
     }, [])
 
     const getCategories = async () => {
-        const res = await getCategoriesListApi();
+        const res = await getCategoriesListApi({ wpAuthToken });
         if (res && res.status === 200) {
             res.data.pop();
             setCategories(res.data);
@@ -55,7 +48,7 @@ const Category = () => {
 
         if (category && category.id) {
             payload = { ...category, name: title, slug: title.toLowerCase() }
-            response = await updateCategoryApi({ wpAuthtoken, payload })
+            response = await updateCategoryApi({ wpAuthToken, payload })
         } else {
             payload = {
                 discription: '',
@@ -64,7 +57,7 @@ const Category = () => {
                 meta: [],
                 parent: 0,
             }
-            response = await addCategoryApi({ wpAuthtoken, payload });
+            response = await addCategoryApi({ wpAuthToken, payload });
         }
 
         if (response && response.statusText === 'Success') {
@@ -78,7 +71,7 @@ const Category = () => {
 
     const onDelete = async (row: any) => {
         setLoader(true)
-        const res = await deleteCategoryApi({ id: row.id, wpAuthtoken })
+        const res = await deleteCategoryApi({ wpAuthToken, id: row.id })
         if (res && res.status === 200 && res.data.deleted) {
             getCategories()
         }

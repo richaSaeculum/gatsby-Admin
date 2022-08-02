@@ -2,24 +2,25 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
 import {  getPostListApi } from '../../../api'
+import { useAuth } from '../../auth'
 import ArticleTable from './articletable/ArticleTable'
 
 const ArticleList = () => {
 
+  const { wpAuth } = useAuth();
+  const wpAuthToken = wpAuth?.token
   const { setLoader } = useLayout()
   const [articleData, setArticleData] = useState();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // setArticleData(Tabledata.data);
     getAllPost();
   }, [])
 
-
   const getAllPost = async () => {
     setLoader(true)
-    let response = await getPostListApi();
+    let response = await getPostListApi({ wpAuthToken });
     if (response && response.status === 200) {
       let a = response?.data.map((item: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item) }) })
       setArticleData(a)
