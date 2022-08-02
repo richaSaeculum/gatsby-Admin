@@ -172,10 +172,28 @@ export const getSinglePostApi = async ({ wpAuthToken, id }) => {
 
 // get users list all (GET)
 export const getUsersListApi = async ({ wpAuthToken }) => {
-    console.log(wpAuthToken)
     try {
         const response = await axios.get(
             `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/users`, {
+            headers: {
+                common: {
+                    Authorization: `Bearer ${wpAuthToken}`
+                }
+            }
+        }
+        );
+        return response
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+// get single users list  (GET)
+export const getSingleUsersListApi = async ({ wpAuthToken, id }) => {
+    try {
+        const response = await axios.get(
+            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/users/${id}`, {
             headers: {
                 common: {
                     Authorization: `Bearer ${wpAuthToken}`
@@ -205,6 +223,47 @@ export const addUserApi = async ({ wpAuthToken, payload }) => {
         if (response && (response.status === 200 || response.status === 201)) {
             response.statusText = 'Success'
         }
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+// update user (POST)
+export const updateUserApi = async ({ wpAuthToken, payload }) => {
+    try {
+        const response = await axios.post(
+            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/users/${payload.id}`, payload, {
+            headers: {
+                common: {
+                    Authorization: `Bearer ${wpAuthToken}`
+                }
+            }
+        }
+        );
+        if (response && (response.status === 200 || response.status === 201)) {
+            response.statusText = 'Success'
+        }
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+// delete user (DELETE)
+export const deleteUserApi = async ({ id, wpAuthToken }) => {
+    try {
+        const response = await axios.delete(
+            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/users/${id}?force=1&reassign=1`, {
+            headers: {
+                common: {
+                    Authorization: `Bearer ${wpAuthToken}`
+                }
+            }
+        }
+        );
         return response;
     } catch (error) {
         console.log(error);

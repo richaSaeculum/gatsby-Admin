@@ -44,7 +44,6 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
     const renderTablerow = () => {
         let arr: Array<ReactElement> = [];
         data?.forEach((row: any, index: number) => {
-            console.log(row.categoryName)
             arr.push(<tr key={index + 1}>
                 <td>
                     <span className='fw-semibold d-block fs-7'>

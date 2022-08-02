@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useLayout } from '../../../../_metronic/layout/core'
-import { getUsersListApi } from '../../../api';
+import { deleteUserApi, getUsersListApi } from '../../../api';
 import { useAuth } from '../../auth';
 import UserTable from './usertable/UserTable';
 
@@ -29,9 +29,17 @@ const UserList = () => {
     }
   }
 
-  const onEditRow = (row: any) => {
+  const onEdit = (row: any) => {
     if (row.id) {
       navigate(`/users/edit-user/${row.id}`)
+    }
+  }
+
+  const onDelete = async (row:any) => {
+    setLoader(true)
+    const res = await deleteUserApi({ wpAuthToken, id: row.id })
+    if (res && res.status === 200 && res.data.deleted) {
+      getAllUsers();
     }
   }
 
@@ -51,8 +59,8 @@ const UserList = () => {
       </div>
 
       <UserTable
-        onEditRow={onEditRow}
-        onDeleteRow={()=>{}}
+        onEditRow={onEdit}
+        onDeleteRow={onDelete}
         data={usersData}
       />
     </div>

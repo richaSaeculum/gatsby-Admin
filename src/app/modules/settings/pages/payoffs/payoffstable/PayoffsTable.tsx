@@ -1,11 +1,6 @@
 import React, { ReactElement, useState } from 'react'
 import ConfirmationModal from '../../../../../components/modal/ConfirmationModal'
 
-type category = {
-    id: number | null
-    name: string | ''
-}
-
 type Props = {
     onEditRow: (row: any) => void
     onDeleteRow: (row: any) => void

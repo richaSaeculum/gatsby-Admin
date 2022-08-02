@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 
-import { UserFormFieldsTypes, UserInitValues as initialValues } from './_user'
+import { UserFormFieldsTypes, UserInitValues } from './_user'
 import * as Yup from 'yup'
-
 import { useFormik } from 'formik'
 import { useAuth } from '../../auth'
-import { addUserApi } from '../../../api'
-import { Link } from 'react-router-dom'
+import { addUserApi, getSingleUsersListApi, updateUserApi } from '../../../api'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
 
 const userDetailsSchema = Yup.object().shape({
@@ -22,15 +21,28 @@ const userDetailsSchema = Yup.object().shape({
 
 const AddUser = () => {
 
+  const param = useParams()
   const { wpAuth } = useAuth();
-  const [wpAuthToken, setWpAuthToken] = useState<string | ''>('')
+  const navigate = useNavigate();
+  const wpAuthToken = wpAuth?.token;
   const { setLoader } = useLayout();
+  const [initialValues, setInitialValues] = useState<any>(UserInitValues)
 
   useEffect(() => {
-    if (wpAuth && wpAuth.token) {
-      setWpAuthToken(wpAuth.token)
+    const { id } = param;
+    if (id) {
+      editId(id)
     }
   }, [])
+
+  const editId = async (id: any) => {
+    setLoader(true);
+    const response = await getSingleUsersListApi({ wpAuthToken, id })
+    if (response && response.status === 200) {
+      setLoader(false);
+      console.log(response.data)
+    }
+  }
 
   const formik = useFormik<UserFormFieldsTypes>({
     initialValues: initialValues,
@@ -39,14 +51,17 @@ const AddUser = () => {
       setSubmitting(true);
       setLoader(true)
       let payload = generatePayload(values);
+      let response;
       try {
         if (values.id) {
           //edit user API call (POST)
+          response = await updateUserApi({ wpAuthToken, payload })
         } else {
           //add user API call (POST)
-          let response = await addUserApi({ wpAuthToken, payload })
+          response = await addUserApi({ wpAuthToken, payload })
           if (response && response.statusText === 'Success') {
-            console.log("success")
+            console.log("success", response)
+            navigate('/users/list')
           }
         }
       } catch (error) {
@@ -61,6 +76,7 @@ const AddUser = () => {
 
   const generatePayload = (values: any) => {
     let data = {
+      'id': values.id ? values.id : '',
       "username": values.username,
       "first_name": values.firstName,
       "last_name": values.lastName,
