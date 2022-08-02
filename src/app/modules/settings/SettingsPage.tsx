@@ -4,6 +4,7 @@ import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 import Category from './pages/category/Category'
 import Configuration from './pages/configuration/Configuration'
 import Payment from './pages/payment/Payment'
+import PaymentList from './pages/payoffs/PaymentList'
 import Payoffs from './pages/payoffs/Payoffs'
 import PayoffsTransactions from './pages/payoffstransactions/PayoffsTransactions'
 import Wallet from './pages/wallet/Wallet'
@@ -75,6 +76,15 @@ const SettingsPage = () => {
                             <>
                                 <PageTitle breadcrumbs={SettingsBreadcrumb}>Monthly Payoffs</PageTitle>
                                 <Payoffs />
+                            </>
+                        }
+                    />
+                    <Route
+                        path='payoffs/:id'
+                        element={
+                            <>
+                                <PageTitle breadcrumbs={SettingsBreadcrumb}>Monthly Payoffs</PageTitle>
+                                <PaymentList />
                             </>
                         }
                     />

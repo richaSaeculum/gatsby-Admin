@@ -6,39 +6,47 @@ import { useLayout } from '../../../../../_metronic/layout/core'
 import { PayoffFormFieldsTypes, PayoffsInitValues as initialValues } from './_payoffs'
 import PayoffsTable from './payoffstable/PayoffsTable'
 import { useFormik } from 'formik'
+import { useNavigate } from 'react-router-dom'
 
 const data = [
     {
+        id: 1,
         month: 'July 2022',
         totalRevenue: '11000',
         amountPerArticle: '1100'
     },
     {
+        id: 8,
         month: 'June 2022',
         totalRevenue: '5000',
         amountPerArticle: '500'
     },
     {
+        id: 7,
         month: 'May 2022',
         totalRevenue: '17000',
         amountPerArticle: '1700'
     },
     {
+        id: 5,
         month: 'April 2022',
         totalRevenue: '10000',
         amountPerArticle: '100'
     },
     {
+        id: 4,
         month: 'March 2022',
         totalRevenue: '14000',
         amountPerArticle: '1400'
     },
     {
+        id: 3,
         month: 'February 2022',
         totalRevenue: '12000',
         amountPerArticle: '1200'
     },
     {
+        id: 2,
         month: 'January 2022',
         totalRevenue: '16000',
         amountPerArticle: '1600'
@@ -50,12 +58,17 @@ const Payoffs = () => {
 
     const { setLoader } = useLayout()
     const [open, setOpen] = useState<boolean>(false)
+    const navigate = useNavigate();
     const formik = useFormik<PayoffFormFieldsTypes>({
         initialValues: initialValues,
         onSubmit: (values: any) => {
             console.log(values)
         }
     })
+
+    const getTotalArticleOfMonth = () => {
+
+    }
 
     const onEdit = async (row: any) => {
         setLoader(false)
@@ -64,6 +77,12 @@ const Payoffs = () => {
 
     const onDelete = async (row: any) => {
         setLoader(true)
+    }
+
+    const onShowPaymentList = (row: any) => {
+        if (row.id) {
+            navigate(`/settings/payoffs/${row.id}`)
+        }
     }
 
     const onCloseModal = () => {
@@ -188,6 +207,7 @@ const Payoffs = () => {
             <PayoffsTable
                 onEditRow={onEdit}
                 onDeleteRow={onDelete}
+                onShowPaymentList={onShowPaymentList}
                 data={data}
             />
         </div>

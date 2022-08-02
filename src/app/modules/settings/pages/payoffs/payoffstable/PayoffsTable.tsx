@@ -6,14 +6,14 @@ type category = {
     name: string | ''
 }
 
-
 type Props = {
     onEditRow: (row: any) => void
     onDeleteRow: (row: any) => void
+    onShowPaymentList: (row: any) => void
     data: Array<any> | undefined
 }
 
-const PayoffsTable = ({ onEditRow, onDeleteRow, data }: Props) => {
+const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data }: Props) => {
 
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
     const [deleteRow, setDeleteRow] = useState<any>()
@@ -69,7 +69,12 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                     >
                         Edit
                     </button>
-
+                    <button
+                        className='btn btn-primary btn-sm px-4 me-2'
+                        onClick={() => { onShowPaymentList(row) }}
+                    >
+                        Complete Payment
+                    </button>
                     <button
                         className='btn btn-light btn-sm px-4'
                         onClick={() => { toggleModal(row) }}
@@ -103,6 +108,7 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                                     <th>Month</th>
                                     <th className='text-center'>Total Revenue</th>
                                     <th className='text-center'>Amount Per Article</th>
+                                    <th className='text-center'>Actions</th>
                                 </tr>
                             </thead>
                             {/* end::Table head */}
