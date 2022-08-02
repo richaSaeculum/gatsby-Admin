@@ -2,6 +2,7 @@
 import React, { ReactElement, useState } from 'react'
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal'
 import Tabledata from './sample_article.json'
+import clsx from 'clsx'
 
 type ArticleData = {
     id: number
@@ -63,7 +64,11 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                     </span>
                 </td>
                 <td>
-                    <span className='fw-semibold d-block fs-7'>
+                    <span className={clsx('badge', { 
+                        'badge-light-success': row.status === 'publish',
+                        'badge-light-primary': row.status === 'draft',
+                        'badge-light-warning': row.status === 'pending',
+                         })}>
                         {row.status}
                     </span>
                 </td>
@@ -101,7 +106,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                         Delete
                     </button>
                 </td>
-            </tr>)
+            </tr >)
         })
 
         return arr

@@ -22,14 +22,18 @@ export function register(
   firstname: string,
   lastname: string,
   password: string,
-  password_confirmation: string
+  password_confirmation: string,
+  username: string,
+  user_role: string
 ) {
-  return axios.post(REGISTER_URL, {
+  return axios.post('', {
     email,
     first_name: firstname,
     last_name: lastname,
     password,
     password_confirmation,
+    username,
+    user_role
   })
 }
 

@@ -17,7 +17,7 @@ const UserList = () => {
 
   useEffect(() => {
     getAllUsers();
-  }, [])
+  }, [wpAuthToken])
 
   const getAllUsers = async () => {
     setLoader(true)
