@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { useAuth } from '../../../auth'
-import { } from '../../../../api'
+import { getPostListByMonthApi } from '../../../../api'
 import { useLayout } from '../../../../../_metronic/layout/core'
-import { PayoffFormFieldsTypes, PayoffsInitValues as initialValues } from './_payoffs'
 import PayoffsTable from './payoffstable/PayoffsTable'
-import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
+import DatePicker from '../../../../components/modal/DatePicker'
 
 const data = [
     {
@@ -56,18 +55,42 @@ const data = [
 
 const Payoffs = () => {
 
+    const { wpAuth } = useAuth();
     const { setLoader } = useLayout()
     const [open, setOpen] = useState<boolean>(false)
+    const wpAuthToken = wpAuth?.token;
     const navigate = useNavigate();
-    const formik = useFormik<PayoffFormFieldsTypes>({
-        initialValues: initialValues,
-        onSubmit: (values: any) => {
-            console.log(values)
+    const [month, setMonth] = useState<any>(new Date());
+    const [revenue, setRevenue] = useState<any>();
+    const [amount, setAmount] = useState<any>();
+    const [articleCount, setArticleCount] = useState<any>();
+
+    useEffect(() => {
+        calculateAmountPerArticle()
+    }, [month, revenue, articleCount])
+
+    const getTotalArticleOfMonth = async (after: any, before: any) => {
+        const response = await getPostListByMonthApi({ wpAuthToken, after, before });
+        if (response && response.status === 200) {
+            setArticleCount(response.data.length)
         }
-    })
+    }
 
-    const getTotalArticleOfMonth = () => {
+    const calculateAmountPerArticle = () => {
+        if (revenue !== null && articleCount > 0) {
+            const amount: any = (revenue - (revenue * 10) / 100) / articleCount
+            setAmount(amount);
+        } else {
+            setAmount(0)
+        }
+    }
 
+    const onMonthChange = (month: any) => {
+        const now = new Date(month);
+        const after = new Date(now.getFullYear(), now.getMonth(), 2).toISOString();
+        const before = new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString();
+        getTotalArticleOfMonth(after, before)
+        setMonth(month);
     }
 
     const onEdit = async (row: any) => {
@@ -87,17 +110,15 @@ const Payoffs = () => {
 
     const onCloseModal = () => {
         setOpen(false);
-        formik.resetForm();
     }
 
-    const handleRevenueChange = (e: any) => {
-        formik.handleChange(e);
-        let amount = calculateAmountPerArticle(e.target.value);
-        formik.setFieldValue('amount', amount)
-    }
-
-    const calculateAmountPerArticle = (revenue: number) => {
-        return ((revenue - (revenue * 10) / 100) / 9)
+    const onSubmit = () => {
+        let payload = {
+            'month': month,
+            'revenue': revenue,
+            'amount': amount
+        }
+        console.log("payoff payload===>", payload)
     }
 
     return (
@@ -131,12 +152,16 @@ const Payoffs = () => {
                         </button>
                     </div>
                     <div className="modal-body py-0">
-                        <form id="payoffForm" className="form" onSubmit={formik.handleSubmit}>
+                        <form className="form">
                             <div className="fv-row mb-5">
-                                <label className="required fs-5 fw-semibold mb-2">Month</label>
+                                <label className="reqired fs-5 fw-semibold mb-2">Month</label>
                                 <div className='row'>
-                                    <div className="col-6">
-                                        <select
+                                    <div className="col-12">
+                                        <DatePicker
+                                            value={month}
+                                            onChange={(month: any) => { onMonthChange(month) }}
+                                        />
+                                        {/* <select
                                             className="form-select form-control"
                                             {...formik.getFieldProps('month')}
                                         >
@@ -154,9 +179,9 @@ const Payoffs = () => {
                                             <option value="december">December</option>
                                         </select>
                                         <div className="fv-plugins-message-container invalid-feedback">
-                                        </div>
+                                        </div> */}
                                     </div>
-                                    <div className="col-6">
+                                    {/* <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
@@ -165,18 +190,18 @@ const Payoffs = () => {
                                         />
                                         <div className="fv-plugins-message-container invalid-feedback">
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             <div className="fv-row mb-5">
-                                <label className="required fs-5 fw-semibold mb-2">Total Revenue</label>
+                                <label className="requred fs-5 fw-semibold mb-2">Total Revenue</label>
                                 <input
                                     type="number"
                                     className="form-control"
                                     placeholder="Total Revenue"
                                     name='revenue'
-                                    value={formik.values.revenue}
-                                    onChange={handleRevenueChange}
+                                    value={revenue}
+                                    onChange={e => { setRevenue(e.target.value) }}
                                 />
                                 <div className="fv-plugins-message-container invalid-feedback">
                                 </div>
@@ -189,7 +214,8 @@ const Payoffs = () => {
                                     disabled
                                     className="form-control"
                                     placeholder="Amount"
-                                    {...formik.getFieldProps('amount')}
+                                    value={amount}
+                                    name='amount'
                                 />
                                 <div className="fv-plugins-message-container invalid-feedback">
                                 </div>
@@ -197,7 +223,7 @@ const Payoffs = () => {
                         </form>
                     </div>
                     <div className="modal-footer">
-                        <button form='payoffForm' type='submit' className="btn btn-secondary btn-sm">
+                        <button type='button' className="btn btn-secondary btn-sm" onClick={onSubmit}>
                             Submit
                         </button>
                     </div>

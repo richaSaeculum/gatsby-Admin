@@ -113,7 +113,25 @@ export const deleteCategoryApi = async ({ id, wpAuthToken }) => {
 export const getPostListApi = async ({ wpAuthToken, status = 'any' }) => {
     try {
         const response = await axios.get(
-            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts?per_page=100&&status=${status}&&_embed`, {
+            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts?per_page=100&status=${status}&_embed`, {
+            headers: {
+                common: {
+                    Authorization: `Bearer ${wpAuthToken}`
+                }
+            }
+        }
+        );
+        return response
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export const getPostListByMonthApi = async ({ wpAuthToken, after = '', before = '' }) => {
+    try {
+        const response = await axios.get(
+            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts?per_page=100&status=publish&before=${before}&after=${after}&_embed`, {
             headers: {
                 common: {
                     Authorization: `Bearer ${wpAuthToken}`
