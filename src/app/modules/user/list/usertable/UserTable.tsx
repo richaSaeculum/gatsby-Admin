@@ -12,6 +12,10 @@ const UserTable = ({ onEditRow, onDeleteRow, data }: Props) => {
 
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
     const [deleteRow, setDeleteRow] = useState<any>()
+    const confirmationInfo = {
+        action: 'confirmation',
+        message: 'Do you want to delete this user?'
+    }
 
     const confirmationCallback = (success: boolean) => {
         if (success) {
@@ -19,6 +23,12 @@ const UserTable = ({ onEditRow, onDeleteRow, data }: Props) => {
             setConfirmationOpen(false)
         } else {
             setConfirmationOpen(!confirmationOpen)
+        }
+    }
+
+    const actionClick = (row: any, confirmation: boolean) => {
+        if (confirmation) {
+            toggleModal(row)
         }
     }
 
@@ -61,7 +71,7 @@ const UserTable = ({ onEditRow, onDeleteRow, data }: Props) => {
 
                     <button
                         className='btn btn-light  btn-sm px-4'
-                        onClick={() => { toggleModal(row) }}
+                        onClick={() => { actionClick(row, true) }}
                     >
                         Delete
                     </button>
@@ -76,7 +86,7 @@ const UserTable = ({ onEditRow, onDeleteRow, data }: Props) => {
         <>
             <ConfirmationModal
                 open={confirmationOpen}
-                confirmationInfo={'Do you want to delete article?'}
+                confirmationInfo={confirmationInfo}
                 onClose={() => { setConfirmationOpen(false) }}
                 handleConfirmationMessage={confirmationCallback}
             />

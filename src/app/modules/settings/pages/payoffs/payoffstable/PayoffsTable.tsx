@@ -12,6 +12,10 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data }: Props
 
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
     const [deleteRow, setDeleteRow] = useState<any>()
+    const confirmationInfo = {
+        action: 'confirmation',
+        message: 'Do you want to delete this payoff?'
+    }
 
     const confirmationCallback = (success: boolean) => {
         if (success) {
@@ -19,6 +23,13 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data }: Props
             setConfirmationOpen(false)
         } else {
             setConfirmationOpen(!confirmationOpen)
+        }
+    }
+
+
+    const actionClick = (row: any, confirmation: boolean) => {
+        if (confirmation) {
+            toggleModal(row)
         }
     }
 
@@ -72,7 +83,7 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data }: Props
                     </button>
                     <button
                         className='btn btn-light btn-sm px-4'
-                        onClick={() => { toggleModal(row) }}
+                        onClick={() => { actionClick(row, true) }}
                     >
                         Delete
                     </button>
@@ -87,7 +98,7 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data }: Props
         <>
             <ConfirmationModal
                 open={confirmationOpen}
-                confirmationInfo={'Do you want to delete category?'}
+                confirmationInfo={confirmationInfo}
                 onClose={() => { setConfirmationOpen(false) }}
                 handleConfirmationMessage={confirmationCallback}
             />

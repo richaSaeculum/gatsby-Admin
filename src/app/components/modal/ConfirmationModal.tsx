@@ -5,8 +5,8 @@ import { Modal } from 'react-bootstrap'
 type Props = {
     open: boolean
     onClose: () => void
-    confirmationInfo: string
-    handleConfirmationMessage: (confirm: boolean) => void
+    confirmationInfo: any
+    handleConfirmationMessage: (confirm: boolean, confirmationInfo: any) => void
 }
 
 const ConfirmationModal = ({ open = false, onClose, handleConfirmationMessage, confirmationInfo }: Props) => {
@@ -19,7 +19,9 @@ const ConfirmationModal = ({ open = false, onClose, handleConfirmationMessage, c
             >
                 <div className="modal-content bg-gray-200">
                     <div className="modal-header">
-                        <h2 className="fw-bolder">Confirmation</h2>
+                        {confirmationInfo.action === 'error' ? <h2 className="fw-bolder">Error</h2> :
+                            <h2 className="fw-bolder">{confirmationInfo.action === 'alert' ? 'Alert' : 'Confirmation'}</h2>
+                        }
                         <button type='button' className="btn btn-icon btn-sm btn-active-icon-primary" onClick={onClose}>
                             <span className="svg-icon svg-icon-1">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mh-50px">
@@ -30,14 +32,15 @@ const ConfirmationModal = ({ open = false, onClose, handleConfirmationMessage, c
                         </button>
                     </div>
                     <div className="modal-body scroll-y mx-3">
-                        <h4>{confirmationInfo}</h4>
+                        <h4>{confirmationInfo.message}</h4>
                     </div>
                     <div className="modal-footer">
-                        <button type='button' className="btn btn-light btn-sm" onClick={() => handleConfirmationMessage(false)}>
-                            No
-                        </button>
-                        <button type='button' className="btn btn-secondary btn-sm" onClick={() => handleConfirmationMessage(true)}>
-                            Yes
+                        {confirmationInfo && confirmationInfo.action && confirmationInfo.action !== 'error' && confirmationInfo.action !== 'alert' &&
+                            (<button type='button' className="btn btn-secondary btn-sm" onClick={() => handleConfirmationMessage(true, confirmationInfo)}>
+                                Ok
+                            </button>)}
+                        <button type='button' className="btn btn-light btn-sm" onClick={() => handleConfirmationMessage(false, confirmationInfo)}>
+                            Close
                         </button>
                     </div>
                 </div>

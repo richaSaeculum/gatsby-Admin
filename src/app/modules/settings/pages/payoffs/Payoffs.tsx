@@ -99,7 +99,7 @@ const Payoffs = () => {
     }
 
     const onDelete = async (row: any) => {
-        setLoader(true)
+        setLoader(false)
     }
 
     const onShowPaymentList = (row: any) => {

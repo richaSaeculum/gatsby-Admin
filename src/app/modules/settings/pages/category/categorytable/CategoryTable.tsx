@@ -2,22 +2,20 @@
 import React, { ReactElement, useState } from 'react'
 import ConfirmationModal from '../../../../../components/modal/ConfirmationModal'
 
-type category = {
-    id: number | null
-    name: string | ''
-}
-
-
 type Props = {
     onEditRow: (row: any) => void
     onDeleteRow: (row: any) => void
-    data: Array<category> | undefined
+    data: Array<any> | undefined
 }
 
 const CategoryTable = ({ onEditRow, onDeleteRow, data }: Props) => {
 
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
     const [deleteRow, setDeleteRow] = useState<any>()
+    const confirmationInfo = {
+        action: 'confirmation',
+        message: 'Do you want to delete category?'
+    }
 
     const confirmationCallback = (success: boolean) => {
         if (success) {
@@ -26,6 +24,12 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data }: Props) => {
         } else {
             setConfirmationOpen(!confirmationOpen)
         }
+    }
+
+    const actionClick = (row: any, confirmation: boolean) => {
+        if(confirmation){
+            toggleModal(row)
+        } 
     }
 
     const toggleModal = (row?: any) => {
@@ -63,7 +67,7 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data }: Props) => {
 
                     <button
                         className='btn btn-light btn-sm px-4'
-                        onClick={() => { toggleModal(row) }}
+                        onClick={() => { actionClick(row, true) }}
                     >
                         Delete
                     </button>
@@ -78,7 +82,7 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data }: Props) => {
         <>
             <ConfirmationModal
                 open={confirmationOpen}
-                confirmationInfo={'Do you want to delete category?'}
+                confirmationInfo={confirmationInfo}
                 onClose={() => { setConfirmationOpen(false) }}
                 handleConfirmationMessage={confirmationCallback}
             />

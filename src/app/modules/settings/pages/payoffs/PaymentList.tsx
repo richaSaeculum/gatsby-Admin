@@ -56,6 +56,10 @@ const PaymentList = () => {
     const [selectAll, setSelectAll] = useState<boolean>(false);
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
     const [paymentData, setPaymentData] = useState<any>()
+    const confirmationInfo = {
+        action: 'confirmation',
+        message: 'Do you want to continue for payment?'
+    }
 
     const confirmationCallback = (success: boolean) => {
         if (success) {
@@ -63,6 +67,12 @@ const PaymentList = () => {
             setConfirmationOpen(false)
         } else {
             setConfirmationOpen(!confirmationOpen)
+        }
+    }
+
+    const actionClick = (row: any, confirmation: boolean) => {
+        if (confirmation) {
+            toggleModal(row)
         }
     }
 
@@ -139,7 +149,7 @@ const PaymentList = () => {
                 <td className='text-center'>
                     <button
                         className='btn btn-secondary btn-sm px-4 me-2'
-                        onClick={() => { toggleModal(row) }}
+                        onClick={() => { actionClick(row, true) }}
                     >
                         Complete
                     </button>
@@ -154,7 +164,7 @@ const PaymentList = () => {
         <div>
             <ConfirmationModal
                 open={confirmationOpen}
-                confirmationInfo={'Do you want to continue for payment?'}
+                confirmationInfo={confirmationInfo}
                 onClose={() => { setConfirmationOpen(false) }}
                 handleConfirmationMessage={confirmationCallback}
             />

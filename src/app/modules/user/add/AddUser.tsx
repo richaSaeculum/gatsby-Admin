@@ -1,23 +1,46 @@
 import React, { useEffect, useState } from 'react'
-
-import { UserFormFieldsTypes, UserInitValues } from './_user'
 import * as Yup from 'yup'
-import { useFormik } from 'formik'
+import { Formik } from 'formik'
 import { useAuth } from '../../auth'
 import { addUserApi, getSingleUsersListApi, updateUserApi } from '../../../api'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
 
 const userDetailsSchema = Yup.object().shape({
+  id: Yup.string(),
   username: Yup.string().required('Userame is required'),
   email: Yup.string().email("Invalid email address format").required('Email is required'),
   firstName: Yup.string(),
   lastName: Yup.string(),
   website: Yup.string(),
-  allowNotification: Yup.boolean(),
   role: Yup.string(),
-  password: Yup.string().required('Password is required')
+  password: Yup.string().when("id", {
+    is: '',
+    then: Yup.string().required('Password is required')
+  }),
 })
+
+interface UserFormFieldsTypes {
+  id: string
+  username: string
+  email: string
+  firstName: string
+  lastName: string
+  website?: string
+  role: string,
+  password: string
+}
+
+const UserInitValues: UserFormFieldsTypes = {
+  id: '',
+  username: '',
+  email: '',
+  firstName: '',
+  lastName: '',
+  website: '',
+  role: 'author',
+  password: '',
+}
 
 const AddUser = () => {
 
@@ -26,7 +49,8 @@ const AddUser = () => {
   const navigate = useNavigate();
   const wpAuthToken = wpAuth?.token;
   const { setLoader } = useLayout();
-  const [initialValues, setInitialValues] = useState<any>(UserInitValues)
+  const [initialValues, setInitialValues] = useState<any>(UserInitValues);
+  const [editForm, setEditForm] = useState<boolean>(false)
 
   useEffect(() => {
     const { id } = param;
@@ -37,42 +61,54 @@ const AddUser = () => {
 
   const editId = async (id: any) => {
     setLoader(true);
+    setEditForm(true);
     const response = await getSingleUsersListApi({ wpAuthToken, id })
     if (response && response.status === 200) {
+      const { username, email, first_name, last_name, roles, url, id } = response.data
       setLoader(false);
-      console.log(response.data)
+      let editData = {
+        username: username,
+        email: email,
+        firstName: first_name,
+        lastName: last_name,
+        website: url,
+        role: roles[0],
+        id: id,
+        password: ''
+      }
+      setInitialValues(editData)
     }
   }
 
-  const formik = useFormik<UserFormFieldsTypes>({
-    initialValues: initialValues,
-    validationSchema: userDetailsSchema,
-    onSubmit: async (values: any, { setSubmitting, resetForm }: any) => {
-      setSubmitting(true);
-      setLoader(true)
-      let payload = generatePayload(values);
-      let response;
-      try {
-        if (values.id) {
-          //edit user API call (POST)
-          response = await updateUserApi({ wpAuthToken, payload })
-        } else {
-          //add user API call (POST)
-          response = await addUserApi({ wpAuthToken, payload })
-          if (response && response.statusText === 'Success') {
-            console.log("success", response)
-            navigate('/users/list')
-          }
-        }
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setSubmitting(false);
-        resetForm();
-        setLoader(false)
-      }
-    }
-  })
+  // const formik = useFormik<UserFormFieldsTypes>({
+  //   initialValues: initialValues,
+  //   validationSchema: userDetailsSchema,
+  //   onSubmit: async (values: any, { setSubmitting, resetForm }: any) => {
+  //     setSubmitting(true);
+  //     setLoader(true)
+  //     let payload = generatePayload(values);
+  //     let response;
+  //     try {
+  //       if (values.id) {
+  //         //edit user API call (POST)
+  //         response = await updateUserApi({ wpAuthToken, payload })
+  //       } else {
+  //         //add user API call (POST)
+  //         response = await addUserApi({ wpAuthToken, payload })
+  //         if (response && response.statusText === 'Success') {
+  //           console.log("success", response)
+  //           navigate('/users/list')
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.log(error)
+  //     } finally {
+  //       setSubmitting(false);
+  //       resetForm();
+  //       setLoader(false)
+  //     }
+  //   }
+  // })
 
   const generatePayload = (values: any) => {
     let data = {
@@ -89,148 +125,185 @@ const AddUser = () => {
       "meta": [],
       "password": values.password
     }
+    if (values.id !== ''){
+      delete data.password
+    }
     return data
   }
 
   return (
     <div>
-      <form onSubmit={formik.handleSubmit} className="form fv-plugins-bootstrap5 fv-plugins-framework" action="#">
-        <div className="fv-row mb-7">
-          <label className="fs-3 fw-semibold form-label mt-3 required">Username</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter your name here"
-            {...formik.getFieldProps('username')}
-          />
-          {formik.touched.username && formik.errors.username && (
-            <div className='fv-plugins-message-container'>
-              <div className='fv-help-block'>{formik.errors.username}</div>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={userDetailsSchema}
+        enableReinitialize={true}
+        onSubmit={async (values: any, { setSubmitting, resetForm }: any) => {
+          setSubmitting(true);
+          setLoader(true)
+          let payload = generatePayload(values);
+          let response;
+          try {
+            if (values.id) {
+              //edit user API call (POST)
+              response = await updateUserApi({ wpAuthToken, payload })
+              if (response && response.statusText === 'Success') {
+                navigate('/users/list')
+              }
+            } else {
+              //add user API call (POST)
+              response = await addUserApi({ wpAuthToken, payload })
+              if (response && response.statusText === 'Success') {
+                navigate('/users/list')
+              }
+            }
+          } catch (error) {
+            console.log(error)
+          } finally {
+            setSubmitting(false);
+            resetForm();
+            setLoader(false)
+          }
+        }}
+      >
+        {props => (<form onSubmit={props.handleSubmit} className="form fv-plugins-bootstrap5 fv-plugins-framework" action="#">
+          <div className="fv-row mb-7">
+            <label className="fs-3 fw-semibold form-label mt-3 required">Username</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter your name here"
+              {...props.getFieldProps('username')}
+            />
+            {props.touched.username && props.errors.username && (
+              <div className='fv-plugins-message-container'>
+                <div className='fv-help-block'>{props.errors.username}</div>
+              </div>
+            )}
+          </div>
+          <div className="fv-row mb-7">
+            <label className="fs-3 fw-semibold form-label mt-3 required">Email</label>
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Enter your name here"
+              disabled={editForm}
+              {...props.getFieldProps('email')}
+            />
+            {props.touched.email && props.errors.email && (
+              <div className='fv-plugins-message-container'>
+                <div className='fv-help-block'>{props.errors.email}</div>
+              </div>
+            )}
+          </div>
+          <div className="row row-cols-1 row-cols-sm-2 rol-cols-md-1 row-cols-lg-2">
+            <div className="col">
+              <div className="fv-row mb-7 fv-plugins-icon-container">
+                <label className="fs-3 fw-semibold form-label mt-3">First Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter your name here"
+                  {...props.getFieldProps('firstName')}
+                />
+                {props.touched.firstName && props.errors.firstName && (
+                  <div className='fv-plugins-message-container'>
+                    <div className='fv-help-block'>{props.errors.firstName}</div>
+                  </div>
+                )}
+              </div>
             </div>
-          )}
-        </div>
-        <div className="fv-row mb-7">
-          <label className="fs-3 fw-semibold form-label mt-3 required">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            placeholder="Enter your name here"
-            {...formik.getFieldProps('email')}
-          />
-          {formik.touched.email && formik.errors.email && (
-            <div className='fv-plugins-message-container'>
-              <div className='fv-help-block'>{formik.errors.email}</div>
-            </div>
-          )}
-        </div>
-        <div className="row row-cols-1 row-cols-sm-2 rol-cols-md-1 row-cols-lg-2">
-          <div className="col">
-            <div className="fv-row mb-7 fv-plugins-icon-container">
-              <label className="fs-3 fw-semibold form-label mt-3">First Name</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Enter your name here"
-                {...formik.getFieldProps('firstName')}
-              />
-              {formik.touched.firstName && formik.errors.firstName && (
-                <div className='fv-plugins-message-container'>
-                  <div className='fv-help-block'>{formik.errors.firstName}</div>
-                </div>
-              )}
+            <div className="col">
+              <div className="fv-row mb-7">
+                <label className="fs-3 fw-semibold form-label mt-3">Last Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter your name here"
+                  {...props.getFieldProps('lastName')}
+                />
+                {props.touched.lastName && props.errors.lastName && (
+                  <div className='fv-plugins-message-container'>
+                    <div className='fv-help-block'>{props.errors.lastName}</div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-          <div className="col">
-            <div className="fv-row mb-7">
-              <label className="fs-3 fw-semibold form-label mt-3">Last Name</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Enter your name here"
-                {...formik.getFieldProps('lastName')}
-              />
-              {formik.touched.lastName && formik.errors.lastName && (
-                <div className='fv-plugins-message-container'>
-                  <div className='fv-help-block'>{formik.errors.lastName}</div>
-                </div>
-              )}
-            </div>
+          <div className="fv-row mb-7">
+            <label className="fs-3 fw-semibold form-label mt-3">Website</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter your name here"
+              {...props.getFieldProps('website')}
+            />
+            {props.touched.website && props.errors.website && (
+              <div className='fv-plugins-message-container'>
+                <div className='fv-help-block'>{props.errors.website}</div>
+              </div>
+            )}
           </div>
-        </div>
-        <div className="fv-row mb-7">
-          <label className="fs-3 fw-semibold form-label mt-3">Website</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter your name here"
-            {...formik.getFieldProps('website')}
-          />
-          {formik.touched.website && formik.errors.website && (
-            <div className='fv-plugins-message-container'>
-              <div className='fv-help-block'>{formik.errors.website}</div>
-            </div>
-          )}
-        </div>
-        {/* <div className="row mb-0">
+          {/* <div className="row mb-0">
           <label className="col-lg-2 col-form-label fw-bold fs-3">Allow Notification</label>
           <div className="col-lg-10 d-flex align-items-center">
             <div className='form-check form-check-custom form-check-solid'>
               <input
                 className='form-check-input'
                 type='checkbox'
-                {...formik.getFieldProps('allowNotification')}
+                {...props.getFieldProps('allowNotification')}
               />
               <label className="form-check-label">Send the new user an email about their account.</label>
             </div>
           </div>
         </div> */}
-        <div className="fv-row mb-7">
-          <label className="fs-3 fw-semibold form-label mt-3">User Role</label>
-          <select
-            className='form-select'
-            {...formik.getFieldProps('role')}
-          >
-            <option value="subscriber">Subscriber</option>
-            <option value="contributer">Contributer</option>
-            <option value="author">Author</option>
-            <option value="editor">Editor</option>
-            <option value="administrator">Administrator</option>
-          </select>
-          {formik.touched.role && formik.errors.role && (
-            <div className='fv-plugins-message-container'>
-              <div className='fv-help-block'>{formik.errors.role}</div>
-            </div>
-          )}
-        </div>
-        <div className="fv-row mb-7">
-          <label className="fs-3 fw-semibold form-label mt-3 required">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            placeholder="Enter your name here"
-            {...formik.getFieldProps('password')}
-          />
-          {formik.touched.password && formik.errors.password && (
-            <div className='fv-plugins-message-container'>
-              <div className='fv-help-block'>{formik.errors.password}</div>
-            </div>
-          )}
-        </div>
-        {/* <div className="fv-row mb-7">
+          <div className="fv-row mb-7">
+            <label className="fs-3 fw-semibold form-label mt-3">User Role</label>
+            <select
+              className='form-select'
+              {...props.getFieldProps('role')}
+            >
+              <option value="subscriber">Subscriber</option>
+              <option value="contributer">Contributer</option>
+              <option value="author">Author</option>
+              <option value="editor">Editor</option>
+              <option value="administrator">Administrator</option>
+            </select>
+            {props.touched.role && props.errors.role && (
+              <div className='fv-plugins-message-container'>
+                <div className='fv-help-block'>{props.errors.role}</div>
+              </div>
+            )}
+          </div>
+          {!editForm && (<div className="fv-row mb-7">
+            <label className="fs-3 fw-semibold form-label mt-3 required">Password</label>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Enter your name here"
+              {...props.getFieldProps('password')}
+            />
+            {props.touched.password && props.errors.password && (
+              <div className='fv-plugins-message-container'>
+                <div className='fv-help-block'>{props.errors.password}</div>
+              </div>
+            )}
+          </div>)}
+          {/* <div className="fv-row mb-7">
           <div className='form-check form-check-custom form-check-solid'>
             <input
               className='form-check-input'
               type='checkbox'
-              {...formik.getFieldProps('allowNotification')}
+              {...props.getFieldProps('allowNotification')}
             />
             <label className="form-check-label">Send the new user an email about their account.</label>
           </div>
         </div> */}
-        <div className="d-flex justify-content-start gap-3">
-          <button type="submit" className="btn btn-secondary">Submit</button>
-          <Link to={'/users/list'}> <button type="button" className="btn btn-light">Cancel</button></Link>
-        </div>
-      </form>
+          <div className="d-flex justify-content-start gap-3">
+            <button type="submit" className="btn btn-secondary">Submit</button>
+            <Link to={'/users/list'}> <button type="button" className="btn btn-light">Cancel</button></Link>
+          </div>
+        </form>)}
+      </Formik>
     </div>
   )
 }
