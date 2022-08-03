@@ -60,7 +60,11 @@ export const addCategoryApi = async ({ wpAuthToken, payload }) => {
         return response;
     } catch (error) {
         console.log(error);
-        throw error;
+        let err = {
+            statusText: "Error",
+            message: error.response.data.message
+        }
+        return err
     }
 }
 
@@ -82,7 +86,11 @@ export const updateCategoryApi = async ({ wpAuthToken, payload }) => {
         return response;
     } catch (error) {
         console.log(error);
-        throw error;
+        let err = {
+            statusText: "Error",
+            message: error.response.data.message
+        }
+        return err
     }
 }
 

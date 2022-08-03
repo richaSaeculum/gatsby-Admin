@@ -122,7 +122,7 @@ const AddUser = () => {
         //edit user API call (POST)
         response = await updateUserApi({ wpAuthToken, payload })
         if (response && response.statusText === 'Success') {
-          const info = { action: 'alert', message: 'User successfully updated?' }
+          const info = { action: 'alert', message: 'User successfully updated' }
           toggleModal(info);
           return
         } else {
@@ -133,7 +133,7 @@ const AddUser = () => {
         //add user API call (POST)
         response = await addUserApi({ wpAuthToken, payload })
         if (response && response.statusText && response.statusText === 'Success') {
-          const info = { action: 'alert', message: 'User successfully added?' }
+          const info = { action: 'alert', message: 'User successfully added' }
           toggleModal(info);
           return
         } else {
