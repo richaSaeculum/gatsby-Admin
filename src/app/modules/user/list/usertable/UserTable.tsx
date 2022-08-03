@@ -70,7 +70,7 @@ const UserTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                     </button>
 
                     <button
-                        className='btn btn-light  btn-sm px-4'
+                        className='btn btn-light btn-sm px-4'
                         onClick={() => { actionClick(row, true) }}
                     >
                         Delete

@@ -1,5 +1,5 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import '../style.scss'
 import RichTextEditor, { EditorValue, ToolbarConfig } from 'react-rte';
 
@@ -10,6 +10,7 @@ import { useLayout } from '../../../../_metronic/layout/core';
 import axios from 'axios';
 import { useAuth } from '../../auth';
 import MultiSelect from '../../../components/modal/MultiSelect';
+import ConfirmationModal from '../../../components/modal/ConfirmationModal';
 
 
 const AddArticle = () => {
@@ -18,6 +19,10 @@ const AddArticle = () => {
   const { setLoader } = useLayout();
   const { wpAuth } = useAuth()
   const wpAuthToken = wpAuth?.token;
+  const navigate = useNavigate();
+
+  const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
+  const [confirmationInfo, setConfirmationInfo] = useState<any>()
 
   const [category, setCategory] = useState<number | undefined>();
   const [categoryList, setCategoryList] = useState<any>();
@@ -26,6 +31,17 @@ const AddArticle = () => {
   const [content, setContent] = useState<EditorValue>(RichTextEditor.createEmptyValue())
   const [seoScore, setSeoScore] = useState<number | undefined>();
   const [seoTips, setSeoTips] = useState<string | undefined>('');
+  const ref = useRef(false);
+
+  useEffect(() => {
+    if (!ref.current) {
+      ref.current = true
+      return
+    }
+    if (!confirmationOpen) {
+      setConfirmationOpen(!confirmationOpen)
+    }
+  }, [confirmationInfo])
 
   useEffect(() => {
     getCategories();
@@ -40,8 +56,7 @@ const AddArticle = () => {
     let response = await getCategoriesListApi({ wpAuthToken });
     if (response && response.status === 200) {
       let arr = response.data;
-      console.log(arr)
-      arr = arr.map((item:any) => ({ label: item.name, value: item.id }))
+      arr = arr.map((item: any) => ({ label: item.name, value: item.id }))
       setCategoryList(arr)
       setLoader(false)
     }
@@ -55,6 +70,23 @@ const AddArticle = () => {
     setContent(RichTextEditor.createValueFromString(article?.content, 'html'))
     setSeoScore(article?.seoScore)
     setSeoTips(article?.seoTips)
+  }
+
+  const confirmationCallback = (success: boolean, info: any) => {
+    setConfirmationOpen(false)
+    if (success && info.action === 'confirmation') {
+      // submitForm(confirmationInfo)
+    } else if (info.action === 'alert' || info.action === 'error') {
+      setConfirmationOpen(!confirmationOpen)
+      navigate('/users/list')
+      return
+    }
+  }
+
+  const toggleModal = (info?: any) => {
+    console.log(confirmationOpen, 'in toggle')
+    setConfirmationInfo(info)
+    setConfirmationOpen(!confirmationOpen)
   }
 
   const onChange = (e: ChangeEvent<any>) => {
@@ -86,6 +118,8 @@ const AddArticle = () => {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    let info = { action: 'confirmation', message: 'Are You Sure To Save?' }
+    toggleModal(info)
     const keywordArr = keyword?.split(',').filter(a => a !== ' ').map(b => b.trim());
     const data = {
       title: title,
@@ -125,6 +159,12 @@ const AddArticle = () => {
 
   return (
     <>
+      {confirmationOpen && <ConfirmationModal
+        open={confirmationOpen}
+        confirmationInfo={confirmationInfo}
+        onClose={() => { setConfirmationOpen(false) }}
+        handleConfirmationMessage={confirmationCallback}
+      />}
       <div className="card-header d-flex justify-content-between align-items-center mb-7">
         <h1 className='mb-0'>Title</h1>
         <button type='button' className='btn btn-secondary'>Preview</button>

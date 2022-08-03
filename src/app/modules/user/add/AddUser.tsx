@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import { useAuth } from '../../auth'
 import { addUserApi, getSingleUsersListApi, updateUserApi } from '../../../api'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
+import ConfirmationModal from '../../../components/modal/ConfirmationModal'
 
 const userDetailsSchema = Yup.object().shape({
   id: Yup.string(),
@@ -15,13 +16,13 @@ const userDetailsSchema = Yup.object().shape({
   website: Yup.string(),
   role: Yup.string(),
   password: Yup.string().when("id", {
-    is: '',
+    is: undefined,
     then: Yup.string().required('Password is required')
   }),
 })
 
 interface UserFormFieldsTypes {
-  id: string
+  id: string | undefined
   username: string
   email: string
   firstName: string
@@ -32,7 +33,7 @@ interface UserFormFieldsTypes {
 }
 
 const UserInitValues: UserFormFieldsTypes = {
-  id: '',
+  id: undefined,
   username: '',
   email: '',
   firstName: '',
@@ -51,6 +52,9 @@ const AddUser = () => {
   const { setLoader } = useLayout();
   const [initialValues, setInitialValues] = useState<any>(UserInitValues);
   const [editForm, setEditForm] = useState<boolean>(false)
+  const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
+  const [confirmationInfo, setConfirmationInfo] = useState<any>()
+  const ref = useRef(false)
 
   useEffect(() => {
     const { id } = param;
@@ -58,6 +62,16 @@ const AddUser = () => {
       editId(id)
     }
   }, [])
+
+  useEffect(() => {
+    if (!ref.current) {
+      ref.current = true
+      return
+    }
+    if (!confirmationOpen){
+      setConfirmationOpen(!confirmationOpen)
+    }
+  }, [confirmationInfo])
 
   const editId = async (id: any) => {
     setLoader(true);
@@ -78,6 +92,73 @@ const AddUser = () => {
       }
       setInitialValues(editData)
     }
+  }
+
+  const confirmationCallback = (success: boolean, info: any) => {
+    setConfirmationOpen(false)
+    if (success && info.action === 'confirmation') {
+      submitForm(confirmationInfo)
+    } else if (info.action === 'alert' || info.action === 'error') {
+      setConfirmationOpen(!confirmationOpen)
+      navigate('/users/list')
+      return
+    }
+  }
+
+  const toggleModal = (info?: any) => {
+    console.log(confirmationOpen, 'in toggle')
+    setConfirmationInfo(info)
+    setConfirmationOpen(!confirmationOpen)
+  }
+
+  const submitForm = async (info: any) => {
+    const { formActions: { setSubmitting, resetForm }, values } = info
+    setSubmitting(true);
+    setLoader(true)
+    let payload = generatePayload(values);
+    let response: any;
+    try {
+      if (values.id) {
+        //edit user API call (POST)
+        response = await updateUserApi({ wpAuthToken, payload })
+        if (response && response.statusText === 'Success') {
+          const info = { action: 'alert', message: 'User successfully updated?' }
+          toggleModal(info);
+          return
+        } else {
+          const info = { action: 'error', message: response.message };
+          toggleModal(info);
+        }
+      } else {
+        //add user API call (POST)
+        response = await addUserApi({ wpAuthToken, payload })
+        if (response && response.statusText && response.statusText === 'Success') {
+          const info = { action: 'alert', message: 'User successfully added?' }
+          toggleModal(info);
+          return
+        } else {
+          const info = { action: 'error', message: response.message };
+          toggleModal(info);
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setSubmitting(false);
+      resetForm();
+      setLoader(false)
+    }
+  }
+
+  const handleSubmit = async (values: any, actions: any) => {
+    let info = {
+      action: 'confirmation',
+      message: 'Are You Sure To Save?',
+      formActions: actions,
+      values: values
+    }
+    // submitForm(info)
+    toggleModal(info)
   }
 
   // const formik = useFormik<UserFormFieldsTypes>({
@@ -125,45 +206,25 @@ const AddUser = () => {
       "meta": [],
       "password": values.password
     }
-    if (values.id !== ''){
+    if (values.id !== undefined) {
       delete data.password
     }
     return data
   }
 
   return (
-    <div>
+    <>
+      {confirmationOpen && <ConfirmationModal
+        open={confirmationOpen}
+        confirmationInfo={confirmationInfo}
+        onClose={() => {setConfirmationOpen(false)}}
+        handleConfirmationMessage={confirmationCallback}
+      />}
       <Formik
         initialValues={initialValues}
         validationSchema={userDetailsSchema}
         enableReinitialize={true}
-        onSubmit={async (values: any, { setSubmitting, resetForm }: any) => {
-          setSubmitting(true);
-          setLoader(true)
-          let payload = generatePayload(values);
-          let response;
-          try {
-            if (values.id) {
-              //edit user API call (POST)
-              response = await updateUserApi({ wpAuthToken, payload })
-              if (response && response.statusText === 'Success') {
-                navigate('/users/list')
-              }
-            } else {
-              //add user API call (POST)
-              response = await addUserApi({ wpAuthToken, payload })
-              if (response && response.statusText === 'Success') {
-                navigate('/users/list')
-              }
-            }
-          } catch (error) {
-            console.log(error)
-          } finally {
-            setSubmitting(false);
-            resetForm();
-            setLoader(false)
-          }
-        }}
+        onSubmit={handleSubmit}
       >
         {props => (<form onSubmit={props.handleSubmit} className="form fv-plugins-bootstrap5 fv-plugins-framework" action="#">
           <div className="fv-row mb-7">
@@ -172,6 +233,7 @@ const AddUser = () => {
               type="text"
               className="form-control"
               placeholder="Enter your name here"
+              disabled={editForm}
               {...props.getFieldProps('username')}
             />
             {props.touched.username && props.errors.username && (
@@ -304,7 +366,7 @@ const AddUser = () => {
           </div>
         </form>)}
       </Formik>
-    </div>
+    </>
   )
 }
 

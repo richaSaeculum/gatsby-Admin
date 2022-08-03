@@ -286,10 +286,15 @@ export const addUserApi = async ({ wpAuthToken, payload }) => {
         if (response && (response.status === 200 || response.status === 201)) {
             response.statusText = 'Success'
         }
+        console.log(response)
         return response;
     } catch (error) {
-        console.log(error);
-        throw error;
+        console.log(error)
+        let err ={ 
+            statusText:"Error",
+            message: error.response.data.message
+        }
+        return err
     }
 }
 
@@ -311,7 +316,11 @@ export const updateUserApi = async ({ wpAuthToken, payload }) => {
         return response;
     } catch (error) {
         console.log(error);
-        throw error;
+        let err = {
+            statusText: "Error",
+            message: error.response.data.message
+        }
+        return err
     }
 }
 
