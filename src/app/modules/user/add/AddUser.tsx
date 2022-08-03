@@ -98,10 +98,12 @@ const AddUser = () => {
     setConfirmationOpen(false)
     if (success && info.action === 'confirmation') {
       submitForm(confirmationInfo)
-    } else if (info.action === 'alert' || info.action === 'error') {
+    } else if (info.action === 'alert') {
       setConfirmationOpen(!confirmationOpen)
       navigate('/users/list')
-      return
+      info.formActions.resetForm();
+    } else if (info.action === 'error'){
+      setConfirmationOpen(false)
     }
   }
 
@@ -145,7 +147,6 @@ const AddUser = () => {
       console.log(error)
     } finally {
       setSubmitting(false);
-      resetForm();
       setLoader(false)
     }
   }
