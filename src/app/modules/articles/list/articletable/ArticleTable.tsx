@@ -68,16 +68,16 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                 <td>
                     <span className='fw-semibold d-block fs-7 mw-100'>
                         <ul className='list-unstyled'>
-                            {row.categoryName && row.categoryName.map((item: string) => (<li>{item}</li>))}
+                            {row.categoryName && row.categoryName.map((item: string, index: number) => (<li key={item + index}>{item}</li>))}
                         </ul>
                     </span>
                 </td>
                 <td>
-                    <span className={clsx('badge', { 
+                    <span className={clsx('badge', {
                         'badge-light-success': row.status === 'publish',
                         'badge-light-primary': row.status === 'draft',
                         'badge-light-warning': row.status === 'pending',
-                         })}>
+                    })}>
                         {row.status}
                     </span>
                 </td>

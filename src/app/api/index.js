@@ -271,7 +271,6 @@ export const getSingleUsersListApi = async ({ wpAuthToken, id }) => {
             }
         }
         );
-        console.log(response)
         return response
     } catch (error) {
         console.log(error);

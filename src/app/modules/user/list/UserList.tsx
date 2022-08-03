@@ -23,9 +23,8 @@ const UserList = () => {
     setLoader(true)
     let response = await getUsersListApi({ wpAuthToken });
     if (response && response.status === 200) {
-      console.log(response?.data)
       setUsersData(response?.data)
-      setLoader(false) 
+      setLoader(false);
     }
   }
 

@@ -40,10 +40,7 @@ const Category = () => {
 
   const confirmationCallback = (success: boolean, info: any) => {
     setConfirmationOpen(false)
-    if (info.action === 'alert' || info.action === 'error') {
-      setConfirmationOpen(!confirmationOpen)
-      setOpen(false);
-    }
+    setOpen(false);
     getCategories();
     setCategory(null)
     setTitle('');
