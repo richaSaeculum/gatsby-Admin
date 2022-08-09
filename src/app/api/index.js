@@ -159,7 +159,7 @@ export const getPostListByMonthApi = async ({ wpAuthToken, after = '', before = 
 export const getSinglePostApi = async ({ wpAuthToken, id }) => {
     try {
         const response = await axios.get(
-            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts/${id}`, {
+            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts/${id}?context=edit&_embed`, {
             headers: {
                 common: {
                     Authorization: `Bearer ${wpAuthToken}`
@@ -192,7 +192,11 @@ export const addPostApi = async ({ wpAuthToken, payload }) => {
         return response;
     } catch (error) {
         console.log(error);
-        throw error;
+        let err = {
+            statusText: "Error",
+            message: error.response.data.message
+        }
+        return err
     }
 }
 

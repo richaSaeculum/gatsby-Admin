@@ -48,6 +48,10 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
   const [wpAuth, setWpAuth] = useState<WpAuthModel | undefined>(authHelper.getWpAuth())
 
   const getWPUserToken = async () => {
+    // let payload = {
+    //   "username": "rutvik",
+    //   "password": "password"
+    // }
     let payload = {
       "username": "gatsby",
       "password": "~7sLqdx:0XBk5U^7cITPte4IjCDbI_yQ"

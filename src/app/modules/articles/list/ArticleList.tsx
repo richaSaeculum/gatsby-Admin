@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
-import {  getPostListApi } from '../../../api'
+import {  deletePostApi, getPostListApi } from '../../../api'
 import { useAuth } from '../../auth'
 import ArticleTable from './articletable/ArticleTable'
 
@@ -38,14 +38,17 @@ const ArticleList = () => {
     }
   }
 
-  const onDeleteRow = (row: any) => {
-    // let data = articleData?.filter(item => item.id !== row.id);
-    // setArticleData(data);
+  const onDeleteRow = async (row: any) => {
+    setLoader(true)
+    let response = await deletePostApi({wpAuthToken, id: row.id});
+    if (response && response.status === 200 && response.data.deleted){
+      getAllPost();
+    }
   }
 
   const onEditRow = (row: any) => {
     if (row.id) {
-      navigate(`/articles/edit-article/${row.id}`)
+      navigate(`/articles/edit-article/${row.id}`);
     }
   }
 
