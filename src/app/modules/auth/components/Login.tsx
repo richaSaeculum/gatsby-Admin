@@ -4,9 +4,9 @@ import * as Yup from 'yup'
 import clsx from 'clsx'
 import { Link } from 'react-router-dom'
 import { useFormik } from 'formik'
-import { getUserByToken, login } from '../core/_requests'
 import { toAbsoluteUrl } from '../../../../_metronic/helpers'
 import { useAuth } from '../core/Auth'
+import { login } from '../../../api'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -21,8 +21,8 @@ const loginSchema = Yup.object().shape({
 })
 
 const initialValues = {
-  email: 'admin@demo.com',
-  password: 'demo',
+  email: '',
+  password: '',
 }
 
 /*
@@ -41,16 +41,24 @@ export function Login() {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true)
       try {
-        const { data: auth } = await login(values.email, values.password)
-        saveAuth(auth)
-        const { data: user } = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
+        let payload = {
+          user_email: values.email,
+          user_password: values.password,
+        }
+        const response = await login(payload);
+        if (response.status === 200) {
+          saveAuth(response.data)
+          setCurrentUser(response.data)
+        } else if (response.status === 400) {
+          setStatus(response.message);
+        }
+        // const { data: user } = await getUserByToken(auth.api_token)
       } catch (error) {
-        console.error(error)
+        console.error(error);
         saveAuth(undefined)
-        setStatus('The login detail is incorrect')
-        setSubmitting(false)
-        setLoading(false)
+        setStatus('The login detail is incorrect');
+        setSubmitting(false);
+        setLoading(false);
       }
     },
   })
@@ -74,7 +82,7 @@ export function Login() {
       </div>
       {/* begin::Heading */}
 
-      {/* {formik.status ? (
+      {formik.status ? (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
@@ -85,7 +93,7 @@ export function Login() {
             continue.
           </div>
         </div>
-      )} */}
+      )}
 
       {/* begin::Form group */}
       <div className='fv-row mb-10'>
@@ -104,7 +112,9 @@ export function Login() {
         />
         {formik.touched.email && formik.errors.email && (
           <div className='fv-plugins-message-container'>
-            <span role='alert'>{formik.errors.email}</span>
+            <div className='fv-help-block'>
+              <span role='alert'>{formik.errors.email}</span>
+            </div>
           </div>
         )}
       </div>
@@ -131,6 +141,7 @@ export function Login() {
         <input
           type='password'
           autoComplete='off'
+          placeholder='Password'
           {...formik.getFieldProps('password')}
           className={clsx(
             'form-control form-control-lg form-control-solid',

@@ -1,4 +1,5 @@
 import axios from "axios"
+import client from "../Utils/client";
 
 /* ============================== */
 /* ********* CATEGORY *********** */
@@ -351,5 +352,20 @@ export const deleteUserApi = async ({ id, wpAuthToken }) => {
     } catch (error) {
         console.log(error);
         throw error;
+    }
+}
+
+
+/* ======================================= */
+/* *********** AUTHENTICATION ************ */
+/* ======================================= */
+
+export const login = async (payload) => {
+    try {
+        const {data} = await client().post('/login', payload);
+        return data;
+    } catch (error) {
+        // get axios errors from error.response
+        return error.response.data
     }
 }

@@ -1,4 +1,4 @@
-import {AuthModel} from './_models'
+import { AuthModel } from './_models'
 
 const AUTH_LOCAL_STORAGE_KEY = 'kt-auth-react-v'
 const WP_AUTH_LOCAL_STORAGE_KEY = 'wp-user-auth'
@@ -60,47 +60,48 @@ const removeWpAuth = () => {
   }
 }
 
-const getWpAuth = () => {
-  if (!localStorage) {
-    return
-  }
+// const getWpAuth = () => {
+//   if (!localStorage) {
+//     return
+//   }
 
-  const lsValue: string | null = localStorage.getItem(WP_AUTH_LOCAL_STORAGE_KEY)
-  if (!lsValue) {
-    return
-  }
+//   const lsValue: string | null = localStorage.getItem(WP_AUTH_LOCAL_STORAGE_KEY)
+//   if (!lsValue) {
+//     return
+//   }
 
-  try {
-    const auth = JSON.parse(lsValue)
-    if (auth) {
-      // You can easily check auth_token expiration also
-      return auth
-    }
-  } catch (error) {
-    console.error('AUTH LOCAL STORAGE PARSE ERROR', error)
-  }
-}
+//   try {
+//     const auth = JSON.parse(lsValue)
+//     if (auth) {
+//       // You can easily check auth_token expiration also
+//       return auth
+//     }
+//   } catch (error) {
+//     console.error('AUTH LOCAL STORAGE PARSE ERROR', error)
+//   }
+// }
 
-const setWpAuth = (auth:any) => {
-  if (!localStorage) {
-    return
-  }
+// const setWpAuth = (auth:any) => {
+//   if (!localStorage) {
+//     return
+//   }
 
-  try {
-    const lsValue = JSON.stringify(auth)
-    localStorage.setItem(WP_AUTH_LOCAL_STORAGE_KEY, lsValue)
-  } catch (error) {
-    console.error('AUTH LOCAL STORAGE SAVE ERROR', error)
-  }
-}
+//   try {
+//     const lsValue = JSON.stringify(auth)
+//     localStorage.setItem(WP_AUTH_LOCAL_STORAGE_KEY, lsValue)
+//   } catch (error) {
+//     console.error('AUTH LOCAL STORAGE SAVE ERROR', error)
+//   }
+// }
 
 export function setupAxios(axios: any) {
   axios.defaults.headers.Accept = 'application/json'
   axios.interceptors.request.use(
-    (config: {headers: {Authorization: string}}) => {
+    (config: { headers: { Authorization: string } }) => {
       const auth = getAuth()
-      if (auth && auth.api_token) {
-        // config.headers.Authorization = `Bearer ${auth.api_token}`
+      if (auth && auth.token) {
+        console.log(auth.token)
+        config.headers.Authorization = `Bearer ${auth.token}`
       }
 
       return config
@@ -109,4 +110,4 @@ export function setupAxios(axios: any) {
   )
 }
 
-export { getAuth, setAuth, removeAuth, getWpAuth, setWpAuth, removeWpAuth, AUTH_LOCAL_STORAGE_KEY}
+export { getAuth, setAuth, removeAuth, removeWpAuth, AUTH_LOCAL_STORAGE_KEY }

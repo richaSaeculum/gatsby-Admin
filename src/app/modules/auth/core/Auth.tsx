@@ -18,11 +18,11 @@ import axios from 'axios'
 type AuthContextProps = {
   auth: AuthModel | undefined
   saveAuth: (auth: AuthModel | undefined) => void
-  saveWpAuth: (auth: WpAuthModel) => void
+  saveWpAuth?: (auth: WpAuthModel) => void
   currentUser: UserModel | undefined
   setCurrentUser: Dispatch<SetStateAction<UserModel | undefined>>
   logout: () => void
-  wpAuth: WpAuthModel | undefined
+  wpAuth?: WpAuthModel | undefined
 }
 
 const initAuthContextPropsState = {
@@ -32,7 +32,7 @@ const initAuthContextPropsState = {
   currentUser: undefined,
   setCurrentUser: () => { },
   logout: () => { },
-  wpAuth: authHelper.getWpAuth()
+  wpAuth: undefined
 }
 
 const AuthContext = createContext<AuthContextProps>(initAuthContextPropsState)
@@ -45,87 +45,57 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
   const [auth, setAuth] = useState<AuthModel | undefined>(authHelper.getAuth())
   const [currentUser, setCurrentUser] = useState<UserModel | undefined>()
 
-  const [wpAuth, setWpAuth] = useState<WpAuthModel | undefined>(authHelper.getWpAuth())
-
-  const getWPUserToken = async () => {
-    // let payload = {
-    //   "username": "rutvik",
-    //   "password": "password"
-    // }
-    let payload = {
-      "username": "gatsby",
-      "password": "~7sLqdx:0XBk5U^7cITPte4IjCDbI_yQ"
-    }
-    let res = await axios.post('https://gatsby.saeculumsolutions.com/wp-json/jwt-auth/v1/token', payload);
-    console.log("===> Wordpress Auth <===", res.data)
-    saveWpAuth(res.data)
-  }
-
   const saveAuth = (auth: AuthModel | undefined) => {
     setAuth(auth)
     if (auth) {
       authHelper.setAuth(auth)
-      getWPUserToken();
+      // getWPUserToken();
     } else {
       authHelper.removeAuth()
     }
   }
 
-  const saveWpAuth = (auth: WpAuthModel | undefined) => {
-    setWpAuth(auth);
-
-    if (auth) {
-      authHelper.setWpAuth(auth)
-    } else {
-      authHelper.removeWpAuth()
-    }
-  }
-
   const logout = () => {
-    saveAuth(undefined)
-    setCurrentUser(undefined)
-    saveWpAuth(undefined)
+    saveAuth(undefined);
+    setCurrentUser(undefined);
+    // saveWpAuth(undefined)
   }
 
   return (
-    <AuthContext.Provider value={{ auth, saveAuth, saveWpAuth, currentUser, setCurrentUser, logout, wpAuth }}>
+    <AuthContext.Provider value={{ auth, saveAuth, currentUser, setCurrentUser, logout }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
 const AuthInit: FC<WithChildren> = ({ children }) => {
-  const { auth, logout, setCurrentUser, wpAuth } = useAuth()
+  const { auth, logout, setCurrentUser } = useAuth()
   const didRequest = useRef(false)
-  const [showSplashScreen, setShowSplashScreen] = useState(true)
+  const [showSplashScreen, setShowSplashScreen] = useState(true);
 
   // We should request user by authToken (IN OUR EXAMPLE IT'S API_TOKEN) before rendering the application
   useEffect(() => {
-    const requestUser = async (apiToken: string) => {
-      if(!wpAuth){
-        logout();
-      }
+    const requestUser = async (auth:any) => {
       try {
         if (!didRequest.current) {
-          const { data } = await getUserByToken(apiToken)
-          if (data) {
-            setCurrentUser(data)
+          if (auth) {
+            setCurrentUser(auth)
           }
         }
       } catch (error) {
         console.error(error)
-        if (!didRequest.current || wpAuth) {
+        if (!didRequest.current) {
           logout()
         }
       } finally {
         setShowSplashScreen(false)
       }
-
+      
       return () => (didRequest.current = true)
     }
 
-    if (auth && auth.api_token) {
-      requestUser(auth.api_token)
+    if (auth) {
+      requestUser(auth)
     } else {
       logout()
       setShowSplashScreen(false)
@@ -134,6 +104,7 @@ const AuthInit: FC<WithChildren> = ({ children }) => {
   }, [])
 
   return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>
+
 }
 
 export { AuthProvider, AuthInit, useAuth }

@@ -20,10 +20,10 @@ const HeaderUserMenu: FC = () => {
 
           <div className='d-flex flex-column'>
             <div className='fw-bolder d-flex align-items-center fs-5'>
-              {currentUser?.first_name} {currentUser?.first_name}
+              {currentUser?.user?.user_first_name} {currentUser?.user?.user_last_name}
             </div>
             <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
-              {currentUser?.email}
+              {currentUser?.user?.user_email}
             </a>
           </div>
         </div>

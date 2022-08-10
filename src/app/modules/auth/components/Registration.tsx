@@ -15,20 +15,20 @@ const initialValues = {
   email: '',
   password: '',
   changepassword: '',
-  username:'',
+  username: '',
   acceptTerms: false,
   user_role: 'author'
 }
 
 const registrationSchema = Yup.object().shape({
- firstname: Yup.string()
+  firstname: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('First name is required'), 
+    .required('First name is required'),
   username: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Username is required'), 
+    .required('Username is required'),
   email: Yup.string()
     .email('Wrong email format')
     .min(3, 'Minimum 3 symbols')
@@ -48,35 +48,51 @@ const registrationSchema = Yup.object().shape({
       is: (val: string) => (val && val.length > 0 ? true : false),
       then: Yup.string().oneOf([Yup.ref('password')], "Password and Confirm Password didn't match"),
     }),
-  acceptTerms: Yup.bool().required('You must accept the terms and conditions'),
+  // acceptTerms: Yup.bool().required('You must accept the terms and conditions'),
 })
 
 export function Registration() {
   const [loading, setLoading] = useState(false)
   const { saveAuth, setCurrentUser } = useAuth()
+  const [success, setSuccess] = useState(false);
   const formik = useFormik({
     initialValues,
     validationSchema: registrationSchema,
-    onSubmit: async (values, { setStatus, setSubmitting }) => {
-      console.log("register payload",values)
+    onSubmit: async (values, { setStatus, setSubmitting, resetForm }) => {
+      console.log("register payload", values)
       setLoading(true)
       try {
-        const { data: auth } = await register(
+        const { data } = await register(
           values.email,
           values.firstname,
           values.lastname,
           values.password,
-          values.changepassword,
           values.username,
           values.user_role
         )
-        saveAuth(auth)
-        const { data: user } = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
+        if (data.status === 200 && data.messsage === 'ok') {
+          console.log("registered");
+          setLoading(false);
+          setStatus('User is successfully registered');
+          resetForm();
+        }
+        if (data.status === 200 && data.messsage === 'ok') {
+          console.log("registered");
+          setLoading(false);
+          setStatus('User is successfully registered');
+          resetForm();
+        }
+        console.log(data)
+
+        // if (data.status === 400) {
+        //   setStatus(data.message);
+        //   setSubmitting(false)
+        //   setLoading(false)
+        // }
+
       } catch (error) {
-        console.error(error)
-        saveAuth(undefined)
-        setStatus('The registration details is incorrect')
+        console.log(error);
+        setStatus('');
         setSubmitting(false)
         setLoading(false)
       }
@@ -128,11 +144,11 @@ export function Registration() {
         <div className='border-bottom border-gray-300 mw-50 w-100'></div>
       </div> */}
 
-      {/* {formik.status && (
+      {formik.status && (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
-      )} */}
+      )}
 
       {/* begin::Form group Firstname */}
       <div className='row fv-row mb-7'>
@@ -251,9 +267,9 @@ export function Registration() {
           </div> */}
           {/* end::Meter */}
         </div>
-        <div className='text-muted'>
+        {/* <div className='text-muted'>
           Use 8 or more characters with a mix of letters, numbers & symbols.
-        </div>
+        </div> */}
       </div>
       {/* end::Form group */}
 
@@ -278,7 +294,7 @@ export function Registration() {
       {/* end::Form group */}
 
       {/* begin::Form group */}
-      <div className='fv-row mb-10'>
+      {/* <div className='fv-row mb-10'>
         <div className='form-check form-check-custom form-check-solid'>
           <input
             className='form-check-input'
@@ -304,7 +320,7 @@ export function Registration() {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
       {/* end::Form group */}
 
       {/* begin::Form group */}
@@ -313,7 +329,7 @@ export function Registration() {
           type='submit'
           id='kt_sign_up_submit'
           className='btn btn-lg btn-primary w-100 mb-5'
-          disabled={formik.isSubmitting || !formik.isValid || !formik.values.acceptTerms}
+          disabled={formik.isSubmitting || !formik.isValid}
         >
           {!loading && <span className='indicator-label'>Submit</span>}
           {loading && (

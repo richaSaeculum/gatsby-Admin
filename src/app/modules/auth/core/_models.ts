@@ -1,6 +1,25 @@
+interface UserModal2 {
+  
+  user_id: string
+  user_name: string
+  user_first_name: string
+  user_last_name: string
+  user_email: string
+  user_password: string
+  user_image: null
+  user_role: string
+  user_access: string
+  user_wallet: null
+  user_website: string
+  user_is_active: number 
+  user_config: null
+  user_created_on: string
+  user_updated_on: string
+}
 export interface AuthModel {
-  api_token: string
-  refreshToken?: string
+  token: string
+  user?: UserModal2
+
 }
 
 export interface WpAuthModel {
@@ -51,24 +70,6 @@ export interface UserSocialNetworksModel {
 }
 
 export interface UserModel {
-  id: number
-  username: string
-  password: string | undefined
-  email: string
-  first_name: string
-  last_name: string
-  fullname?: string
-  occupation?: string
-  companyName?: string
-  phone?: string
-  roles?: Array<number>
-  pic?: string
-  language?: 'en' | 'de' | 'es' | 'fr' | 'ja' | 'zh' | 'ru'
-  timeZone?: string
-  website?: 'https://keenthemes.com'
-  emailSettings?: UserEmailSettingsModel
-  auth?: AuthModel
-  communication?: UserCommunicationModel
-  address?: UserAddressModel
-  socialNetworks?: UserSocialNetworksModel
+  token: string
+  user?: UserModal2
 }
