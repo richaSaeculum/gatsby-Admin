@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
-import {  deletePostApi, getPostListApi } from '../../../api'
+import { deletePostApi, getPostListApi } from '../../../api'
 import { useAuth } from '../../auth'
 import ArticleTable from './articletable/ArticleTable'
 
@@ -11,28 +11,31 @@ const ArticleList = () => {
   const wpAuthToken = wpAuth?.token
   const { setLoader } = useLayout()
   const [articleData, setArticleData] = useState();
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllPost();
+    getAllPost({ page: currentPage });
   }, [])
 
-  const getAllPost = async () => {
+  const getAllPost = async ({ page }: any) => {
     setLoader(true)
-    let response = await getPostListApi({ wpAuthToken });
+    let response = await getPostListApi({ wpAuthToken, page });
     if (response && response.status === 200) {
-      let a = response?.data.map((item: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item) }) })
+      setTotalPage(parseInt(response.headers['x-wp-totalpages']))
+      let a = response?.data.map((item: any, index: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item), rowNo: (page - 1) * 10 + index + 1 }) })
       setArticleData(a)
       setLoader(false)
     }
   }
 
-  const getCategoryNameForDisplay = (item: any) => {
+  function getCategoryNameForDisplay(item: any) {
     if (item._embedded.hasOwnProperty('wp:term')) {
       let arr: any = [];
       if (item._embedded['wp:term'].length > 0) {
-        item._embedded['wp:term'][0].forEach((item: any) => arr.push(item.name))
+        item._embedded['wp:term'][0].forEach((item: any) => arr.push(item.name));
       }
       return arr
     }
@@ -40,9 +43,9 @@ const ArticleList = () => {
 
   const onDeleteRow = async (row: any) => {
     setLoader(true)
-    let response = await deletePostApi({wpAuthToken, id: row.id});
-    if (response && response.status === 200 && response.data.deleted){
-      getAllPost();
+    let response = await deletePostApi({ wpAuthToken, id: row.id });
+    if (response && response.status === 200 && response.data.deleted) {
+      getAllPost({ page: currentPage });
     }
   }
 
@@ -50,6 +53,12 @@ const ArticleList = () => {
     if (row.id) {
       navigate(`/articles/edit-article/${row.id}`);
     }
+  }
+
+  const handlePageChange = async (selectedPage: number) => {
+    // return
+    await getAllPost({ page: selectedPage });
+    setCurrentPage(selectedPage);
   }
 
   return (
@@ -75,6 +84,7 @@ const ArticleList = () => {
           onEditRow={onEditRow}
           onDeleteRow={onDeleteRow}
           data={articleData}
+          paginationConfig={{ totalPage, handlePageChange }}
         />
       </div>
     </>

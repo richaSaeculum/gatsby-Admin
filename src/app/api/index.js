@@ -5,10 +5,10 @@ import axios from "axios"
 /* ============================== */
 
 // get categorylist all (GET)
-export const getCategoriesListApi = async ({ wpAuthToken }) => {
+export const getCategoriesListApi = async ({ wpAuthToken, page = 1 }) => {
     try {
         const response = await axios.get(
-            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories`, {
+            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories?page=${page}&per_page=10`, {
             headers: {
                 common: {
                     Authorization: `Bearer ${wpAuthToken}`
@@ -27,7 +27,7 @@ export const getCategoriesListApi = async ({ wpAuthToken }) => {
 export const getSingleCategoryApi = async ({ wpAuthToken, id }) => {
     try {
         const response = await axios.get(
-            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories/${id}`, {
+            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories/${id}?context=edit`, {
             headers: {
                 common: {
                     Authorization: `Bearer ${wpAuthToken}`
@@ -118,10 +118,10 @@ export const deleteCategoryApi = async ({ id, wpAuthToken }) => {
 /* ============================== */
 
 // get post list all (GET)
-export const getPostListApi = async ({ wpAuthToken, status = 'any' }) => {
+export const getPostListApi = async ({ wpAuthToken, status = 'any', page = 1 }) => {
     try {
         const response = await axios.get(
-            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts?per_page=100&status=${status}&_embed`, {
+            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts?page=${page}&per_page=10&status=${status}&_embed`, {
             headers: {
                 common: {
                     Authorization: `Bearer ${wpAuthToken}`
@@ -245,10 +245,10 @@ export const deletePostApi = async ({ id, wpAuthToken }) => {
 /* ============================== */
 
 // get users list all (GET)
-export const getUsersListApi = async ({ wpAuthToken }) => {
+export const getUsersListApi = async ({ wpAuthToken, page = 1 }) => {
     try {
         const response = await axios.get(
-            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/users`, {
+            `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/users?page=${page}&per_page=10`, {
             headers: {
                 common: {
                     Authorization: `Bearer ${wpAuthToken}`
@@ -301,8 +301,8 @@ export const addUserApi = async ({ wpAuthToken, payload }) => {
         return response;
     } catch (error) {
         console.log(error)
-        let err ={ 
-            statusText:"Error",
+        let err = {
+            statusText: "Error",
             message: error.response.data.message
         }
         return err

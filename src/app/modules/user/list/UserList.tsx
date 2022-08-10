@@ -12,34 +12,45 @@ const UserList = () => {
   const { setLoader } = useLayout();
   const [usersData, setUsersData] = useState<any>();
   const wpAuthToken = wpAuth?.token
-  
+
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllUsers();
+    getAllUsers({ page: currentPage });
   }, [wpAuthToken])
 
-  const getAllUsers = async () => {
+  const getAllUsers = async ({ page }: any) => {
     setLoader(true)
-    let response = await getUsersListApi({ wpAuthToken });
+    let response = await getUsersListApi({ wpAuthToken, page });
     if (response && response.status === 200) {
-      setUsersData(response?.data)
+      setTotalPage(parseInt(response.headers['x-wp-totalpages']))
+      let a = response?.data.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
+      setUsersData(a);
       setLoader(false);
     }
   }
 
-  const onEdit = (row: any) => {
+  const onEditRow = (row: any) => {
     if (row.id) {
-      navigate(`/users/edit-user/${row.id}`)
+      navigate(`/users/edit-user/${row.id}`);
     }
   }
 
-  const onDelete = async (row:any) => {
+  const onDeleteRow = async (row: any) => {
     setLoader(true)
-    const res = await deleteUserApi({ wpAuthToken, id: row.id })
-    if (res && res.status === 200 && res.data.deleted) {
-      getAllUsers();
+    const response = await deleteUserApi({ wpAuthToken, id: row.id })
+    if (response && response.status === 200 && response.data.deleted) {
+      getAllUsers({ page: currentPage });
     }
+  }
+
+  const handlePageChange = async (selectedPage: number) => {
+    // return
+    await getAllUsers({ page: selectedPage });
+    setCurrentPage(selectedPage);
   }
 
   return (
@@ -58,9 +69,10 @@ const UserList = () => {
       </div>
 
       <UserTable
-        onEditRow={onEdit}
-        onDeleteRow={onDelete}
+        onEditRow={onEditRow}
+        onDeleteRow={onDeleteRow}
         data={usersData}
+        paginationConfig={{ totalPage, handlePageChange }}
       />
     </div>
   )

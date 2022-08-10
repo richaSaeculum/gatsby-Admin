@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { ReactElement, useState } from 'react'
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal'
-import Tabledata from './sample_article.json'
 import clsx from 'clsx'
+import Pagination from '../../../../components/pagination/Pagination'
 
 type ArticleData = {
     id: number
@@ -16,16 +16,22 @@ type ArticleData = {
     content: string
 }
 
+type PaginationConfig = {
+    totalPage: number
+    handlePageChange: (page: number) => void
+}
+
 type Props = {
     onEditRow: (row: any) => void
     onDeleteRow: (row: any) => void
+    paginationConfig: PaginationConfig
     data?: any
 }
 
-const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
+const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props) => {
 
-    const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
-    const [deleteRow, setDeleteRow] = useState<any>()
+    const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
+    const [deleteRow, setDeleteRow] = useState<any>();
     const confirmationInfo = {
         action: 'confirmation',
         message: 'Do you want to delete this post?'
@@ -33,22 +39,22 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
 
     const confirmationCallback = (success: boolean) => {
         if (success) {
-            onDeleteRow(deleteRow)
-            setConfirmationOpen(false)
+            onDeleteRow(deleteRow);
+            setConfirmationOpen(false);
         } else {
-            setConfirmationOpen(!confirmationOpen)
+            setConfirmationOpen(!confirmationOpen);
         }
     }
 
     const actionClick = (row: any, confirmation: boolean) => {
         if (confirmation) {
-            toggleModal(row)
+            toggleModal(row);
         }
     }
 
     const toggleModal = (row?: any) => {
-        setConfirmationOpen(!confirmationOpen)
-        setDeleteRow(row)
+        setConfirmationOpen(!confirmationOpen);
+        setDeleteRow(row);
     }
 
     const renderTablerow = () => {
@@ -57,7 +63,8 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
             arr.push(<tr key={index + 1}>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {index + 1}
+                        {/* {index + 1} */}
+                        {row.rowNo}
                     </span>
                 </td>
                 <td>
@@ -91,7 +98,6 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                     <span className='fw-semibold d-block fs-7'>
                         {/* {row.ctr} */}
                         not find in res
-
                     </span>
                 </td>
                 <td className='text-end'>
@@ -102,7 +108,9 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                         View
                     </a> */}
                     <button
-                        className='btn btn-secondary btn-sm px-4 me-2'
+                        className={clsx('btn btn-secondary btn-sm px-4 me-2', {
+                            'disabled': row.status !== 'draft'
+                        })}
                         onClick={() => { onEditRow(row) }}
                     >
                         Edit
@@ -121,14 +129,18 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
         return arr
     }
 
+    const handlePageClick = (a: any) => {
+        paginationConfig.handlePageChange(a.selected + 1);
+    }
+
     return (
         <>
-            <ConfirmationModal
+            {confirmationOpen && <ConfirmationModal
                 open={confirmationOpen}
                 confirmationInfo={confirmationInfo}
                 onClose={() => { setConfirmationOpen(false) }}
                 handleConfirmationMessage={confirmationCallback}
-            />
+            />}
             <div className={`card`}>
                 <div className='card-body py-3'>
                     <div className='table-responsive'>
@@ -156,6 +168,22 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data }: Props) => {
                         {/* end::Table */}
                     </div>
                     {/* end::Table container */}
+                    <div className="card-footer d-flex justify-content-end align-items-center flex-wrap">
+                        <Pagination
+                            handlePageClick={handlePageClick}
+                            totalPage={paginationConfig.totalPage}
+                        />
+                        {/* <div className="d-flex align-items-center py-3">
+                            <select className="form-control form-select form-control-sm font-weight-bold mr-4 border-0 bg-light" style={{ width: '75px' }}>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            <span className="text-muted ms-2">Displaying 10 of 230 records</span>
+                        </div> */}
+                    </div>
                 </div>
                 {/* begin::Body */}
             </div>

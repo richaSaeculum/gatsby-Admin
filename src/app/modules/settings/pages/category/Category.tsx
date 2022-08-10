@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import CategoryTable from './categorytable/CategoryTable'
 import { Modal } from 'react-bootstrap'
 import { useAuth } from '../../../auth'
@@ -11,39 +11,39 @@ import { useNavigate } from 'react-router-dom'
 const Category = () => {
 
   const { wpAuth } = useAuth();
-  const { setLoader } = useLayout()
+  const { setLoader } = useLayout();
   const wpAuthToken = wpAuth?.token;
   const [categories, setCategories] = useState();
-  const [open, setOpen] = useState<boolean>(false)
-  const [isError, setIsError] = useState<boolean>(false)
-  const [title, setTitle] = useState<string | ''>('')
+  const [open, setOpen] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [title, setTitle] = useState<string | ''>('');
   const [category, setCategory] = useState<any>(null);
-  const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
-  const [confirmationInfo, setConfirmationInfo] = useState<any>()
+  const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
+  const [confirmationInfo, setConfirmationInfo] = useState<any>();
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
-    setLoader(true)
-    getCategories()
+    getCategories({ page: currentPage });
   }, [])
 
   const onEdit = async (row: any) => {
-    setLoader(true)
+    setLoader(true);
     const res = await getSingleCategoryApi({ wpAuthToken, id: row.id })
     // console.log(res)
     if (res && res.status === 200) {
-      setTitle(res.data.name)
-      setOpen(true)
-      setCategory(res.data)
-      setLoader(false)
+      setTitle(res.data.name);
+      setOpen(true);
+      setCategory(res.data);
+      setLoader(false);
     }
   }
 
   const confirmationCallback = (success: boolean, info: any) => {
-    setConfirmationOpen(false)
-    setOpen(false);
-    getCategories();
-    setCategory(null)
-    setTitle('');
+    setConfirmationOpen(false);
+    onCloseModal();
+    getCategories({ page: currentPage });
+    setCategory(null);
   }
 
   const toggleModal = (info?: any) => {
@@ -51,12 +51,23 @@ const Category = () => {
     setConfirmationOpen(!confirmationOpen);
   }
 
-  const getCategories = async () => {
-    const res = await getCategoriesListApi({ wpAuthToken });
-    if (res && res.status === 200) {
-      res.data.pop();
-      setCategories(res.data);
-      setLoader(false)
+  const getCategories = async ({ page }: any) => {
+    setLoader(true);
+    const response = await getCategoriesListApi({ wpAuthToken, page });
+    if (response && response.status === 200) {
+      setTotalPage(parseInt(response.headers['x-wp-totalpages']))
+      let a = response?.data.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
+      setCategories(a);
+      setLoader(false);
+    }
+  }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value != null) {
+      setIsError(false);
+      setTitle(e.target.value);
+    } else {
+      setIsError(true);
     }
   }
 
@@ -64,8 +75,8 @@ const Category = () => {
     if (title == '') { setIsError(true); return }
     let payload, response: any;
     if (category && category.id) {
-      payload = { ...category, name: title, slug: title.toLowerCase() }
-      response = await updateCategoryApi({ wpAuthToken, payload })
+      payload = { ...category, name: title, slug: title.toLowerCase() };
+      response = await updateCategoryApi({ wpAuthToken, payload });
       if (response && response.statusText === 'Success') {
         const info = { action: 'alert', message: 'Category successfully updated' }
         toggleModal(info);
@@ -96,16 +107,23 @@ const Category = () => {
   }
 
   const onDelete = async (row: any) => {
-    setLoader(true)
-    const res = await deleteCategoryApi({ wpAuthToken, id: row.id })
+    setLoader(true);
+    const res = await deleteCategoryApi({ wpAuthToken, id: row.id });
     if (res && res.status === 200 && res.data.deleted) {
-      getCategories()
+      getCategories({ page: currentPage });
     }
   }
 
   const onCloseModal = () => {
     setOpen(false);
     setIsError(false);
+    setTitle('');
+  }
+
+  const handlePageChange = async (selectedPage: number) => {
+    // return
+    await getCategories({ page: selectedPage });
+    setCurrentPage(selectedPage);
   }
 
   return (
@@ -157,7 +175,7 @@ const Category = () => {
                     className="form-control"
                     placeholder="Enter your name here"
                     value={title}
-                    onChange={e => { setTitle(e.target.value); }}
+                    onChange={handleChange}
                   />
                   {
                     isError && <div className='fv-plugins-message-container'>
@@ -180,6 +198,7 @@ const Category = () => {
         onEditRow={onEdit}
         onDeleteRow={onDelete}
         data={categories}
+        paginationConfig={{ totalPage, handlePageChange }}
       />
     </>
   )

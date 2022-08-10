@@ -5,7 +5,7 @@ import { getPostListByMonthApi } from '../../../../api'
 import { useLayout } from '../../../../../_metronic/layout/core'
 import PayoffsTable from './payoffstable/PayoffsTable'
 import { useNavigate } from 'react-router-dom'
-import DatePicker from '../../../../components/modal/DatePicker'
+import DatePicker from '../../../../components/datepicker/DatePicker'
 
 const data = [
     {
@@ -66,22 +66,22 @@ const Payoffs = () => {
     const [articleCount, setArticleCount] = useState<any>();
 
     useEffect(() => {
-        calculateAmountPerArticle()
+        calculateAmountPerArticle();
     }, [month, revenue, articleCount])
 
     const getTotalArticleOfMonth = async (after: any, before: any) => {
         const response = await getPostListByMonthApi({ wpAuthToken, after, before });
         if (response && response.status === 200) {
-            setArticleCount(response.data.length)
+            setArticleCount(response.data.length);
         }
     }
 
     const calculateAmountPerArticle = () => {
         if (revenue !== null && articleCount > 0) {
-            const amount: any = (revenue - (revenue * 10) / 100) / articleCount
+            const amount: any = (revenue - (revenue * 10) / 100) / articleCount;
             setAmount(amount);
         } else {
-            setAmount(0)
+            setAmount(0);
         }
     }
 
@@ -89,22 +89,22 @@ const Payoffs = () => {
         const now = new Date(month);
         const after = new Date(now.getFullYear(), now.getMonth(), 2).toISOString();
         const before = new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString();
-        getTotalArticleOfMonth(after, before)
+        getTotalArticleOfMonth(after, before);
         setMonth(month);
     }
 
-    const onEdit = async (row: any) => {
+    const onEditRow = async (row: any) => {
         setLoader(false)
         setOpen(true);
     }
 
-    const onDelete = async (row: any) => {
-        setLoader(false)
+    const onDeleteRow = async (row: any) => {
+        setLoader(false);
     }
 
     const onShowPaymentList = (row: any) => {
         if (row.id) {
-            navigate(`/settings/payoffs/${row.id}`)
+            navigate(`/settings/payoffs/${row.id}`);
         }
     }
 
@@ -118,7 +118,7 @@ const Payoffs = () => {
             'revenue': revenue,
             'amount': amount
         }
-        console.log("payoff payload===>", payload)
+        console.log("payoff payload===>", payload);
     }
 
     return (
@@ -231,8 +231,8 @@ const Payoffs = () => {
             </Modal>
 
             <PayoffsTable
-                onEditRow={onEdit}
-                onDeleteRow={onDelete}
+                onEditRow={onEditRow}
+                onDeleteRow={onDeleteRow}
                 onShowPaymentList={onShowPaymentList}
                 data={data}
             />

@@ -87,11 +87,11 @@ const AddArticle = () => {
 
   useEffect(() => {
     if (!ref.current) {
-      ref.current = true
+      ref.current = true;
       return
     }
     if (!confirmationOpen) {
-      setConfirmationOpen(!confirmationOpen)
+      setConfirmationOpen(!confirmationOpen);
     }
   }, [confirmationInfo])
 
@@ -103,17 +103,17 @@ const AddArticle = () => {
     const { id } = param;
     if (id) {
       editId(id);
-      setId(id)
+      setId(id);
     }
   }, [])
 
   const getCategories = async () => {
-    setLoader(true)
+    setLoader(true);
     let response: any = await getCategoriesListApi({ wpAuthToken });
     if (response && response.status === 200) {
       let arr = response.data;
       arr = arr.map((item: any) => ({ label: item.name, value: item.id }))
-      setCategoryList(arr)
+      setCategoryList(arr);
     }
     setLoader(false);
   }
@@ -121,35 +121,39 @@ const AddArticle = () => {
   const editId = async (id: any) => {
     let response: any = await getSinglePostApi({ wpAuthToken, id });
     if (response && response.status === 200) {
-      const { content, id, title } = response.data
+      const { content, id, title } = response.data;
       let arr: any = [];
       if (response.data._embedded.hasOwnProperty('wp:term')) {
         if (response.data._embedded['wp:term'].length > 0) {
-          response.data._embedded['wp:term'][0].forEach((item: any) => arr.push({ label: item.name, value: item.id }))
+          response.data._embedded['wp:term'][0].forEach((item: any) => {
+            // uncategorized tag is not displayed when user edit articles (id=1 for uncategorized)
+            if (item.id != 1)
+              arr.push({ label: item.name, value: item.id });
+          })
         }
       }
-      setCategory(arr)
-      setTitle(title.rendered)
-      setContent(RichTextEditor.createValueFromString(content.rendered, 'html'))
+      setCategory(arr);
+      setTitle(title.rendered);
+      setContent(RichTextEditor.createValueFromString(content.rendered, 'html'));
     }
   }
 
   const confirmationCallback = (success: boolean, info: any) => {
-    setConfirmationOpen(false)
+    setConfirmationOpen(false);
     if (success && info.action === 'confirmation') {
-      setLoader(true)
-      submitForm()
+      setLoader(true);
+      submitForm();
     } else if (info.action === 'alert' || info.action === 'error') {
-      setConfirmationOpen(!confirmationOpen)
-      setLoader(false)
-      navigate('articles/list')
+      setConfirmationOpen(!confirmationOpen);
+      setLoader(false);
+      navigate('articles/list');
       return
     }
   }
 
   const toggleModal = (info?: any) => {
-    setConfirmationInfo(info)
-    setConfirmationOpen(!confirmationOpen)
+    setConfirmationInfo(info);
+    setConfirmationOpen(!confirmationOpen);
   }
 
   const onChange = (e: any) => {
@@ -182,7 +186,7 @@ const AddArticle = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     let info = { action: 'confirmation', message: 'Are You Sure To Save?' }
-    toggleModal(info)
+    toggleModal(info);
   }
 
   const submitForm = async () => {
