@@ -1,16 +1,16 @@
 /* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {FC, useRef} from 'react'
-import {Link} from 'react-router-dom'
+import { FC, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import clsx from 'clsx'
-import {useLayout} from '../../core'
-import {KTSVG, toAbsoluteUrl} from '../../../helpers'
-import {AsideMenu} from './AsideMenu'
+import { useLayout } from '../../core'
+import { KTSVG, toAbsoluteUrl } from '../../../helpers'
+import { AsideMenu } from './AsideMenu'
 
 const AsideDefault: FC = () => {
-  const {config, classes} = useLayout()
+  const { config, classes } = useLayout()
   const asideRef = useRef<HTMLDivElement | null>(null)
-  const {aside} = config
+  const { aside } = config
 
   const minimize = () => {
     asideRef.current?.classList.add('animating')
@@ -106,4 +106,4 @@ const AsideDefault: FC = () => {
   )
 }
 
-export {AsideDefault}
+export { AsideDefault }

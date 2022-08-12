@@ -101,7 +101,7 @@ export function setupAxios(axios: any) {
       const auth = getAuth()
       if (auth && auth.token) {
         console.log(auth.token)
-        config.headers.Authorization = `Bearer ${auth.token}`
+        config.headers.Authorization = auth.token
       }
 
       return config

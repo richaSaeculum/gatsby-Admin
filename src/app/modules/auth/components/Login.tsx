@@ -15,7 +15,7 @@ const loginSchema = Yup.object().shape({
     .max(50, 'Maximum 50 symbols')
     .required('Email is required'),
   password: Yup.string()
-    .min(3, 'Minimum 3 symbols')
+    .min(8, 'Minimum 8 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Password is required'),
 })
@@ -38,7 +38,7 @@ export function Login() {
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
-    onSubmit: async (values, { setStatus, setSubmitting }) => {
+    onSubmit: async (values, { setStatus, setSubmitting, resetForm }) => {
       setLoading(true)
       try {
         let payload = {
@@ -50,6 +50,7 @@ export function Login() {
           saveAuth(response.data)
           setCurrentUser(response.data)
         } else if (response.status === 400) {
+          resetForm();
           setStatus(response.message);
         }
         // const { data: user } = await getUserByToken(auth.api_token)
@@ -58,6 +59,7 @@ export function Login() {
         saveAuth(undefined)
         setStatus('The login detail is incorrect');
         setSubmitting(false);
+      } finally {
         setLoading(false);
       }
     },
@@ -82,18 +84,11 @@ export function Login() {
       </div>
       {/* begin::Heading */}
 
-      {formik.status ? (
+      {formik.status && (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
-      ) : (
-        <div className='mb-10 bg-light-info p-8 rounded'>
-          <div className='text-info'>
-            Use account <strong>admin@demo.com</strong> and password <strong>demo</strong> to
-            continue.
-          </div>
-        </div>
-      )}
+      ) }
 
       {/* begin::Form group */}
       <div className='fv-row mb-10'>

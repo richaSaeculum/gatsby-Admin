@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import { getUserByToken, register } from '../core/_requests'
 import { Link } from 'react-router-dom'
 import { toAbsoluteUrl } from '../../../../_metronic/helpers'
 import { PasswordMeterComponent } from '../../../../_metronic/assets/ts/components'
 import { useAuth } from '../core/Auth'
+import { register } from '../../../api'
 
 const initialValues = {
   firstname: '',
@@ -16,8 +16,7 @@ const initialValues = {
   password: '',
   changepassword: '',
   username: '',
-  acceptTerms: false,
-  user_role: 'author'
+  user_role: 'Author'
 }
 
 const registrationSchema = Yup.object().shape({
@@ -39,7 +38,7 @@ const registrationSchema = Yup.object().shape({
     .max(50, 'Maximum 50 symbols')
     .required('Last name is required'),
   password: Yup.string()
-    .min(3, 'Minimum 3 symbols')
+    .min(8, 'Minimum 8 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Password is required'),
   changepassword: Yup.string()
@@ -52,9 +51,9 @@ const registrationSchema = Yup.object().shape({
 })
 
 export function Registration() {
-  const [loading, setLoading] = useState(false)
-  const { saveAuth, setCurrentUser } = useAuth()
-  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { saveAuth, setCurrentUser } = useAuth();
+  const [successCode, setSuccessCode] = useState();
   const formik = useFormik({
     initialValues,
     validationSchema: registrationSchema,
@@ -62,39 +61,29 @@ export function Registration() {
       console.log("register payload", values)
       setLoading(true)
       try {
-        const { data } = await register(
-          values.email,
-          values.firstname,
-          values.lastname,
-          values.password,
-          values.username,
-          values.user_role
-        )
-        if (data.status === 200 && data.messsage === 'ok') {
-          console.log("registered");
-          setLoading(false);
-          setStatus('User is successfully registered');
-          resetForm();
+        let payload = {
+          user_email: values.email,
+          user_first_name: values.firstname,
+          user_last_name: values.lastname,
+          user_password: values.password,
+          user_name: values.username,
+          user_role: ['author']
         }
-        if (data.status === 200 && data.messsage === 'ok') {
-          console.log("registered");
-          setLoading(false);
-          setStatus('User is successfully registered');
-          resetForm();
-        }
-        console.log(data)
+        const response = await register(payload)
+        setSuccessCode(response.status)
 
-        // if (data.status === 400) {
-        //   setStatus(data.message);
-        //   setSubmitting(false)
-        //   setLoading(false)
-        // }
+        if (response.status === 200) {
+          resetForm();
+          setStatus('User is successfully registered');
+        } else if (response.status === 400) {
+          setStatus(response.message);
+        }
 
       } catch (error) {
         console.log(error);
-        setStatus('');
-        setSubmitting(false)
-        setLoading(false)
+        setSubmitting(false);
+      } finally {
+        setLoading(false);
       }
     },
   })
@@ -145,7 +134,10 @@ export function Registration() {
       </div> */}
 
       {formik.status && (
-        <div className='mb-lg-15 alert alert-danger'>
+        <div className={clsx('mb-lg-15 alert', {
+          'alert-danger': successCode === 400,
+          'alert-success': successCode === 200
+        })}>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       )}

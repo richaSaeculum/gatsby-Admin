@@ -119,7 +119,7 @@ const AddArticle = () => {
   }
 
   const editId = async (id: any) => {
-    let response: any = await getSinglePostApi({ wpAuthToken, id });
+    let response: any = await getSinglePostApi({ id });
     if (response && response.status === 200) {
       const { content, id, title } = response.data;
       let arr: any = [];
@@ -202,7 +202,7 @@ const AddArticle = () => {
 
     let payload = generatePayload();
     if (id) {
-      let response: any = await updatePostApi({ wpAuthToken, payload });
+      let response: any = await updatePostApi({ id, payload });
       if (response && response.statusText && response.statusText === 'Success') {
         const info = { action: 'alert', message: 'Article successfully updated' }
         toggleModal(info);
@@ -212,7 +212,7 @@ const AddArticle = () => {
         toggleModal(info);
       }
     } else {
-      let response: any = await addPostApi({ wpAuthToken, payload });
+      let response = await addPostApi({ payload });
       if (response && response.statusText && response.statusText === 'Success') {
         const info = { action: 'alert', message: 'Article successfully added' }
         toggleModal(info);
@@ -226,27 +226,32 @@ const AddArticle = () => {
 
   const generatePayload = () => {
 
+    // let payload = {
+    //   // date: new Date().toUTCString(),
+    //   // date_gmt: new Date().toUTCString(),
+    //   id: id ? id : undefined,
+    //   status: 'draft', // draft or pending review
+    //   password: '', // not needed
+    //   title: title,
+    //   content: content.toString('html'),
+    //   author: 1,
+    //   excerpt: "", //not needed
+    //   featured_media: 1,
+    //   comment_status: 'closed',
+    //   ping_status: 'closed',
+    //   format: 'quote',
+    //   meta: [],
+    //   sticky: false,
+    //   template: '',
+    //   categories: category.map((item: any) => item.value),
+    //   tags: [],
+    // }
     let payload = {
-      // date: new Date().toUTCString(),
-      // date_gmt: new Date().toUTCString(),
-      id: id ? id : undefined,
-      status: 'draft', // draft or pending review
-      password: '', // not needed
       title: title,
       content: content.toString('html'),
-      author: 1,
-      excerpt: "", //not needed
-      featured_media: 1,
-      comment_status: 'closed',
-      ping_status: 'closed',
-      format: 'quote',
-      meta: [],
-      sticky: false,
-      template: '',
       categories: category.map((item: any) => item.value),
-      tags: [],
     }
-    console.log(category)
+    console.log(payload);
 
     return payload
   }

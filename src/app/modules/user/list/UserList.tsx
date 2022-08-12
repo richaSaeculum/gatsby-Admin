@@ -19,11 +19,11 @@ const UserList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllUsers({ page: currentPage });
+    // getAllUsers({ page: currentPage });
   }, [wpAuthToken])
 
   const getAllUsers = async ({ page }: any) => {
-    setLoader(true)
+    setLoader(true);
     let response = await getUsersListApi({ wpAuthToken, page });
     if (response && response.status === 200) {
       setTotalPage(parseInt(response.headers['x-wp-totalpages']))

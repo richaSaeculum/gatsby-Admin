@@ -68,7 +68,7 @@ const AddUser = () => {
       ref.current = true
       return
     }
-    if (!confirmationOpen){
+    if (!confirmationOpen) {
       setConfirmationOpen(!confirmationOpen)
     }
   }, [confirmationInfo])
@@ -102,7 +102,7 @@ const AddUser = () => {
       setConfirmationOpen(!confirmationOpen)
       navigate('/users/list')
       info.formActions.resetForm();
-    } else if (info.action === 'error'){
+    } else if (info.action === 'error') {
       setConfirmationOpen(false)
     }
   }
@@ -193,24 +193,35 @@ const AddUser = () => {
   // })
 
   const generatePayload = (values: any) => {
-    let data = {
-      'id': values.id ? values.id : '',
-      "username": values.username,
-      "first_name": values.firstName,
-      "last_name": values.lastName,
-      "email": values.email,
-      "url": values.website,
-      "description": '',
-      "locale": 'en_US',
-      "nickname": '',
-      "roles": values.role,
-      "meta": [],
-      "password": values.password
+
+    let payload = {
+      user_email: values.email,
+      user_first_name: values.firstname,
+      user_last_name: values.lastname,
+      user_password: values.password,
+      user_name: values.username,
+      user_role: 'Author',
+      user_website: values.website
     }
-    if (values.id !== undefined) {
-      delete data.password
-    }
-    return data
+
+    // let payload = {
+    //   'id': values.id ? values.id : '',
+    //   "username": values.username,
+    //   "first_name": values.firstName,
+    //   "last_name": values.lastName,
+    //   "email": values.email,
+    //   "url": values.website,
+    //   "description": '',
+    //   "locale": 'en_US',
+    //   "nickname": '',
+    //   "roles": values.role,
+    //   "meta": [],
+    //   "password": values.password
+    // }
+    // if (values.id !== undefined) {
+    //   delete payload.password
+    // }
+    return payload
   }
 
   return (
@@ -218,7 +229,7 @@ const AddUser = () => {
       {confirmationOpen && <ConfirmationModal
         open={confirmationOpen}
         confirmationInfo={confirmationInfo}
-        onClose={() => {setConfirmationOpen(false)}}
+        onClose={() => { setConfirmationOpen(false) }}
         handleConfirmationMessage={confirmationCallback}
       />}
       <Formik

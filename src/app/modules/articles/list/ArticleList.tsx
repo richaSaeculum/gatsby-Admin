@@ -7,6 +7,7 @@ import ArticleTable from './articletable/ArticleTable'
 
 const ArticleList = () => {
 
+  const { auth } = useAuth();
   const { wpAuth } = useAuth();
   const wpAuthToken = wpAuth?.token
   const { setLoader } = useLayout()
@@ -22,9 +23,10 @@ const ArticleList = () => {
 
   const getAllPost = async ({ page }: any) => {
     setLoader(true)
-    let response = await getPostListApi({ wpAuthToken, page });
+    let response = await getPostListApi({ token: auth?.token, page });
+    console.log(response)
     if (response && response.status === 200) {
-      setTotalPage(parseInt(response.headers['x-wp-totalpages']))
+      // setTotalPage(parseInt(response.headers['x-wp-totalpages']))
       let a = response?.data.map((item: any, index: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item), rowNo: (page - 1) * 10 + index + 1 }) })
       setArticleData(a)
       setLoader(false)
@@ -43,7 +45,7 @@ const ArticleList = () => {
 
   const onDeleteRow = async (row: any) => {
     setLoader(true)
-    let response = await deletePostApi({ wpAuthToken, id: row.id });
+    let response = await deletePostApi({ id: row.id });
     if (response && response.status === 200 && response.data.deleted) {
       getAllPost({ page: currentPage });
     }

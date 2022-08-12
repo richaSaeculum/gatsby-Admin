@@ -1,12 +1,14 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React from 'react'
-import {useIntl} from 'react-intl'
-import {KTSVG} from '../../../helpers'
-import {AsideMenuItemWithSub} from './AsideMenuItemWithSub'
-import {AsideMenuItem} from './AsideMenuItem'
+import { useIntl } from 'react-intl'
+import { KTSVG } from '../../../helpers'
+import { AsideMenuItemWithSub } from './AsideMenuItemWithSub'
+import { AsideMenuItem } from './AsideMenuItem'
+import { useAuth } from '../../../../app/modules/auth'
 
 export function AsideMenuMain() {
   const intl = useIntl()
+  const { auth } = useAuth()
 
   return (
     <>
@@ -23,12 +25,12 @@ export function AsideMenuMain() {
         fontIcon='bi-layers'
       /> */}
 
-      <AsideMenuItem
+      {auth?.user?.user_role === 'Administrator' && <AsideMenuItem
         to='/users'
         icon='/media/icons/duotune/art/art002.svg'
         title={'User'}
         fontIcon='bi-app-indicator'
-      />
+      />}
 
       <AsideMenuItem
         to='/admin-dashboard'
@@ -51,12 +53,15 @@ export function AsideMenuMain() {
       >
         <AsideMenuItem to='/settings/payment' title='Payment' hasBullet={true} />
         <AsideMenuItem to='/settings/wallet' title='Wallet' hasBullet={true} />
-        <AsideMenuItem to='/settings/category' title='Category' hasBullet={true} />
-        <AsideMenuItem to='/settings/config' title='Configuration' hasBullet={true} />
-        <AsideMenuItem to='/settings/payoffs' title='Monthly Payoffs' hasBullet={true} />
-        <AsideMenuItem to='/settings/transactions' title='User Payoff Trasactions' hasBullet={true} />
+        {auth?.user?.user_role === 'Administrator' && (
+          <>
+            <AsideMenuItem to='/settings/category' title='Category' hasBullet={true} />
+            <AsideMenuItem to='/settings/config' title='Configuration' hasBullet={true} />
+            <AsideMenuItem to='/settings/payoffs' title='Monthly Payoffs' hasBullet={true} />
+            <AsideMenuItem to='/settings/transactions' title='User Payoff Trasactions' hasBullet={true} />
+          </>
+        )}
       </AsideMenuItemWithSub>
-
 
       {/* <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
