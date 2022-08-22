@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
-import { deletePostApi, getPostListApi } from '../../../api'
+import { deletePostApi, getDashboardApi, getPostListApi } from '../../../api'
 import { useAuth } from '../../auth'
 import ArticleTable from './articletable/ArticleTable'
 
@@ -45,8 +45,8 @@ const ArticleList = () => {
 
   const onDeleteRow = async (row: any) => {
     setLoader(true)
-    let response = await deletePostApi({ id: row.id });
-    if (response && response.status === 200 && response.data.deleted) {
+    let response = await deletePostApi({ token: auth?.token, id: row.id });
+    if (response && response.status === 200) {
       getAllPost({ page: currentPage });
     }
   }

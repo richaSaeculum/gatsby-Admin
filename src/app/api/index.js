@@ -6,23 +6,23 @@ import client from "../Utils/client";
 /* ============================== */
 
 // get categorylist all (GET)
-export const getCategoriesListApi = async ({ wpAuthToken, page = 1 }) => {
-  try {
-    const response = await axios.get(
-      `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories?page=${page}&per_page=10`, {
-      headers: {
-        common: {
-          Authorization: `Bearer ${wpAuthToken}`
-        }
-      }
-    }
-    );
-    return response
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-}
+// export const getCategoriesListApi = async ({ wpAuthToken, page = 1 }) => {
+//   try {
+//     const response = await axios.get(
+//       `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories?page=${page}&per_page=10`, {
+//       headers: {
+//         common: {
+//           Authorization: `Bearer ${wpAuthToken}`
+//         }
+//       }
+//     }
+//     );
+//     return response
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// }
 
 // get category list single (GET)
 export const getSingleCategoryApi = async ({ wpAuthToken, id }) => {
@@ -114,133 +114,6 @@ export const deleteCategoryApi = async ({ id, wpAuthToken }) => {
   }
 }
 
-/* ============================== */
-/* *********** POSTS ************ */
-/* ============================== */
-
-// get post list all (GET)
-// export const getPostListApi = async ({ wpAuthToken, status = 'any', page = 1 }) => {
-//     try {
-//         const response = await axios.get(
-//             `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts?page=${page}&per_page=10&status=${status}&_embed`, {
-//             headers: {
-//                 common: {
-//                     Authorization: `Bearer ${wpAuthToken}`
-//                 }
-//             }
-//         }
-//         );
-//         return response
-//     } catch (error) {
-//         console.log(error);
-//         throw error;
-//     }
-// }
-
-// get post list by MONTH (GET)
-// export const getPostListByMonthApi = async ({ wpAuthToken, after = '', before = '' }) => {
-//     try {
-//         const response = await axios.get(
-//             `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts?per_page=100&status=publish&before=${before}&after=${after}&_embed`, {
-//             headers: {
-//                 common: {
-//                     Authorization: `Bearer ${wpAuthToken}`
-//                 }
-//             }
-//         }
-//         );
-//         return response
-//     } catch (error) {
-//         console.log(error);
-//         throw error;
-//     }
-// }
-
-// get single post (GET) 
-// export const getSinglePostApi = async ({ wpAuthToken, id }) => {
-//     try {
-//         const response = await axios.get(
-//             `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts/${id}?context=edit&_embed`, {
-//             headers: {
-//                 common: {
-//                     Authorization: `Bearer ${wpAuthToken}`
-//                 }
-//             }
-//         }
-//         );
-//         return response
-//     } catch (error) {
-//         console.log(error);
-//         throw error;
-//     }
-// }
-
-// add post (POST) 
-// export const addPostApi = async ({ wpAuthToken, payload }) => {
-//     try {
-//         const response = await axios.post(
-//             `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts`, payload, {
-//             headers: {
-//                 common: {
-//                     Authorization: `Bearer ${wpAuthToken}`
-//                 }
-//             }
-//         }
-//         );
-//         if (response && (response.status === 200 || response.status === 201)) {
-//             response.statusText = 'Success'
-//         }
-//         return response;
-//     } catch (error) {
-//         console.log(error);
-//         let err = {
-//             statusText: "Error",
-//             message: error.response.data.message
-//         }
-//         return err
-//     }
-// }
-
-// update post (POST)
-// export const updatePostApi = async ({ wpAuthToken, payload }) => {
-//     try {
-//         const response = await axios.post(
-//             `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts/${payload.id}`, payload, {
-//             headers: {
-//                 common: {
-//                     Authorization: `Bearer ${wpAuthToken}`
-//                 }
-//             }
-//         }
-//         );
-//         if (response && (response.status === 200 || response.status === 201)) {
-//             response.statusText = 'Success'
-//         }
-//         return response;
-//     } catch (error) {
-//         console.log(error);
-//         throw error;
-//     }
-// }
-
-//delete post by id (DELETE)
-// export const deletePostApi = async ({ id, wpAuthToken }) => {
-//     try {
-//         const response = await axios.delete(
-//             `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts/${id}?force=1`, {
-//             headers: {
-//                 common: {
-//                     Authorization: `Bearer ${wpAuthToken}`
-//                 }
-//             }
-//         }
-//         );
-//         return response;
-//     } catch (error) {
-//         console.log(error);
-//         throw error;
-//     }
-// }
 
 /* ============================== */
 /* *********** USERS ************ */
@@ -368,6 +241,7 @@ export const login = async (payload) => {
     return data;
   } catch (error) {
     // get axios errors from error.response
+    console.log(error);
     return error.response.data
   }
 }
@@ -379,7 +253,21 @@ export const register = async (payload) => {
     return data;
   } catch (error) {
     // get axios errors from error.response
-    console.log(error)
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// logout user
+export const logoutApi = async ({ token }) => {
+  try {
+    const { data } = await client().post('/logout', {}, {
+      headers: token
+    });
+    return data;
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
     return error.response.data
   }
 }
@@ -391,14 +279,14 @@ export const register = async (payload) => {
 // get post list all (GET)
 export const getPostListApi = async ({ token, page = 1, limit = 10 }) => {
   try {
-    const response = await client().get(`http://13.232.236.62:9000/api/article/list/${page}/${limit}`, {
+    const { data } = await client().get(`/articles/list?page=${page}&limit=${limit}`, {
       headers: {
         Authorization: token
       }
     });
-    console.log(response)
-    return response.data
+    return data
   } catch (error) {
+    // get axios errors from error.response
     console.log(error);
     return error.response.data
   }
@@ -418,53 +306,133 @@ export const getPostListByMonthApi = async ({ wpAuthToken, after = '', before = 
     );
     return response
   } catch (error) {
+    // get axios errors from error.response
     console.log(error);
     throw error;
   }
 }
 
 // get single post (GET) 
-export const getSinglePostApi = async ({ id }) => {
+export const getSinglePostApi = async ({ token, id }) => {
   try {
-    const { data } = await client.get(`http://13.232.236.62:9000/api/article/${id}`);
+    const { data } = await client().get(`/article/${id}`, {
+      headers: {
+        Authorization: token
+      }
+    });
     return data
   } catch (error) {
+    // get axios errors from error.response
     console.log(error);
     return error.response.data
   }
 }
 
 //delete post by id (GET)
-export const deletePostApi = async ({ id }) => {
+export const deletePostApi = async ({ token, id }) => {
   try {
-    const { data } = await client().get(`http://13.232.236.62:9000/api/article/{id}/delete`);
+    const { data } = await client().delete(`/article/${id}`, {
+      headers: {
+        Authorization: token
+      }
+    });
     return data;
   } catch (error) {
+    // get axios errors from error.response
     console.log(error);
     return error.response.data;
   }
 }
 
 //  add post(POST)
-export const addPostApi = async ({ payload }) => {
+export const addPostApi = async ({ token, payload }) => {
   try {
-    const { data } = await client().post(`http://13.232.236.62:9000/api/article/create`, payload);
+    const { data } = await client().post(`/article/create`, payload, {
+      headers: {
+        Authorization: token
+      }
+    });
     return data;
   } catch (error) {
+    // get axios errors from error.response
     console.log(error);
     return error.response.data
   }
 }
 
 //  update post(POST)
-export const updatePostApi = async ({ id, payload }) => {
+export const updatePostApi = async ({ token, id, payload }) => {
   try {
-    const { data } = await axios.post(
-      `http://13.232.236.62:9000/api/article/create/${id}`, payload);
+    const { data } = await client().post(`/article/create/${id}`, payload, {
+      headers: {
+        Authorization: token
+      }
+    });
     return data;
   } catch (error) {
+    // get axios errors from error.response
     console.log(error);
     return error.response.data
   }
 }
 
+/* ============================= */
+/* ********* GENERAL *********** */
+/* ============================= */
+
+// file upload
+export const fileUploadApi = async ({ token, payload }) => {
+  try {
+    const { data } = await client({ multipart: true }).post(`/upload`, payload, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data;
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+/* ============================== */
+/* ********* CATEGORY *********** */
+/* ============================== */
+
+// get categorylist all (GET)
+export const getCategoriesListApi = async ({ token }) => {
+  try {
+    const { data } = await client().get(`categories/list`, {
+      headers: {
+        Authorization: token
+      }
+    }
+    );
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+/* ================================== */
+/* *********** Dashboard ************ */
+/* ================================== */
+
+// get post list all (GET)
+export const getDashboardApi = async ({ token }) => {
+  try {
+    const { data } = await client().get(`/dashboard`, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}

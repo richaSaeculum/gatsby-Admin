@@ -100,7 +100,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
                         not find in res
                     </span>
                 </td>
-                <td className='text-end'>
+                <td className='text-end d-flex'>
                     {/* <a
                         href='#'
                         className='btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4 me-2'

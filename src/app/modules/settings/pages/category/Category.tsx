@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Category = () => {
 
-  const { wpAuth } = useAuth();
+  const { wpAuth, auth } = useAuth();
   const { setLoader } = useLayout();
   const wpAuthToken = wpAuth?.token;
   const [categories, setCategories] = useState();
@@ -24,7 +24,7 @@ const Category = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
-    getCategories({ page: currentPage });
+    // getCategories({ page: currentPage });
   }, [])
 
   const onEdit = async (row: any) => {
@@ -42,7 +42,7 @@ const Category = () => {
   const confirmationCallback = (success: boolean, info: any) => {
     setConfirmationOpen(false);
     onCloseModal();
-    getCategories({ page: currentPage });
+    // getCategories({ page: currentPage });
     setCategory(null);
   }
 
@@ -53,7 +53,7 @@ const Category = () => {
 
   const getCategories = async ({ page }: any) => {
     setLoader(true);
-    const response = await getCategoriesListApi({ wpAuthToken, page });
+    const response = await getCategoriesListApi({ token: auth?.token });
     if (response && response.status === 200) {
       setTotalPage(parseInt(response.headers['x-wp-totalpages']))
       let a = response?.data.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
@@ -110,7 +110,7 @@ const Category = () => {
     setLoader(true);
     const res = await deleteCategoryApi({ wpAuthToken, id: row.id });
     if (res && res.status === 200 && res.data.deleted) {
-      getCategories({ page: currentPage });
+      // getCategories({ page: currentPage });
     }
   }
 
@@ -122,7 +122,7 @@ const Category = () => {
 
   const handlePageChange = async (selectedPage: number) => {
     // return
-    await getCategories({ page: selectedPage });
+    // await getCategories({ page: selectedPage });
     setCurrentPage(selectedPage);
   }
 

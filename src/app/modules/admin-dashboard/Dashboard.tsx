@@ -1,5 +1,7 @@
 import React, { FC, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { getDashboardApi } from '../../api'
+import { useAuth } from '../auth'
 import ArticleTable from './components/articletable/ArticleTable'
 import ListCard from './components/listcard/ListCard'
 import StatusCard from './components/statuscard/StatusCard'
@@ -71,6 +73,17 @@ const listData2: Array<listDataType> = [
 ]
 
 const Dashboard: FC = () => {
+
+  const { auth } = useAuth();
+
+  const getData = () => {
+    const res = getDashboardApi({ token: auth?.token });
+    console.log(res)
+  }
+
+  useEffect(() => {
+    getData();
+  }, [])
 
   return (
     <>

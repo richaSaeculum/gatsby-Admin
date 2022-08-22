@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
+import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import '../style.scss'
 import RichTextEditor, { EditorValue, ToolbarConfig } from 'react-rte';
@@ -68,7 +68,7 @@ const AddArticle = () => {
 
   const param = useParams()
   const { setLoader } = useLayout();
-  const { wpAuth } = useAuth()
+  const { wpAuth, auth } = useAuth()
   const wpAuthToken = wpAuth?.token;
   const navigate = useNavigate();
 
@@ -109,7 +109,7 @@ const AddArticle = () => {
 
   const getCategories = async () => {
     setLoader(true);
-    let response: any = await getCategoriesListApi({ wpAuthToken });
+    let response: any = await getCategoriesListApi({ token: auth?.token });
     if (response && response.status === 200) {
       let arr = response.data;
       arr = arr.map((item: any) => ({ label: item.name, value: item.id }))
@@ -119,19 +119,21 @@ const AddArticle = () => {
   }
 
   const editId = async (id: any) => {
-    let response: any = await getSinglePostApi({ id });
+    console.log("edit")
+    let response: any = await getSinglePostApi({ token: auth?.token, id });
     if (response && response.status === 200) {
       const { content, id, title } = response.data;
       let arr: any = [];
-      if (response.data._embedded.hasOwnProperty('wp:term')) {
-        if (response.data._embedded['wp:term'].length > 0) {
-          response.data._embedded['wp:term'][0].forEach((item: any) => {
-            // uncategorized tag is not displayed when user edit articles (id=1 for uncategorized)
-            if (item.id != 1)
-              arr.push({ label: item.name, value: item.id });
-          })
-        }
-      }
+      //set category array from embed data in wp
+      // if (response.data._embedded.hasOwnProperty('wp:term')) {
+      //   if (response.data._embedded['wp:term'].length > 0) {
+      //     response.data._embedded['wp:term'][0].forEach((item: any) => {
+      //       // uncategorized tag is not displayed when user edit articles (id=1 for uncategorized)
+      //       if (item.id != 1)
+      //         arr.push({ label: item.name, value: item.id });
+      //     })
+      //   }
+      // }
       setCategory(arr);
       setTitle(title.rendered);
       setContent(RichTextEditor.createValueFromString(content.rendered, 'html'));
@@ -202,8 +204,8 @@ const AddArticle = () => {
 
     let payload = generatePayload();
     if (id) {
-      let response: any = await updatePostApi({ id, payload });
-      if (response && response.statusText && response.statusText === 'Success') {
+      let response: any = await updatePostApi({ token: auth?.token, id, payload });
+      if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Article successfully updated' }
         toggleModal(info);
         return
@@ -212,8 +214,8 @@ const AddArticle = () => {
         toggleModal(info);
       }
     } else {
-      let response = await addPostApi({ payload });
-      if (response && response.statusText && response.statusText === 'Success') {
+      let response = await addPostApi({ token: auth?.token, payload });
+      if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Article successfully added' }
         toggleModal(info);
         return
@@ -246,10 +248,13 @@ const AddArticle = () => {
     //   categories: category.map((item: any) => item.value),
     //   tags: [],
     // }
+
     let payload = {
       title: title,
+      excerpt: "Test post excerpt",
       content: content.toString('html'),
       categories: category.map((item: any) => item.value),
+      status: 'draft'
     }
     console.log(payload);
 
