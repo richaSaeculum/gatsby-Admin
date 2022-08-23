@@ -24,13 +24,12 @@ const Category = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
-    // getCategories({ page: currentPage });
+    getCategories();
   }, [])
 
   const onEdit = async (row: any) => {
     setLoader(true);
-    const res = await getSingleCategoryApi({ wpAuthToken, id: row.id })
-    // console.log(res)
+    const res = await getSingleCategoryApi({ token: auth?.token, id: row.id })
     if (res && res.status === 200) {
       setTitle(res.data.name);
       setOpen(true);
@@ -42,7 +41,7 @@ const Category = () => {
   const confirmationCallback = (success: boolean, info: any) => {
     setConfirmationOpen(false);
     onCloseModal();
-    // getCategories({ page: currentPage });
+    getCategories();
     setCategory(null);
   }
 
@@ -51,13 +50,13 @@ const Category = () => {
     setConfirmationOpen(!confirmationOpen);
   }
 
-  const getCategories = async ({ page }: any) => {
+  const getCategories = async () => {
     setLoader(true);
     const response = await getCategoriesListApi({ token: auth?.token });
     if (response && response.status === 200) {
-      setTotalPage(parseInt(response.headers['x-wp-totalpages']))
-      let a = response?.data.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
-      setCategories(a);
+      // setTotalPage(parseInt(response.headers['x-wp-totalpages']))
+      // let a = response?.data.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
+      setCategories(response.data);
       setLoader(false);
     }
   }
@@ -72,12 +71,12 @@ const Category = () => {
   }
 
   const handleSubmit = async () => {
+    setLoader(true);
     if (title == '') { setIsError(true); return }
-    let payload, response: any;
+    let payload = { name: title }, response: any;
     if (category && category.id) {
-      payload = { ...category, name: title, slug: title.toLowerCase() };
-      response = await updateCategoryApi({ wpAuthToken, payload });
-      if (response && response.statusText === 'Success') {
+      response = await updateCategoryApi({ token: auth?.token, payload, id: category.id });
+      if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Category successfully updated' }
         toggleModal(info);
         return
@@ -86,15 +85,8 @@ const Category = () => {
         toggleModal(info);
       }
     } else {
-      payload = {
-        discription: '',
-        name: title,
-        slug: title.toLocaleLowerCase(),
-        meta: [],
-        parent: 0,
-      }
-      response = await addCategoryApi({ wpAuthToken, payload });
-      if (response && response.statusText && response.statusText === 'Success') {
+      response = await addCategoryApi({ token: auth?.token, payload });
+      if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Category successfully added ' }
         toggleModal(info);
         return
@@ -104,13 +96,15 @@ const Category = () => {
       }
     }
     setIsError(false);
+    setLoader(false);
   }
 
   const onDelete = async (row: any) => {
     setLoader(true);
-    const res = await deleteCategoryApi({ wpAuthToken, id: row.id });
+    const res = await deleteCategoryApi({ token: auth?.token, id: row.id });
+    console.log(res)
     if (res && res.status === 200 && res.data.deleted) {
-      // getCategories({ page: currentPage });
+      getCategories();
     }
   }
 
@@ -120,11 +114,11 @@ const Category = () => {
     setTitle('');
   }
 
-  const handlePageChange = async (selectedPage: number) => {
-    // return
-    // await getCategories({ page: selectedPage });
-    setCurrentPage(selectedPage);
-  }
+  // const handlePageChange = async (selectedPage: number) => {
+  //   // return
+  //   // await getCategories({ page: selectedPage });
+  //   setCurrentPage(selectedPage);
+  // }
 
   return (
     <>
@@ -198,7 +192,6 @@ const Category = () => {
         onEditRow={onEdit}
         onDeleteRow={onDelete}
         data={categories}
-        paginationConfig={{ totalPage, handlePageChange }}
       />
     </>
   )

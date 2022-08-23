@@ -14,6 +14,7 @@ import * as authHelper from './AuthHelpers'
 import { getUserByToken } from './_requests'
 import { WithChildren } from '../../../../_metronic/helpers'
 import axios from 'axios'
+import { logoutApi } from '../../../api'
 
 type AuthContextProps = {
   auth: AuthModel | undefined
@@ -55,10 +56,13 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
     }
   }
 
-  const logout = () => {
-    saveAuth(undefined);
-    setCurrentUser(undefined);
-    // saveWpAuth(undefined)
+  const logout = async () => {
+    const res = await logoutApi({ token: auth?.token });
+    if (res && res.status === 200) {
+      saveAuth(undefined);
+      setCurrentUser(undefined);
+      // saveWpAuth(undefined)
+    }
   }
 
   return (
@@ -75,7 +79,7 @@ const AuthInit: FC<WithChildren> = ({ children }) => {
 
   // We should request user by authToken (IN OUR EXAMPLE IT'S API_TOKEN) before rendering the application
   useEffect(() => {
-    const requestUser = async (auth:any) => {
+    const requestUser = async (auth: any) => {
       try {
         if (!didRequest.current) {
           if (auth) {
@@ -84,20 +88,17 @@ const AuthInit: FC<WithChildren> = ({ children }) => {
         }
       } catch (error) {
         console.error(error)
-        if (!didRequest.current) {
-          logout()
-        }
       } finally {
         setShowSplashScreen(false)
       }
-      
+
       return () => (didRequest.current = true)
     }
 
     if (auth) {
       requestUser(auth)
     } else {
-      logout()
+      // logout()
       setShowSplashScreen(false)
     }
     // eslint-disable-next-line

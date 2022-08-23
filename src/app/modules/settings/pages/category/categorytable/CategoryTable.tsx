@@ -12,10 +12,10 @@ type Props = {
     onEditRow: (row: any) => void
     onDeleteRow: (row: any) => void
     data: Array<any> | undefined
-    paginationConfig: PaginationConfig
+    paginationConfig?: PaginationConfig
 }
 
-const CategoryTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props) => {
+const CategoryTable = ({ onEditRow, onDeleteRow, data }: Props) => {
 
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
     const [deleteRow, setDeleteRow] = useState<any>()
@@ -50,8 +50,8 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props
             arr.push(<tr key={index + 1}>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {/* {index + 1} */}
-                        {row.rowNo}
+                        {index + 1}
+                        {/* {row.rowNo} */}
                     </span>
                 </td>
                 <td>
@@ -86,9 +86,9 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props
         return arr
     }
 
-    const handlePageClick = (a: any) => {
-        paginationConfig.handlePageChange(a.selected + 1);
-    }
+    // const handlePageClick = (a: any) => {
+    //     paginationConfig.handlePageChange(a.selected + 1);
+    // }
 
     return (
         <>
@@ -121,12 +121,12 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props
                         {/* end::Table */}
                     </div>
                     {/* end::Table container */}
-                    <div className="card-footer d-flex justify-content-end align-items-center flex-wrap">
+                    {/* <div className="card-footer d-flex justify-content-end align-items-center flex-wrap">
                         <Pagination
                             handlePageClick={handlePageClick}
                             totalPage={paginationConfig.totalPage}
                         />
-                        {/* <div className="d-flex align-items-center py-3">
+                        <div className="d-flex align-items-center py-3">
                             <select className="form-control form-select form-control-sm font-weight-bold mr-4 border-0 bg-light" style={{ width: '75px' }}>
                                 <option value="10">10</option>
                                 <option value="20">20</option>
@@ -135,8 +135,8 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props
                                 <option value="100">100</option>
                             </select>
                             <span className="text-muted ms-2">Displaying 10 of 230 records</span>
-                        </div> */}
-                    </div>
+                        </div>
+                    </div> */}
                 </div>
                 {/* begin::Body */}
             </div>

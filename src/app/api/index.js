@@ -25,94 +25,94 @@ import client from "../Utils/client";
 // }
 
 // get category list single (GET)
-export const getSingleCategoryApi = async ({ wpAuthToken, id }) => {
-  try {
-    const response = await axios.get(
-      `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories/${id}?context=edit`, {
-      headers: {
-        common: {
-          Authorization: `Bearer ${wpAuthToken}`
-        }
-      }
-    }
-    );
-    return response
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-}
+// export const getSingleCategoryApi = async ({ wpAuthToken, id }) => {
+//   try {
+//     const response = await axios.get(
+//       `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories/${id}?context=edit`, {
+//       headers: {
+//         common: {
+//           Authorization: `Bearer ${wpAuthToken}`
+//         }
+//       }
+//     }
+//     );
+//     return response
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// }
 
 // add category (POST)
-export const addCategoryApi = async ({ wpAuthToken, payload }) => {
-  try {
-    const response = await axios.post(
-      `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories`, payload, {
-      headers: {
-        common: {
-          Authorization: `Bearer ${wpAuthToken}`
-        }
-      }
-    }
-    );
-    if (response && (response.status === 200 || response.status === 201)) {
-      response.statusText = 'Success'
-    }
-    return response;
-  } catch (error) {
-    console.log(error);
-    let err = {
-      statusText: "Error",
-      message: error.response.data.message
-    }
-    return err
-  }
-}
+// export const addCategoryApi = async ({ wpAuthToken, payload }) => {
+//   try {
+//     const response = await axios.post(
+//       `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories`, payload, {
+//       headers: {
+//         common: {
+//           Authorization: `Bearer ${wpAuthToken}`
+//         }
+//       }
+//     }
+//     );
+//     if (response && (response.status === 200 || response.status === 201)) {
+//       response.statusText = 'Success'
+//     }
+//     return response;
+//   } catch (error) {
+//     console.log(error);
+//     let err = {
+//       statusText: "Error",
+//       message: error.response.data.message
+//     }
+//     return err
+//   }
+// }
 
 // update category (POST)
-export const updateCategoryApi = async ({ wpAuthToken, payload }) => {
-  try {
-    const response = await axios.post(
-      `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories/${payload.id}`, payload, {
-      headers: {
-        common: {
-          Authorization: `Bearer ${wpAuthToken}`
-        }
-      }
-    }
-    );
-    if (response && (response.status === 200 || response.status === 201)) {
-      response.statusText = 'Success'
-    }
-    return response;
-  } catch (error) {
-    console.log(error);
-    let err = {
-      statusText: "Error",
-      message: error.response.data.message
-    }
-    return err
-  }
-}
+// export const updateCategoryApi = async ({ wpAuthToken, payload }) => {
+//   try {
+//     const response = await axios.post(
+//       `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories/${payload.id}`, payload, {
+//       headers: {
+//         common: {
+//           Authorization: `Bearer ${wpAuthToken}`
+//         }
+//       }
+//     }
+//     );
+//     if (response && (response.status === 200 || response.status === 201)) {
+//       response.statusText = 'Success'
+//     }
+//     return response;
+//   } catch (error) {
+//     console.log(error);
+//     let err = {
+//       statusText: "Error",
+//       message: error.response.data.message
+//     }
+//     return err
+//   }
+// }
 
 //delete category by id (DELETE)
-export const deleteCategoryApi = async ({ id, wpAuthToken }) => {
-  try {
-    const response = await axios.delete(
-      `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories/${id}?force=1`, {
-      headers: {
-        common: {
-          Authorization: `Bearer ${wpAuthToken}`
-        }
-      }
-    }
-    );
-    return response;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-}
+// export const deleteCategoryApi = async ({ id, wpAuthToken }) => {
+//   try {
+//     const response = await axios.delete(
+//       `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/categories/${id}?force=1`, {
+//       headers: {
+//         common: {
+//           Authorization: `Bearer ${wpAuthToken}`
+//         }
+//       }
+//     }
+//     );
+//     return response;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// }
 
 
 /* ============================== */
@@ -229,12 +229,11 @@ export const deleteUserApi = async ({ id, wpAuthToken }) => {
   }
 }
 
-
 /* ======================================= */
 /* *********** AUTHENTICATION ************ */
 /* ======================================= */
 
-// user login  
+// user login (POST)
 export const login = async (payload) => {
   try {
     const { data } = await client().post('/login', payload);
@@ -246,7 +245,7 @@ export const login = async (payload) => {
   }
 }
 
-// user register as well add user from admin panel when user role is administrator
+// user register as well add user from admin panel when user role is administrator (POST)
 export const register = async (payload) => {
   try {
     const { data } = await client().post('/register', payload);
@@ -258,11 +257,13 @@ export const register = async (payload) => {
   }
 }
 
-// logout user
+// logout user (POST)
 export const logoutApi = async ({ token }) => {
   try {
     const { data } = await client().post('/logout', {}, {
-      headers: token
+      headers: {
+        Authorization: token
+      }
     });
     return data;
   } catch (error) {
@@ -271,6 +272,7 @@ export const logoutApi = async ({ token }) => {
     return error.response.data
   }
 }
+
 
 /* ============================== */
 /* *********** POSTS ************ */
@@ -328,22 +330,6 @@ export const getSinglePostApi = async ({ token, id }) => {
   }
 }
 
-//delete post by id (GET)
-export const deletePostApi = async ({ token, id }) => {
-  try {
-    const { data } = await client().delete(`/article/${id}`, {
-      headers: {
-        Authorization: token
-      }
-    });
-    return data;
-  } catch (error) {
-    // get axios errors from error.response
-    console.log(error);
-    return error.response.data;
-  }
-}
-
 //  add post(POST)
 export const addPostApi = async ({ token, payload }) => {
   try {
@@ -376,11 +362,27 @@ export const updatePostApi = async ({ token, id, payload }) => {
   }
 }
 
+//delete post by id (DELETE)
+export const deletePostApi = async ({ token, id }) => {
+  try {
+    const { data } = await client().delete(`/article/${id}`, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data;
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data;
+  }
+}
+
 /* ============================= */
 /* ********* GENERAL *********** */
 /* ============================= */
 
-// file upload
+// file upload (POST)
 export const fileUploadApi = async ({ token, payload }) => {
   try {
     const { data } = await client({ multipart: true }).post(`/upload`, payload, {
@@ -396,6 +398,7 @@ export const fileUploadApi = async ({ token, payload }) => {
   }
 }
 
+// validate ifsc and get bank name (GET)
 export const validateIFSC = async ({ ifsc }) => {
   try {
     const data = await axios.get(`https://ifsc.razorpay.com/${ifsc}`);
@@ -414,7 +417,7 @@ export const validateIFSC = async ({ ifsc }) => {
 // get categorylist all (GET)
 export const getCategoriesListApi = async ({ token }) => {
   try {
-    const { data } = await client().get(`categories/list`, {
+    const { data } = await client().get(`/categories/list?page=1&limit=100`, {
       headers: {
         Authorization: token
       }
@@ -428,11 +431,78 @@ export const getCategoriesListApi = async ({ token }) => {
   }
 }
 
+// get category list single (GET)
+export const getSingleCategoryApi = async ({ token, id }) => {
+  try {
+    const { data } = await client().get(`/category/${id}`, {
+      headers: {
+        Authorization: token
+      }
+    }
+    );
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// add category (POST)
+export const addCategoryApi = async ({ token, payload }) => {
+  try {
+    const { data } = await client().post(`/category/create`, payload, {
+      headers: {
+        Authorization: token
+      }
+    }
+    );
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// update category (POST)
+export const updateCategoryApi = async ({ token, payload, id }) => {
+  try {
+    const { data } = await client().post(`/category/create/${id}`, payload, {
+      headers: {
+        Authorization: token
+      }
+    }
+    );
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+//delete category by id (DELETE)
+export const deleteCategoryApi = async ({ token, id }) => {
+  try {
+    const { data } = await client().delete(`/category/${id}`, {
+      headers: {
+        Authorization: token
+      }
+    }
+    );
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error.response.data
+  }
+}
+
 /* ================================== */
 /* *********** DASHBOARD ************ */
 /* ================================== */
 
-// get post list all (GET)
+// get dashboard details (GET)
 export const getDashboardApi = async ({ token }) => {
   try {
     const { data } = await client().get(`/dashboard`, {
@@ -448,11 +518,27 @@ export const getDashboardApi = async ({ token }) => {
   }
 }
 
-
-/* ================================== */
+/* ================================ */
 /* *********** PAYMENT ************ */
-/* ================================== */
+/* ================================ */
 
+// get payment details if already added (GET)
+export const getPaymentDetailsApi = async ({ token }) => {
+  try {
+    const { data } = await client().get(`/payment`, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// add payment details (POST)
 export const addPaymentDetailsApi = async ({ token, payload }) => {
   try {
     const { data } = await client().post(`/payment`, payload, {
@@ -468,9 +554,30 @@ export const addPaymentDetailsApi = async ({ token, payload }) => {
   }
 }
 
-export const getPaymentDetailsApi = async ({ token }) => {
+/* ================================= */
+/* *********** SETTINGS ************ */
+/* ================================= */
+
+// get current payout margin
+export const getPayoutMarginApi = async ({ token }) => {
   try {
-    const { data } = await client().get(`/payment`, {
+    const { data } = await client().get(`/margin`, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// add payout margin  (POST)
+export const addPayoutMarginApi = async ({ token, payload }) => {
+  try {
+    const { data } = await client().post(`/margin/create`, payload, {
       headers: {
         Authorization: token
       }

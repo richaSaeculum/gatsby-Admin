@@ -98,6 +98,7 @@ const Payment = () => {
       })
     } else {
       setInitialValues(PaymentInitValues)
+      setImgUrl({})
     }
   }
 
@@ -157,9 +158,9 @@ const Payment = () => {
       user_pay_type: values.isUpi ? "upi" : "bank-transfer",
       user_pay_name: values.name,
       user_pay_address: values.address,
-      user_pay_account: values.isUpi ? "" : values.bankAccNo,
-      user_pay_ifsc: values.isUpi ? "" : values.ifsc,
-      user_pay_bank: values.isUpi ? "" : values.bankName,
+      user_pay_account: values.isUpi ? null : values.bankAccNo,
+      user_pay_ifsc: values.isUpi ? null : values.ifsc,
+      user_pay_bank: values.isUpi ? null : values.bankName,
       aadhar_image: imgUrl.aadharcard,
       pan_image: imgUrl.pancard,
       user_pay_upi: values.isUpi ? values.upi : ""
@@ -279,7 +280,7 @@ const Payment = () => {
                       <div className='fv-help-block'>{props.errors.aadharcard}</div>
                     </div>
                   )}
-                  <img src={imgUrl.aadharcard} alt="" className='img-fluid img-thumb mt-2' />
+                  {(props.values.isEdit || props.values.aadharcard) && <img src={imgUrl.aadharcard} alt="" className='img-fluid img-thumb mt-2' />}
                 </div>
               </div>
               <div className="col">
@@ -298,7 +299,7 @@ const Payment = () => {
                       <div className='fv-help-block'>{props.errors.pancard}</div>
                     </div>
                   )}
-                  <img src={imgUrl.pancard} alt="" className='img-fluid img-thumb mt-2' />
+                  {(props.values.isEdit || props.values.pancard) && <img src={imgUrl.pancard} alt="" className='img-fluid img-thumb mt-2' />}
                 </div>
               </div>
 
