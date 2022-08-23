@@ -54,7 +54,7 @@ const SettingsPage = () => {
               </>
             }
           />
-          {auth?.user?.user_role === 'Administrator' &&
+          {auth?.user?.user_role === 'administrator' &&
             (
               <>
                 <Route

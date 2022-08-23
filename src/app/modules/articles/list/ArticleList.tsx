@@ -11,7 +11,7 @@ const ArticleList = () => {
   const { wpAuth } = useAuth();
   const wpAuthToken = wpAuth?.token
   const { setLoader } = useLayout()
-  const [articleData, setArticleData] = useState();
+  const [articleData, setArticleData] = useState<any>();
   const [totalPage, setTotalPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -82,12 +82,18 @@ const ArticleList = () => {
           </div>
         </div>
 
-        <ArticleTable
+        {articleData?.length > 0 ? <ArticleTable
           onEditRow={onEditRow}
           onDeleteRow={onDeleteRow}
           data={articleData}
           paginationConfig={{ totalPage, handlePageChange }}
-        />
+        /> :
+          <div className={`card`}>
+            <div className='card-body py-3'>
+              <h4 className='mb-0 text-center'>No record found</h4>
+            </div>
+          </div>
+        }
       </div>
     </>
   )

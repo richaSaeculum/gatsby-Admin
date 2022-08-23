@@ -125,15 +125,15 @@ const AddArticle = () => {
       const { content, id, title } = response.data;
       let arr: any = [];
       //set category array from embed data in wp
-      // if (response.data._embedded.hasOwnProperty('wp:term')) {
-      //   if (response.data._embedded['wp:term'].length > 0) {
-      //     response.data._embedded['wp:term'][0].forEach((item: any) => {
-      //       // uncategorized tag is not displayed when user edit articles (id=1 for uncategorized)
-      //       if (item.id != 1)
-      //         arr.push({ label: item.name, value: item.id });
-      //     })
-      //   }
-      // }
+      if (response.data._embedded.hasOwnProperty('wp:term')) {
+        if (response.data._embedded['wp:term'].length > 0) {
+          response.data._embedded['wp:term'][0].forEach((item: any) => {
+            // uncategorized tag is not displayed when user edit articles (id=1 for uncategorized)
+            if (item.id != 1)
+              arr.push({ label: item.name, value: item.id });
+          })
+        }
+      }
       setCategory(arr);
       setTitle(title.rendered);
       setContent(RichTextEditor.createValueFromString(content.rendered, 'html'));

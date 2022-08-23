@@ -8,6 +8,7 @@ export interface PaymentFormFieldsTypes {
     bankName: string
     upi: string
     isUpi?: boolean
+    isEdit?: boolean
     aadharcardfile?: FileList | undefined
     pancardfile?: FileList | undefined
 }
@@ -21,5 +22,6 @@ export const PaymentInitValues: PaymentFormFieldsTypes = {
     ifsc: '',
     bankName: '',
     upi: '',
-    isUpi: false
+    isUpi: false,
+    isEdit: false
 }

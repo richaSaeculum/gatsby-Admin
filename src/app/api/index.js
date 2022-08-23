@@ -396,6 +396,17 @@ export const fileUploadApi = async ({ token, payload }) => {
   }
 }
 
+export const validateIFSC = async ({ ifsc }) => {
+  try {
+    const data = await axios.get(`https://ifsc.razorpay.com/${ifsc}`);
+    return data;
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response
+  }
+}
+
 /* ============================== */
 /* ********* CATEGORY *********** */
 /* ============================== */
@@ -418,13 +429,48 @@ export const getCategoriesListApi = async ({ token }) => {
 }
 
 /* ================================== */
-/* *********** Dashboard ************ */
+/* *********** DASHBOARD ************ */
 /* ================================== */
 
 // get post list all (GET)
 export const getDashboardApi = async ({ token }) => {
   try {
     const { data } = await client().get(`/dashboard`, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+
+/* ================================== */
+/* *********** PAYMENT ************ */
+/* ================================== */
+
+export const addPaymentDetailsApi = async ({ token, payload }) => {
+  try {
+    const { data } = await client().post(`/payment`, payload, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+export const getPaymentDetailsApi = async ({ token }) => {
+  try {
+    const { data } = await client().get(`/payment`, {
       headers: {
         Authorization: token
       }

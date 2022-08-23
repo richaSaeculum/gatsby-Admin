@@ -102,7 +102,7 @@ const PrivateRoutes = () => {
             </SuspensedView>
           }
         />
-        {auth?.user?.user_role === 'Administrator' && <Route
+        {auth?.user?.user_role === 'administrator' && <Route
           path='users/*'
           element={
             <SuspensedView>
