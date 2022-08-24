@@ -46,7 +46,7 @@ const UserInitValues: UserFormFieldsTypes = {
 const AddUser = () => {
 
   const param = useParams()
-  const { wpAuth } = useAuth();
+  const { wpAuth, auth } = useAuth();
   const navigate = useNavigate();
   const wpAuthToken = wpAuth?.token;
   const { setLoader } = useLayout();
@@ -76,19 +76,19 @@ const AddUser = () => {
   const editId = async (id: any) => {
     setLoader(true);
     setEditForm(true);
-    const response = await getSingleUsersListApi({ wpAuthToken, id })
+    const response = await getSingleUsersListApi({ token: auth?.token, id })
     if (response && response.status === 200) {
-      const { username, email, first_name, last_name, roles, url, id } = response.data
-      setLoader(false);
+      const { user_name, user_email, user_first_name, user_last_name, user_role, user_website, wp_user_id } = response.data
+      setLoader(false); 
       let editData = {
-        username: username,
-        email: email,
-        firstName: first_name,
-        lastName: last_name,
-        website: url,
-        role: roles[0],
-        id: id,
-        password: ''
+        username: user_name,
+        email: user_email,
+        firstName: user_first_name,
+        lastName: user_last_name,
+        website: user_website === null ? "" : user_website,
+        role: user_role,
+        id: wp_user_id,
+        password: ""
       }
       setInitialValues(editData)
     }
@@ -122,7 +122,7 @@ const AddUser = () => {
     try {
       if (values.id) {
         //edit user API call (POST)
-        response = await updateUserApi({ wpAuthToken, payload })
+        response = await updateUserApi({ token: auth?.token, payload, id: values.id });
         if (response && response.statusText === 'Success') {
           const info = { action: 'alert', message: 'User successfully updated' }
           toggleModal(info);
@@ -133,8 +133,8 @@ const AddUser = () => {
         }
       } else {
         //add user API call (POST)
-        response = await addUserApi({ wpAuthToken, payload })
-        if (response && response.statusText && response.statusText === 'Success') {
+        response = await addUserApi({ payload });
+        if (response && response.status === 200) {
           const info = { action: 'alert', message: 'User successfully added' }
           toggleModal(info);
           return
@@ -196,11 +196,11 @@ const AddUser = () => {
 
     let payload = {
       user_email: values.email,
-      user_first_name: values.firstname,
-      user_last_name: values.lastname,
+      user_first_name: values.firstName,
+      user_last_name: values.lastName,
       user_password: values.password,
       user_name: values.username,
-      user_role: 'Author',
+      user_role: [values.role],
       user_website: values.website
     }
 
@@ -221,6 +221,7 @@ const AddUser = () => {
     // if (values.id !== undefined) {
     //   delete payload.password
     // }
+
     return payload
   }
 
@@ -333,6 +334,7 @@ const AddUser = () => {
           <div className="fv-row mb-7">
             <label className="fs-3 fw-semibold form-label mt-3">User Role</label>
             <select
+              disabled={editForm}
               className='form-select'
               {...props.getFieldProps('role')}
             >

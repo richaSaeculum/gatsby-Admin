@@ -8,7 +8,7 @@ import UserTable from './usertable/UserTable';
 
 const UserList = () => {
 
-  const { wpAuth } = useAuth();
+  const { wpAuth, auth } = useAuth();
   const { setLoader } = useLayout();
   const [usersData, setUsersData] = useState<any>();
   const wpAuthToken = wpAuth?.token
@@ -19,14 +19,14 @@ const UserList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // getAllUsers({ page: currentPage });
+    getAllUsers({ page: currentPage });
   }, [wpAuthToken])
 
   const getAllUsers = async ({ page }: any) => {
     setLoader(true);
-    let response = await getUsersListApi({ wpAuthToken, page });
+    let response = await getUsersListApi({ token: auth?.token, page });
     if (response && response.status === 200) {
-      setTotalPage(parseInt(response.headers['x-wp-totalpages']))
+      // setTotalPage(parseInt(response.headers['x-wp-totalpages']))
       let a = response?.data.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
       setUsersData(a);
       setLoader(false);
@@ -34,15 +34,15 @@ const UserList = () => {
   }
 
   const onEditRow = (row: any) => {
-    if (row.id) {
-      navigate(`/users/edit-user/${row.id}`);
+    if (row.user_id) {
+      navigate(`/users/edit-user/${row.user_id}`);
     }
   }
 
   const onDeleteRow = async (row: any) => {
     setLoader(true)
-    const response = await deleteUserApi({ wpAuthToken, id: row.id })
-    if (response && response.status === 200 && response.data.deleted) {
+    const response = await deleteUserApi({ token: auth?.token, id: row.wp_user_id })
+    if (response && response.status === 200) {
       getAllUsers({ page: currentPage });
     }
   }

@@ -39,10 +39,14 @@ const Category = () => {
   }
 
   const confirmationCallback = (success: boolean, info: any) => {
-    setConfirmationOpen(false);
-    onCloseModal();
-    getCategories();
-    setCategory(null);
+    if (success && (info.action === 'confirmation' || info.action === 'alert')) {
+      setConfirmationOpen(false);
+      onCloseModal();
+      getCategories();
+      setCategory(null);
+    } else if (info.action === 'error') {
+      setConfirmationOpen(false);
+    }
   }
 
   const toggleModal = (info?: any) => {
@@ -80,6 +84,10 @@ const Category = () => {
         const info = { action: 'alert', message: 'Category successfully updated' }
         toggleModal(info);
         return
+      } else if (response && response.status === 500) {
+        const info = { action: 'error', message: 'Category with same name is already exists' }
+        toggleModal(info);
+        return
       } else {
         const info = { action: 'error', message: response.message };
         toggleModal(info);
@@ -88,6 +96,10 @@ const Category = () => {
       response = await addCategoryApi({ token: auth?.token, payload });
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Category successfully added ' }
+        toggleModal(info);
+        return
+      } else if (response && response.status === 500) {
+        const info = { action: 'error', message: 'Category with same name is already exists' }
         toggleModal(info);
         return
       } else {
@@ -102,7 +114,6 @@ const Category = () => {
   const onDelete = async (row: any) => {
     setLoader(true);
     const res = await deleteCategoryApi({ token: auth?.token, id: row.id });
-    console.log(res)
     if (res && res.status === 200 && res.data.deleted) {
       getCategories();
     }
