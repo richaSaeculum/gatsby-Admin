@@ -1,18 +1,17 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import CategoryTable from './categorytable/CategoryTable'
 import { Modal } from 'react-bootstrap'
 import { useAuth } from '../../../auth'
 import { addCategoryApi, deleteCategoryApi, getCategoriesListApi, getSingleCategoryApi, updateCategoryApi } from '../../../../api'
 import { useLayout } from '../../../../../_metronic/layout/core'
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal'
-import { useNavigate } from 'react-router-dom'
+
 
 
 const Category = () => {
 
   const { wpAuth, auth } = useAuth();
   const { setLoader } = useLayout();
-  const wpAuthToken = wpAuth?.token;
   const [categories, setCategories] = useState();
   const [open, setOpen] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -39,7 +38,12 @@ const Category = () => {
   }
 
   const confirmationCallback = (success: boolean, info: any) => {
-    if (success && (info.action === 'confirmation' || info.action === 'alert')) {
+    if (success && info.action === 'confirmation') {
+      setConfirmationOpen(false);
+      onCloseModal();
+      getCategories();
+      setCategory(null);
+    } else if (info.action === 'alert') {
       setConfirmationOpen(false);
       onCloseModal();
       getCategories();

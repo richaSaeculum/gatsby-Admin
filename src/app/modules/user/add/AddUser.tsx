@@ -79,7 +79,7 @@ const AddUser = () => {
     const response = await getSingleUsersListApi({ token: auth?.token, id })
     if (response && response.status === 200) {
       const { user_name, user_email, user_first_name, user_last_name, user_role, user_website, wp_user_id } = response.data
-      setLoader(false); 
+      setLoader(false);
       let editData = {
         username: user_name,
         email: user_email,
@@ -193,15 +193,23 @@ const AddUser = () => {
   // })
 
   const generatePayload = (values: any) => {
-
-    let payload = {
-      user_email: values.email,
-      user_first_name: values.firstName,
-      user_last_name: values.lastName,
-      user_password: values.password,
-      user_name: values.username,
-      user_role: [values.role],
-      user_website: values.website
+    let payload;
+    if (values.id) {
+      payload = {
+        user_first_name: values.firstName,
+        user_last_name: values.lastName,
+        user_website: values.website
+      }
+    } else {
+      payload = {
+        user_email: values.email,
+        user_first_name: values.firstName,
+        user_last_name: values.lastName,
+        user_password: values.password,
+        user_name: values.username,
+        user_role: [values.role],
+        user_website: values.website
+      }
     }
 
     // let payload = {
