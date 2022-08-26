@@ -123,7 +123,7 @@ const AddUser = () => {
       if (values.id) {
         //edit user API call (POST)
         response = await updateUserApi({ token: auth?.token, payload, id: values.id });
-        if (response && response.statusText === 'Success') {
+        if (response && response.status === 200) {
           const info = { action: 'alert', message: 'User successfully updated' }
           toggleModal(info);
           return

@@ -74,7 +74,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
                 </td>
                 <td>
                     <span className='fw-semibold d-block fs-7 mw-100'>
-                        <ul className='list-unstyled'>
+                        <ul className='list-unstyled mb-0'>
                             {row.categoryName && row.categoryName.map((item: string, index: number) => (<li key={item + index}>{item}</li>))}
                         </ul>
                     </span>
