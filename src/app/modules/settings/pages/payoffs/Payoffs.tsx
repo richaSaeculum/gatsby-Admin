@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { useAuth } from '../../../auth'
-import { getPostListByMonthApi } from '../../../../api'
+import { getPayoffAllApi, getPayoffsByMonthApi, getPostListByMonthApi } from '../../../../api'
 import { useLayout } from '../../../../../_metronic/layout/core'
 import PayoffsTable from './payoffstable/PayoffsTable'
 import { useNavigate } from 'react-router-dom'
 import DatePicker from '../../../../components/datepicker/DatePicker'
+import moment from 'moment'
 
 const data = [
     {
@@ -55,7 +56,7 @@ const data = [
 
 const Payoffs = () => {
 
-    const { wpAuth } = useAuth();
+    const { wpAuth, auth } = useAuth();
     const { setLoader } = useLayout()
     const [open, setOpen] = useState<boolean>(false)
     const wpAuthToken = wpAuth?.token;
@@ -64,6 +65,23 @@ const Payoffs = () => {
     const [revenue, setRevenue] = useState<any>();
     const [amount, setAmount] = useState<any>();
     const [articleCount, setArticleCount] = useState<any>();
+
+    const [payoffsList, setPayoffsList] = useState<any>();
+
+    const getPayofflist = async () => {
+        const res = await getPayoffAllApi({ token: auth?.token })
+        let payload = {
+            "month": 8,
+            "year": 2022
+        }
+        // const res = await getPayoffsByMonthApi({ token: auth?.token, payload })
+        if (res && res.status === 200) {
+            setPayoffsList(res.data);
+        }
+    }
+    useEffect(() => {
+        getPayofflist();
+    }, [])
 
     useEffect(() => {
         calculateAmountPerArticle();
@@ -103,8 +121,8 @@ const Payoffs = () => {
     }
 
     const onShowPaymentList = (row: any) => {
-        if (row.id) {
-            navigate(`/settings/payoffs/${row.id}`);
+        if (row.month && row.yaer) {
+            navigate(`/settings/payoffs/${row.month}-${row.yaer}`);
         }
     }
 
@@ -114,9 +132,10 @@ const Payoffs = () => {
 
     const onSubmit = () => {
         let payload = {
-            'month': month,
-            'revenue': revenue,
-            'amount': amount
+            "month": moment(month).format("M"),
+            "year": moment(month).format("YYYY"),
+            "total_revenue": revenue,
+            "amount_per_article": amount
         }
         console.log("payoff payload===>", payload);
     }
@@ -234,7 +253,7 @@ const Payoffs = () => {
                 onEditRow={onEditRow}
                 onDeleteRow={onDeleteRow}
                 onShowPaymentList={onShowPaymentList}
-                data={data}
+                data={payoffsList}
             />
         </div>
     )

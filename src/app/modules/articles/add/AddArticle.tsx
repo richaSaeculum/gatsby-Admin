@@ -109,9 +109,9 @@ const AddArticle = () => {
 
   const getCategories = async () => {
     setLoader(true);
-    let response: any = await getCategoriesListApi({ token: auth?.token });
+    let response: any = await getCategoriesListApi({ token: auth?.token, page: 1, limit: 100 });
     if (response && response.status === 200) {
-      let arr = response.data;
+      let arr = response.data.categories;
       arr = arr.map((item: any) => ({ label: item.name, value: item.id }))
       setCategoryList(arr);
     }
@@ -253,7 +253,7 @@ const AddArticle = () => {
       title: title,
       excerpt: "Test post excerpt",
       content: content.toString('html'),
-      categories: category.map((item: any) => item.value),
+      categories: category?.map((item: any) => item.value),
       status: 'draft'
     }
     console.log(payload);

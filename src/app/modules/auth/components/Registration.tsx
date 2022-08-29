@@ -67,7 +67,7 @@ export function Registration() {
           user_last_name: values.lastname,
           user_password: values.password,
           user_name: values.username,
-          user_role: ['author']
+          user_role: 'author'
         }
         const response = await register(payload)
         setSuccessCode(response.status)

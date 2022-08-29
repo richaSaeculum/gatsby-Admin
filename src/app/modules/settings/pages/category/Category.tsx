@@ -23,7 +23,7 @@ const Category = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
-    getCategories();
+    getCategories({ page: currentPage });
   }, [])
 
   const onEdit = async (row: any) => {
@@ -41,12 +41,12 @@ const Category = () => {
     if (success && info.action === 'confirmation') {
       setConfirmationOpen(false);
       onCloseModal();
-      getCategories();
+      getCategories({ page: currentPage });
       setCategory(null);
     } else if (info.action === 'alert') {
       setConfirmationOpen(false);
       onCloseModal();
-      getCategories();
+      getCategories({ page: currentPage });
       setCategory(null);
     } else if (info.action === 'error') {
       setConfirmationOpen(false);
@@ -58,13 +58,13 @@ const Category = () => {
     setConfirmationOpen(!confirmationOpen);
   }
 
-  const getCategories = async () => {
+  const getCategories = async ({ page }: any) => {
     setLoader(true);
-    const response = await getCategoriesListApi({ token: auth?.token });
+    const response = await getCategoriesListApi({ token: auth?.token, page });
     if (response && response.status === 200) {
-      // setTotalPage(parseInt(response.headers['x-wp-totalpages']))
-      // let a = response?.data.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
-      setCategories(response.data);
+      setTotalPage(parseInt(response.data['categories-page-count']))
+      let a = response?.data?.categories.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
+      setCategories(a);
       setLoader(false);
     }
   }
@@ -119,7 +119,7 @@ const Category = () => {
     setLoader(true);
     const res = await deleteCategoryApi({ token: auth?.token, id: row.id });
     if (res && res.status === 200 && res.data.deleted) {
-      getCategories();
+      getCategories({ page: currentPage });
     }
   }
 
@@ -129,11 +129,11 @@ const Category = () => {
     setTitle('');
   }
 
-  // const handlePageChange = async (selectedPage: number) => {
-  //   // return
-  //   // await getCategories({ page: selectedPage });
-  //   setCurrentPage(selectedPage);
-  // }
+  const handlePageChange = async (selectedPage: number) => {
+    // return
+    await getCategories({ page: selectedPage });
+    setCurrentPage(selectedPage);
+  }
 
   return (
     <>
@@ -207,6 +207,7 @@ const Category = () => {
         onEditRow={onEdit}
         onDeleteRow={onDelete}
         data={categories}
+        paginationConfig={{ totalPage, handlePageChange }}
       />
     </>
   )

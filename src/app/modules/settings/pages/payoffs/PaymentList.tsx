@@ -1,5 +1,9 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom';
+import { useLayout } from '../../../../../_metronic/layout/core';
+import { getPayoffsByMonthApi } from '../../../../api';
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
+import { useAuth } from '../../../auth';
 
 const listData = [
     {
@@ -49,16 +53,47 @@ const listData = [
     }
 ]
 
+type Props = {
+    data: any
+}
+
 
 const PaymentList = () => {
 
-    const [data, setData] = useState<any>(listData);
+    const { auth } = useAuth();
+    const { setLoader } = useLayout();
+    const param = useParams();
+    const [monthYear, setMonthYear] = useState();
+    const [data, setData] = useState<any>();
     const [selectAll, setSelectAll] = useState<boolean>(false);
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
     const [paymentData, setPaymentData] = useState<any>()
     const confirmationInfo = {
         action: 'confirmation',
         message: 'Do you want to continue for payment?'
+    }
+
+    useEffect(() => {
+        const { id } = param;
+        if (id) {
+            getMonthWisePaypoffList(id);
+        }
+    }, [])
+
+    const getMonthWisePaypoffList = async (id: any) => {
+        setLoader(true)
+        let a = id.split('-');
+        let payload = {
+            "month": a[0],
+            "year": a[1]
+        }
+        const res = await getPayoffsByMonthApi({ token: auth?.token, payload });
+        if (res && res.status === 200) {
+            const a = res?.data.map((a: any) => ({ ...a, isSelected: false }))
+            setData(a);
+            setMonthYear(res.data[0].month);
+            setLoader(false)
+        }
     }
 
     const confirmationCallback = (success: boolean) => {
@@ -78,19 +113,19 @@ const PaymentList = () => {
 
     const toggleModal = (row?: any) => {
         setConfirmationOpen(!confirmationOpen);
-        setPaymentData(row)
+        setPaymentData(row);
     }
 
     const onUserSelect = (row: any) => {
         let arr = data.map((item: any) => {
-            if (item.id === row.id) {
+            if (item.userid === row.userid) {
                 return { ...item, isSelected: !item.isSelected }
             } else {
                 return item
             }
         })
         let a = arr.every((item: any) => item.isSelected)
-        setSelectAll(a)
+        setSelectAll(a);
         setData(arr);
     }
 
@@ -128,12 +163,12 @@ const PaymentList = () => {
                 </td>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {row.userId}
+                        {row.userid}
                     </span>
                 </td>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {row.articles}
+                        {row.totalArticles}
                     </span>
                 </td>
                 <td>
@@ -170,7 +205,7 @@ const PaymentList = () => {
             />
             <div className='d-flex justify-content-between align-items-center mb-5'>
                 <div>
-                    <h1 className='fs-2hx fw-bold text-dark mb-0'>January 2022</h1>
+                    <h1 className='fs-2hx fw-bold text-dark mb-0'>{monthYear}</h1>
                 </div>
                 <button type='button' className='btn btn-secondary' onClick={() => { toggleModal('selected') }}>
                     Complete Selected

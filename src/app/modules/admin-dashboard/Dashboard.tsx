@@ -1,84 +1,42 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getDashboardApi } from '../../api'
+import { useLayout } from '../../../_metronic/layout/core'
+import { getDashboardApi, getPostListApi, getPostOfCurrentMonthApi } from '../../api'
 import { useAuth } from '../auth'
 import ArticleTable from './components/articletable/ArticleTable'
-import ListCard from './components/listcard/ListCard'
+import EarnersCard from './components/earnerscard/EarnersCard'
+import TreandsCard from './components/trendscard/TrendsCard'
 import StatusCard from './components/statuscard/StatusCard'
-import StatusCardGroup from './components/statuscardgroup/StatusCardGroup'
-
-export type listDataType = {
-  text: string,
-  count: string
-}
-
-const listData: Array<listDataType> = [
-  {
-    text: 'lorem ipsum 1',
-    count: '100k+ searches'
-  },
-  {
-    text: 'lorem ipsum 2',
-    count: '100k+ searches'
-  },
-  {
-    text: 'lorem ipsum 3',
-    count: '100k+ searches'
-  },
-  {
-    text: 'lorem ipsum 4',
-    count: '100k+ searches'
-  },
-  {
-    text: 'lorem ipsum 5',
-    count: '100k+ searches'
-  }, {
-    text: 'lorem ipsum 6',
-    count: '100k+ searches'
-  },
-  {
-    text: 'lorem ipsum 7',
-    count: '100k+ searches'
-  },
-]
-
-const listData2: Array<listDataType> = [
-  {
-    text: 'lorem ipsum 1',
-    count: '100k+ searches'
-  },
-  {
-    text: 'lorem ipsum 2',
-    count: '100k+ searches'
-  },
-  {
-    text: 'lorem ipsum 3',
-    count: '100k+ searches'
-  },
-  {
-    text: 'lorem ipsum 4',
-    count: '100k+ searches'
-  },
-  {
-    text: 'lorem ipsum 5',
-    count: '100k+ searches'
-  }, {
-    text: 'lorem ipsum 6',
-    count: '100k+ searches'
-  },
-  {
-    text: 'lorem ipsum 7',
-    count: '100k+ searches'
-  },
-]
 
 const Dashboard: FC = () => {
 
   const { auth } = useAuth();
+  const { setLoader } = useLayout();
+  const [articleList, setArticleList] = useState<any>();
+  const [dashboard, setDashboard] = useState<any>();
+  const [postCount, setPostCount] = useState<any>();
 
-  const getData = () => {
-    const res = getDashboardApi({ token: auth?.token });
-    console.log(res)
+  const getData = async () => {
+    try {
+      setLoader(true);
+      const res = await getDashboardApi({ token: auth?.token });
+      if (res && res.status === 200) {
+        setDashboard(res.data);
+      }
+      const response = await getPostListApi({ token: auth?.token });
+      if (response && response.status === 200) {
+        setArticleList(response.data.articles);
+      }
+
+      const currentRes = await getPostOfCurrentMonthApi({ token: auth?.token })
+      if (currentRes && currentRes.status === 200) {
+        setPostCount(currentRes.data['articles-count'])
+      }
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoader(false);
+    }
   }
 
   useEffect(() => {
@@ -87,19 +45,53 @@ const Dashboard: FC = () => {
 
   return (
     <>
-      <StatusCardGroup />
+      <div className='row'>
+        <StatusCard
+          className='card-xl-stretch mb-5 mb-xl-8'
+          faIcon='fa-chart-simple'
+          bgColor='secondary'
+          value={dashboard?.getEarnings?.highest_earnings}
+          title='Highest Earnings'
+          valueColor='white'
+          titleColor='white'
+        />
+        <StatusCard
+          className='card-xl-stretch mb-5 mb-xl-8'
+          faIcon='fa-file'
+          value={articleList?.length}
+          title='Total Articles'
+          valueColor='dark'
+          titleColor='dark'
+        />
+        <StatusCard
+          className='card-xl-stretch mb-5 mb-xl-8'
+          faIcon='fa-dollar-sign'
+          value={dashboard?.getEarnings?.total_earnings}
+          title='Earnings'
+          valueColor='dark'
+          titleColor='dark'
+        />
+        <StatusCard
+          className='card-xl-stretch mb-5 mb-xl-8'
+          faIcon='fa-file'
+          value={postCount}
+          title='Articles'
+          valueColor='dark'
+          titleColor='dark'
+        />
+      </div>
 
       <div className='row my-6'>
         <div className='col-md-6'>
-          <ListCard
+          <TreandsCard
             title={'Top Trends'}
-            data={listData}
+            data={articleList}
           />
         </div>
         <div className='col-md-6'>
-          <ListCard
+          <EarnersCard
             title={'Top Earners'}
-            data={listData2}
+            data={dashboard}
           />
         </div>
       </div>
@@ -116,7 +108,9 @@ const Dashboard: FC = () => {
               </button>
             </Link>
           </div>
-          <ArticleTable />
+          <ArticleTable
+            data={articleList}
+          />
         </div>
       </div>
     </>

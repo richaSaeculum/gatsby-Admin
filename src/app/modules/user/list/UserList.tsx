@@ -11,7 +11,6 @@ const UserList = () => {
   const { wpAuth, auth } = useAuth();
   const { setLoader } = useLayout();
   const [usersData, setUsersData] = useState<any>();
-  const wpAuthToken = wpAuth?.token
 
   const [totalPage, setTotalPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -20,14 +19,14 @@ const UserList = () => {
 
   useEffect(() => {
     getAllUsers({ page: currentPage });
-  }, [wpAuthToken])
+  }, [])
 
   const getAllUsers = async ({ page }: any) => {
     setLoader(true);
     let response = await getUsersListApi({ token: auth?.token, page });
     if (response && response.status === 200) {
-      // setTotalPage(parseInt(response.headers['x-wp-totalpages']))
-      let a = response?.data.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
+      setTotalPage(parseInt(response.data['page-count']))
+      let a = response?.data?.users.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
       setUsersData(a);
       setLoader(false);
     }

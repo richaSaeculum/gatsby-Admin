@@ -49,7 +49,7 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data }: Props
                 </td>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {row.month}
+                        {row.monthYear}
                     </span>
                 </td>
                 <td>
@@ -59,7 +59,7 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data }: Props
                 </td>
                 <td>
                     <span className='fw-semibold d-block fs-7 text-center'>
-                        {row.amountPerArticle}
+                        {row.perArticleRevenue}
                     </span>
                 </td>
                 <td className='text-end'>

@@ -3,12 +3,15 @@ import React, { ReactElement } from 'react'
 import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import Tabledata from './sample_article.json'
 
+type Props = {
+    data?: any
+}
 
-const ArticleTable = () => {
+const ArticleTable = ({ data }: Props) => {
 
     const renderTablerow = () => {
         let arr: Array<ReactElement> = [];
-        Tabledata.data.forEach((item, index) => {
+        data?.forEach((row: any, index: any) => {
             arr.push(<tr key={index + 1}>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
@@ -17,17 +20,19 @@ const ArticleTable = () => {
                 </td>
                 <td>
                     <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
-                        {item.title}
+                        {row.title.rendered}
                     </a>
                 </td>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {item.views}
+                        {/* {row.views} */}
+                        not found
                     </span>
                 </td>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {item.ctr}
+                        {/* {row.ctr} */}
+                        not found
                     </span>
                 </td>
                 {/* <td className='text-end'>

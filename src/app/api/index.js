@@ -139,18 +139,36 @@ export const deleteUserApi = async ({ token, id }) => {
 // get post list all (GET)
 export const getPostListApi = async ({ token, page = 1, limit = 10 }) => {
   try {
-    const { data } = await client().get(`/articles/list?page=${page}&limit=${limit}`, {
+    const response = await client().get(`/articles/list?page=${page}&limit=${limit}`, {
       headers: {
         Authorization: token
       }
     });
-    return data
+    return response.data
   } catch (error) {
     // get axios errors from error.response
     console.log(error);
     return error.response.data
   }
 }
+
+// get post list all (GET)
+export const getPostOfCurrentMonthApi = async ({ token }) => {
+  try {
+    const response = await client().get(`/articles/list?month=current}`, {
+      headers: {
+        Authorization: token
+      }
+    });
+    console.log(response)
+    return response.data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
 
 // get post list by month (GET)
 export const getPostListByMonthApi = async ({ wpAuthToken, after = '', before = '' }) => {
@@ -275,9 +293,9 @@ export const validateIFSC = async ({ ifsc }) => {
 /* ============================== */
 
 // get categorylist all (GET)
-export const getCategoriesListApi = async ({ token }) => {
+export const getCategoriesListApi = async ({ token, page = 1, limit = 10 }) => {
   try {
-    const { data } = await client().get(`/categories/list?page=1&limit=100`, {
+    const { data } = await client().get(`/categories/list?page=${page}&limit=${limit}`, {
       headers: {
         Authorization: token
       }
@@ -470,9 +488,75 @@ export const getWalletDetailsApi = async ({ token }) => {
 }
 
 // get wallet details for user
-export const getTransactionsApi = async ({ token }) => {
+export const getTransactionsApi = async ({ token, page = 1, limit = 10 }) => {
   try {
-    const { data } = await client().get(`/transactions/1/5`, {
+    const { data } = await client().get(`/transactions?page=${page}&limit=${limit}`, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+
+// add payout margin  (POST)
+export const addPayoffApi = async ({ token, payload }) => {
+  try {
+    const { data } = await client().post(`/payoff/create`, payload, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// get all payoff list (MONTHS)
+export const getPayoffAllApi = async ({ token }) => {
+  try {
+    const { data } = await client().get(`/payoff/all`, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// get all success payoff list (by users)
+export const getSuccessPayoffListApi = async ({ token }) => {
+  try {
+    const { data } = await client().get(`/payoffs/list`, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+
+// get all payoff list (monthwise user specific)
+export const getPayoffsByMonthApi = async ({ token, payload }) => {
+  try {
+    const { data } = await client().post(`/payoff/users`, payload, {
       headers: {
         Authorization: token
       }

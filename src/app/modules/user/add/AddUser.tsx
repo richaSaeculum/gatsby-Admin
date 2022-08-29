@@ -207,7 +207,7 @@ const AddUser = () => {
         user_last_name: values.lastName,
         user_password: values.password,
         user_name: values.username,
-        user_role: [values.role],
+        user_role: values.role,
         user_website: values.website
       }
     }
