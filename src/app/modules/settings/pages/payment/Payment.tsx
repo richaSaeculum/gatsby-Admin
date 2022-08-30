@@ -89,7 +89,7 @@ const Payment = () => {
         ifsc: data.user_pay_ifsc,
         bankName: data.user_pay_bank,
         upi: data.user_pay_upi === null ? '' : data.user_pay_upi,
-        isUpi: data.user_pay_type === 'bank-transfer' ? false : true,
+        isUpi: data.user_pay_type === 'bank-transfers' ? false : true,
         isEdit: true,
       })
       setImgUrl({
@@ -155,7 +155,7 @@ const Payment = () => {
   const generatePayload = (values: any) => {
     console.log(values.isUpi)
     let payload = {
-      user_pay_type: values.isUpi ? "upi" : "bank-transfer",
+      user_pay_type: values.isUpi ? "upi" : "bank-transfers",
       user_pay_name: values.name,
       user_pay_address: values.address,
       user_pay_account: values.isUpi ? null : values.bankAccNo,

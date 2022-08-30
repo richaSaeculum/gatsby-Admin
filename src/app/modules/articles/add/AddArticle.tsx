@@ -86,6 +86,7 @@ const AddArticle = () => {
   const ref = useRef(false);
   const [titleError, setTitleError] = useState<Boolean>(false);
   const [contentError, setContentError] = useState<Boolean>(false);
+  const [view, setView] = useState<any>();
 
   useEffect(() => {
     if (!ref.current) {
@@ -123,7 +124,10 @@ const AddArticle = () => {
   const editId = async (id: any) => {
     let response: any = await getSinglePostApi({ token: auth?.token, id });
     if (response && response.status === 200) {
-      const { content, id, title } = response.data;
+      const { content, id, title, status } = response.data;
+      if (status === 'draft') {
+        setView(true);
+      }
       let arr: any = [];
       //set category array from embed data in wp
       if (response.data._embedded.hasOwnProperty('wp:term')) {
@@ -294,6 +298,7 @@ const AddArticle = () => {
               options={categoryList}
               onChange={value => onChange({ target: { name: 'category', value: value } })}
               styles={customStyles}
+              isDisabled={!view}
             />
           </div>
         </div>
@@ -310,7 +315,14 @@ const AddArticle = () => {
         <div className="row mb-3">
           <label htmlFor="title" className="col-sm-2 fs-4 col-form-label">Title</label>
           <div className="col-sm-10">
-            <input name='title' type="text" className="form-control" id="title" value={title} onChange={onChange} />
+            <input name='title'
+              type="text"
+              className="form-control"
+              id="title"
+              value={title}
+              onChange={onChange}
+              disabled={!view}
+            />
             {titleError && (<div className='fv-plugins-message-container'>
               <div className='fv-help-block'>Title is required</div>
             </div>)}
@@ -319,13 +331,21 @@ const AddArticle = () => {
         <div className="row mb-3">
           <label htmlFor="keyword" className="col-sm-2 fs-4 col-form-label">Keyword</label>
           <div className="col-sm-10">
-            <input name='keyword' type="text" className="form-control" id="keyword" value={keyword} onChange={onChange} />
+            <input
+              name='keyword'
+              type="text"
+              className="form-control"
+              id="keyword"
+              value={keyword}
+              onChange={onChange}
+              disabled={!view}
+            />
           </div>
         </div>
         <div className="row mb-3">
           <label htmlFor="content" className="col-sm-2 fs-4 col-form-label">Content</label>
           <div className="col-sm-10">
-            <Editor value={content} onChange={onChange} />
+            <Editor value={content} onChange={onChange} disabled={!view} />
             {contentError && (<div className='fv-plugins-message-container'>
               <div className='fv-help-block'>Content is required</div>
             </div>)}
@@ -346,9 +366,15 @@ const AddArticle = () => {
         <div className="row mt-8">
           <div className="col-sm-2 fs-4 col-form-label"></div>
           <div className="col-sm-10">
-            <button type="button" className="btn btn-secondary" onClick={(e) => handleSubmit(e, 'pending')}>Submit</button> &nbsp;
-            <button type="button" className="btn btn-light" onClick={(e) => handleSubmit(e, 'draft')} >Save as Draft</button>
-            <Link to={'/articles/list'}> <button type="button" className="btn btn-light">Cancel</button></Link>
+            {
+              view && (
+                <>
+                  <button type="button" className="btn btn-secondary" onClick={(e) => handleSubmit(e, 'pending')}>Submit</button> &nbsp;
+                  <button type="button" className="btn btn-light" onClick={(e) => handleSubmit(e, 'draft')} >Save as Draft</button>
+                </>
+              )
+            }
+            <Link to={'/articles/list'}> <button type="button" className="btn btn-light">{view ? 'Cancel' : 'Back'}</button></Link>
           </div>
         </div>
       </form>

@@ -4,11 +4,13 @@ import RichTextEditor, { EditorValue, ToolbarConfig } from "react-rte";
 type Props = {
   value: EditorValue
   onChange: (value: any) => void
+  disabled: boolean
 }
 
 export const Editor = ({
   value,
-  onChange
+  onChange,
+  disabled
 }: Props) => {
 
   const toolbarConfig: ToolbarConfig = {
@@ -41,6 +43,7 @@ export const Editor = ({
         value={value}
         onChange={(value) => onChange({ target: { name: 'content', value: value } })}
         toolbarConfig={toolbarConfig}
+        disabled={disabled}
       />
     </div>
   );

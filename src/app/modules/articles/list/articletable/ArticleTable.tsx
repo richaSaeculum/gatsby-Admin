@@ -107,14 +107,25 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
                     >
                         View
                     </a> */}
-                    <button
+                    {/* <button
                         className={clsx('btn btn-secondary btn-sm px-4 me-2', {
                             'disabled': row.status !== 'draft'
                         })}
                         onClick={() => { onEditRow(row) }}
                     >
                         Edit
-                    </button>
+                    </button> */}
+                    {row.status !== 'draft' ? <button
+                        className={clsx('btn btn-secondary btn-sm px-4 me-2')}
+                        onClick={() => { onEditRow(row) }}
+                    >
+                        View
+                    </button> : <button
+                        className={clsx('btn btn-secondary btn-sm px-4 me-2')}
+                        onClick={() => { onEditRow(row) }}
+                    >
+                        Edit
+                    </button>}
 
                     <button
                         className='btn btn-light  btn-sm px-4'

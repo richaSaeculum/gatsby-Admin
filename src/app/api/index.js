@@ -155,7 +155,7 @@ export const getPostListApi = async ({ token, page = 1, limit = 10 }) => {
 // get post list all (GET)
 export const getPostOfCurrentMonthApi = async ({ token }) => {
   try {
-    const response = await client().get(`/articles/list?month=current}`, {
+    const response = await client().get(`/articles/list?month=current`, {
       headers: {
         Authorization: token
       }

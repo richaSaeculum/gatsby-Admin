@@ -27,12 +27,12 @@ const Dashboard: FC = () => {
       const response = await getPostListApi({ token: auth?.token });
       if (response && response.status === 200) {
         setArticleList(response.data.articles);
-        setTotalPost(response.data['articles-count'])
+        setTotalPost(response.data.articlesCount)
       }
 
       const currentRes = await getPostOfCurrentMonthApi({ token: auth?.token })
       if (currentRes && currentRes.status === 200) {
-        setPostCount(currentRes.data['articles-count'])
+        setPostCount(currentRes.data.articlesCount)
       }
     } catch (err) {
       console.log(err)
