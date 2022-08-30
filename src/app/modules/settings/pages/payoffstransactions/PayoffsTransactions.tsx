@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { getSuccessPayoffListApi } from '../../../../api'
+import { useAuth } from '../../../auth'
 import TransactionTable from './TransactionTable'
 
 const data = [
@@ -40,6 +42,21 @@ const data = [
 ]
 
 const PayoffsTransactions = () => {
+
+    const {auth} = useAuth();
+    // const [data, setData] = useState<any>();
+
+    useEffect(()=>{
+        getSuccessPayoff();
+    },[])
+
+    const getSuccessPayoff = async () => {
+        const res = await getSuccessPayoffListApi({token: auth?.token});
+        if(res && res.status === 200) {
+            console.log(res)
+        }
+    }
+    
     return (
         <div>
             <TransactionTable
