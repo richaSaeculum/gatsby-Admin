@@ -160,7 +160,6 @@ export const getPostOfCurrentMonthApi = async ({ token }) => {
         Authorization: token
       }
     });
-    console.log(response)
     return response.data
   } catch (error) {
     // get axios errors from error.response
@@ -537,9 +536,13 @@ export const getPayoffAllApi = async ({ token }) => {
 }
 
 // get all success payoff list (by users)
-export const getSuccessPayoffListApi = async ({ token }) => {
+export const getSuccessPayoffListApi = async ({ token, page = 1, limit = 10 }) => {
   try {
-    const { data } = await client().get(`/payoffs/list`, {
+    let payload = {
+      "page_index": page,
+      "page_size": limit
+    }
+    const { data } = await client().post(`/payoffs/list`, payload, {
       headers: {
         Authorization: token
       }

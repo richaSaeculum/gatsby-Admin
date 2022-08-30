@@ -101,7 +101,7 @@ const AddUser = () => {
     } else if (info.action === 'alert') {
       setConfirmationOpen(!confirmationOpen)
       navigate('/users/list')
-      info.formActions.resetForm();
+      // info.formActions.resetForm();
     } else if (info.action === 'error') {
       setConfirmationOpen(false)
     }

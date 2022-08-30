@@ -84,6 +84,8 @@ const AddArticle = () => {
   const [seoTips, setSeoTips] = useState<string | undefined>('');
   const [id, setId] = useState<string>();
   const ref = useRef(false);
+  const [titleError, setTitleError] = useState<Boolean>(false);
+  const [contentError, setContentError] = useState<Boolean>(false);
 
   useEffect(() => {
     if (!ref.current) {
@@ -119,7 +121,6 @@ const AddArticle = () => {
   }
 
   const editId = async (id: any) => {
-    console.log("edit")
     let response: any = await getSinglePostApi({ token: auth?.token, id });
     if (response && response.status === 200) {
       const { content, id, title } = response.data;
@@ -144,7 +145,7 @@ const AddArticle = () => {
     setConfirmationOpen(false);
     if (success && info.action === 'confirmation') {
       setLoader(true);
-      submitForm();
+      submitForm(info);
     } else if (info.action === 'alert' || info.action === 'error') {
       setConfirmationOpen(!confirmationOpen);
       setLoader(false);
@@ -160,6 +161,14 @@ const AddArticle = () => {
 
   const onChange = (e: any) => {
     const { name, value } = e.target;
+
+    if (name == 'title' && value !== '') {
+      setTitleError(false)
+    }
+
+    if (name == 'content' && value !== '<p><br></p>') {
+      setContentError(false)
+    }
 
     switch (name) {
       case 'category':
@@ -185,24 +194,27 @@ const AddArticle = () => {
     }
   }
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent, status: any) => {
     e.preventDefault();
-    let info = { action: 'confirmation', message: 'Are You Sure To Save?' }
-    toggleModal(info);
+    let valid = true
+    if (title == '') {
+      setTitleError(true);
+      valid = false;
+    }
+    if (content.toString('html') === "<p><br></p>") {
+      setContentError(true)
+      valid = false
+    }
+    console.log(valid)
+    if (valid) {
+      let info = { action: 'confirmation', message: 'Are You Sure To Save?', status: status }
+      toggleModal(info);
+    }
   }
 
-  const submitForm = async () => {
+  const submitForm = async (info: any) => {
     const keywordArr = keyword?.split(',').filter(a => a !== ' ').map(b => b.trim());
-    const data = {
-      title: title,
-      category: category,
-      keyword: keywordArr,
-      seoScore: seoScore,
-      seoTips: seoTips,
-      content: content.toString('html')
-    }
-
-    let payload = generatePayload();
+    let payload = generatePayload(info);
     if (id) {
       let response: any = await updatePostApi({ token: auth?.token, id, payload });
       if (response && response.status === 200) {
@@ -226,7 +238,7 @@ const AddArticle = () => {
     }
   }
 
-  const generatePayload = () => {
+  const generatePayload = (info: any) => {
 
     // let payload = {
     //   // date: new Date().toUTCString(),
@@ -254,10 +266,9 @@ const AddArticle = () => {
       excerpt: "Test post excerpt",
       content: content.toString('html'),
       categories: category?.map((item: any) => item.value),
-      status: 'draft'
+      status: info.status
     }
     console.log(payload);
-
     return payload
   }
 
@@ -300,6 +311,9 @@ const AddArticle = () => {
           <label htmlFor="title" className="col-sm-2 fs-4 col-form-label">Title</label>
           <div className="col-sm-10">
             <input name='title' type="text" className="form-control" id="title" value={title} onChange={onChange} />
+            {titleError && (<div className='fv-plugins-message-container'>
+              <div className='fv-help-block'>Title is required</div>
+            </div>)}
           </div>
         </div>
         <div className="row mb-3">
@@ -312,6 +326,9 @@ const AddArticle = () => {
           <label htmlFor="content" className="col-sm-2 fs-4 col-form-label">Content</label>
           <div className="col-sm-10">
             <Editor value={content} onChange={onChange} />
+            {contentError && (<div className='fv-plugins-message-container'>
+              <div className='fv-help-block'>Content is required</div>
+            </div>)}
           </div>
         </div>
         <div className="row mb-3">
@@ -329,8 +346,8 @@ const AddArticle = () => {
         <div className="row mt-8">
           <div className="col-sm-2 fs-4 col-form-label"></div>
           <div className="col-sm-10">
-            <button type="button" className="btn btn-secondary" onClick={handleSubmit}>Submit</button> &nbsp;
-            <button type="button" className="btn btn-light">Save as Draft</button>
+            <button type="button" className="btn btn-secondary" onClick={(e) => handleSubmit(e, 'pending')}>Submit</button> &nbsp;
+            <button type="button" className="btn btn-light" onClick={(e) => handleSubmit(e, 'draft')} >Save as Draft</button>
             <Link to={'/articles/list'}> <button type="button" className="btn btn-light">Cancel</button></Link>
           </div>
         </div>

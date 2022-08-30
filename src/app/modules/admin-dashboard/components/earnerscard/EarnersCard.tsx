@@ -7,7 +7,6 @@ type Props = {
 }
 
 const EarnersCard = ({ data, title }: Props) => {
-	console.log(data)
 	const renderList = () => {
 		const list: Array<ReactElement> = [];
 		data?.topEarnersList?.forEach((row: any, index: any) =>

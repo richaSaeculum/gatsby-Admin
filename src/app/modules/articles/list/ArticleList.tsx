@@ -23,10 +23,11 @@ const ArticleList = () => {
 
   const getAllPost = async ({ page }: any) => {
     setLoader(true);
-    let response = await getPostListApi({ token: auth?.token, page });
+    let limit = 5;
+    let response = await getPostListApi({ token: auth?.token, page, limit });
     if (response && response.status === 200) {
       setTotalPage(parseInt(response.data['articles-page-count']))
-      let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item), rowNo: (page - 1) * 10 + index + 1 }) })
+      let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item), rowNo: (page - 1) * limit + index + 1 }) })
       setArticleData(a)
       setLoader(false)
     }

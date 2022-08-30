@@ -60,10 +60,11 @@ const Category = () => {
 
   const getCategories = async ({ page }: any) => {
     setLoader(true);
-    const response = await getCategoriesListApi({ token: auth?.token, page });
+    let limit = 10;
+    const response = await getCategoriesListApi({ token: auth?.token, page, limit });
     if (response && response.status === 200) {
       setTotalPage(parseInt(response.data['categories-page-count']))
-      let a = response?.data?.categories.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
+      let a = response?.data?.categories.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
       setCategories(a);
       setLoader(false);
     }

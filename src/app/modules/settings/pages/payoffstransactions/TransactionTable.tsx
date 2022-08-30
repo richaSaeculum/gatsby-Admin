@@ -1,30 +1,31 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { ReactElement, useState } from 'react'
+import Pagination from '../../../../components/pagination/Pagination'
 
-type category = {
-    id: number | null
-    name: string | ''
+type PaginationConfig = {
+    totalPage: number
+    handlePageChange: (page: number) => void
 }
-
 
 type Props = {
-    data: Array<any> | undefined
+    data: any,
+    paginationConfig: PaginationConfig
 }
 
-const TransactionTable = ({ data }: Props) => {
+const TransactionTable = ({ data, paginationConfig }: Props) => {
 
     const renderTablerow = () => {
         let arr: Array<ReactElement> = [];
-        data?.forEach((row, index) => {
+        data?.forEach((row: any, index: any) => {
             arr.push(<tr key={index + 1}>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {index + 1}
+                        {row.rowNo}
                     </span>
                 </td>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {row.username}
+                        {row.txn_user_name}
                     </span>
                 </td>
                 <td>
@@ -34,12 +35,7 @@ const TransactionTable = ({ data }: Props) => {
                 </td>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {row.payoutMonth}
-                    </span>
-                </td>
-                <td>
-                    <span className='fw-semibold d-block fs-7'>
-                        {row.date}
+                        {`${row.txn_month_name} ${row.txn_year}`}
                     </span>
                 </td>
                 <td>
@@ -51,6 +47,10 @@ const TransactionTable = ({ data }: Props) => {
         })
 
         return arr
+    }
+
+    const handlePageClick = (a: any) => {
+        paginationConfig.handlePageChange(a.selected + 1);
     }
 
     return (
@@ -67,7 +67,7 @@ const TransactionTable = ({ data }: Props) => {
                                     <th>Username</th>
                                     <th>Payout</th>
                                     <th>Payout Month</th>
-                                    <th>Date</th>
+                                    {/* <th>Date</th> */}
                                     <th>Articles</th>
                                 </tr>
                             </thead>
@@ -81,6 +81,22 @@ const TransactionTable = ({ data }: Props) => {
                         {/* end::Table */}
                     </div>
                     {/* end::Table container */}
+                    <div className="card-footer d-flex justify-content-end align-items-center flex-wrap">
+                        <Pagination
+                            handlePageClick={handlePageClick}
+                            totalPage={paginationConfig.totalPage}
+                        />
+                        {/* <div className="d-flex align-items-center py-3">
+              <select className="form-control form-select form-control-sm font-weight-bold mr-4 border-0 bg-light" style={{ width: '75px' }}>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              <span className="text-muted ms-2">Displaying 10 of 230 records</span>
+            </div> */}
+                    </div>
                 </div>
                 {/* begin::Body */}
             </div>

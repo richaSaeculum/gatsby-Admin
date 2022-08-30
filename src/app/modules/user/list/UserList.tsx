@@ -23,10 +23,11 @@ const UserList = () => {
 
   const getAllUsers = async ({ page }: any) => {
     setLoader(true);
-    let response = await getUsersListApi({ token: auth?.token, page });
+    let limit = 10;
+    let response = await getUsersListApi({ token: auth?.token, page, limit });
     if (response && response.status === 200) {
       setTotalPage(parseInt(response.data['page-count']))
-      let a = response?.data?.users.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
+      let a = response?.data?.users.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
       setUsersData(a);
       setLoader(false);
     }

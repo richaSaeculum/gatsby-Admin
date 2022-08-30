@@ -15,6 +15,7 @@ const Dashboard: FC = () => {
   const [articleList, setArticleList] = useState<any>();
   const [dashboard, setDashboard] = useState<any>();
   const [postCount, setPostCount] = useState<any>();
+  const [totalPost, setTotalPost] = useState<any>();
 
   const getData = async () => {
     try {
@@ -26,6 +27,7 @@ const Dashboard: FC = () => {
       const response = await getPostListApi({ token: auth?.token });
       if (response && response.status === 200) {
         setArticleList(response.data.articles);
+        setTotalPost(response.data['articles-count'])
       }
 
       const currentRes = await getPostOfCurrentMonthApi({ token: auth?.token })
@@ -58,7 +60,7 @@ const Dashboard: FC = () => {
         <StatusCard
           className='card-xl-stretch mb-5 mb-xl-8'
           faIcon='fa-file'
-          value={articleList?.length}
+          value={totalPost}
           title='Total Articles'
           valueColor='dark'
           titleColor='dark'
