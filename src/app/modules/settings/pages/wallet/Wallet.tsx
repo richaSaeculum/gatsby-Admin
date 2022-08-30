@@ -91,10 +91,15 @@ const Wallet = () => {
         <div className='row my-5'>
           <div className='col-12'>
             <h1 className='fs-2hx fw-bold text-dark my-6'>Transactions</h1>
-            <PaymentTable
+            {transactionList?.length > 0 ? <PaymentTable
               data={transactionList}
               paginationConfig={{ totalPage, handlePageChange }}
-            />
+            /> : <div className={`card`}>
+              <div className='card-body py-3'>
+                <h4 className='mb-0 text-center'>No record found</h4>
+              </div>
+            </div>
+            }
           </div>
         </div>
       </div>
