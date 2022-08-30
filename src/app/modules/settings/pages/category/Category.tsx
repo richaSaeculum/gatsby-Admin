@@ -60,10 +60,10 @@ const Category = () => {
 
   const getCategories = async ({ page }: any) => {
     setLoader(true);
-    let limit = 10;
+    let limit = 5;
     const response = await getCategoriesListApi({ token: auth?.token, page, limit });
     if (response && response.status === 200) {
-      setTotalPage(parseInt(response.data['categories-page-count']))
+      setTotalPage(parseInt(response.data.categoriesPageCount))
       let a = response?.data?.categories.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
       setCategories(a);
       setLoader(false);

@@ -26,7 +26,7 @@ const UserList = () => {
     let limit = 10;
     let response = await getUsersListApi({ token: auth?.token, page, limit });
     if (response && response.status === 200) {
-      setTotalPage(parseInt(response.data['page-count']))
+      setTotalPage(parseInt(response.data.pageCount))
       let a = response?.data?.users.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
       setUsersData(a);
       setLoader(false);

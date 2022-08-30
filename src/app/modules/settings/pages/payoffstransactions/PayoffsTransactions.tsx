@@ -67,7 +67,7 @@ const PayoffsTransactions = () => {
 		let limit = 10;
 		const res = await getSuccessPayoffListApi({ token: auth?.token, page, limit });
 		if (res && res.status === 200) {
-			setTotalPage(parseInt(res.data['page-count']));
+			setTotalPage(parseInt(res.data.pageCount));
 			let a = res.data.payoffs.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
 			setData(a);
 			setLoader(false);
