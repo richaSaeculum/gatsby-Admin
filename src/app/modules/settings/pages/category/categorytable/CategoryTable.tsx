@@ -50,8 +50,8 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props
             arr.push(<tr key={index + 1}>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
-                        {index + 1}
-                        {/* {row.rowNo} */}
+                        {/* {index + 1} */}
+                        {row.rowNo}
                     </span>
                 </td>
                 <td>
