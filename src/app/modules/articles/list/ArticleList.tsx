@@ -8,8 +8,6 @@ import ArticleTable from './articletable/ArticleTable'
 const ArticleList = () => {
 
   const { auth } = useAuth();
-  const { wpAuth } = useAuth();
-  const wpAuthToken = wpAuth?.token
   const { setLoader } = useLayout()
   const [articleData, setArticleData] = useState<any>();
   const [totalPage, setTotalPage] = useState<number>(0);

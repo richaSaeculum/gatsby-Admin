@@ -139,53 +139,33 @@ export const deleteUserApi = async ({ token, id }) => {
 // get post list all (GET)
 export const getPostListApi = async ({ token, page = 1, limit = 10 }) => {
   try {
-    const response = await client().get(`/articles/list?page=${page}&limit=${limit}`, {
+    const { data } = await client().get(`/articles/list?page=${page}&limit=${limit}`, {
       headers: {
         Authorization: token
       }
     });
-    return response.data
+    return data
   } catch (error) {
     // get axios errors from error.response
     console.log(error);
     return error.response.data
   }
 }
-
-// get post list all (GET)
-export const getPostOfCurrentMonthApi = async ({ token }) => {
-  try {
-    const response = await client().get(`/articles/list?month=current`, {
-      headers: {
-        Authorization: token
-      }
-    });
-    return response.data
-  } catch (error) {
-    // get axios errors from error.response
-    console.log(error);
-    return error.response.data
-  }
-}
-
 
 // get post list by month (GET)
-export const getPostListByMonthApi = async ({ wpAuthToken, after = '', before = '' }) => {
+export const getPostListByMonthApi = async ({ token, after = '', before = '', status = 'any' }) => {
   try {
-    const response = await client().get(
-      `https://gatsby.saeculumsolutions.com/wp-json/wp/v2/posts?per_page=100&status=publish&before=${before}&after=${after}&_embed`, {
+    const { data } = await client().get(`/articles/list?status=${status}&after=${after}&before=${before}`, {
       headers: {
-        common: {
-          Authorization: `Bearer ${wpAuthToken}`
-        }
+        Authorization: token
       }
     }
     );
-    return response
+    return data
   } catch (error) {
     // get axios errors from error.response
     console.log(error);
-    throw error;
+    return error.response.data
   }
 }
 

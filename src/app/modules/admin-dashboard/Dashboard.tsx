@@ -1,12 +1,13 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLayout } from '../../../_metronic/layout/core'
-import { getDashboardApi, getPostListApi, getPostOfCurrentMonthApi } from '../../api'
+import { getDashboardApi, getPostListApi, getPostListByMonthApi } from '../../api'
 import { useAuth } from '../auth'
 import ArticleTable from './components/articletable/ArticleTable'
 import EarnersCard from './components/earnerscard/EarnersCard'
 import TreandsCard from './components/trendscard/TrendsCard'
 import StatusCard from './components/statuscard/StatusCard'
+import moment from 'moment'
 
 const Dashboard: FC = () => {
 
@@ -29,8 +30,10 @@ const Dashboard: FC = () => {
         setArticleList(response.data.articles);
         setTotalPost(response.data.articlesCount)
       }
+      const previousMonthLastDate = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD');
+      const nextMonthFirstDate = moment().add(1, 'months').startOf('month').format('YYYY-MM-DD');
 
-      const currentRes = await getPostOfCurrentMonthApi({ token: auth?.token })
+      const currentRes = await getPostListByMonthApi({ token: auth?.token, after: previousMonthLastDate, before: nextMonthFirstDate })
       if (currentRes && currentRes.status === 200) {
         setPostCount(currentRes.data.articlesCount)
       }

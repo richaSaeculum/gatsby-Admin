@@ -34,7 +34,7 @@ const Wallet = () => {
       setLoader(true);
       const response = await getTransactionsApi({ token: auth?.token, page })
       if (response && response.status === 200) {
-        setTotalPage(parseInt(response.data['page-count']))
+        setTotalPage(parseInt(response.data.pageCount))
         let a = response?.data?.transactions.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })
         setTransactionList(a);
       }

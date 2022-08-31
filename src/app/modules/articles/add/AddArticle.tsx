@@ -86,7 +86,7 @@ const AddArticle = () => {
   const ref = useRef(false);
   const [titleError, setTitleError] = useState<Boolean>(false);
   const [contentError, setContentError] = useState<Boolean>(false);
-  const [view, setView] = useState<any>();
+  const [view, setView] = useState<any>(false);
 
   useEffect(() => {
     if (!ref.current) {
@@ -110,6 +110,8 @@ const AddArticle = () => {
     }
   }, [])
 
+
+
   const getCategories = async () => {
     setLoader(true);
     let response: any = await getCategoriesListApi({ token: auth?.token, page: 1, limit: 100 });
@@ -125,7 +127,7 @@ const AddArticle = () => {
     let response: any = await getSinglePostApi({ token: auth?.token, id });
     if (response && response.status === 200) {
       const { content, id, title, status } = response.data;
-      if (status === 'draft') {
+      if (status !== 'draft') {
         setView(true);
       }
       let arr: any = [];
@@ -142,6 +144,7 @@ const AddArticle = () => {
       setCategory(arr);
       setTitle(title.rendered);
       setContent(RichTextEditor.createValueFromString(content.rendered, 'html'));
+      // setContent(content.rendered);
     }
   }
 
@@ -150,11 +153,13 @@ const AddArticle = () => {
     if (success && info.action === 'confirmation') {
       setLoader(true);
       submitForm(info);
-    } else if (info.action === 'alert' || info.action === 'error') {
+    } else if (info.action === 'alert') {
       setConfirmationOpen(!confirmationOpen);
       setLoader(false);
       navigate('articles/list');
-      return
+    } else if (info.action === 'error') {
+      setConfirmationOpen(!confirmationOpen);
+      setLoader(false);
     }
   }
 
@@ -298,7 +303,7 @@ const AddArticle = () => {
               options={categoryList}
               onChange={value => onChange({ target: { name: 'category', value: value } })}
               styles={customStyles}
-              isDisabled={!view}
+              isDisabled={view}
             />
           </div>
         </div>
@@ -321,7 +326,7 @@ const AddArticle = () => {
               id="title"
               value={title}
               onChange={onChange}
-              disabled={!view}
+              disabled={view}
             />
             {titleError && (<div className='fv-plugins-message-container'>
               <div className='fv-help-block'>Title is required</div>
@@ -338,14 +343,14 @@ const AddArticle = () => {
               id="keyword"
               value={keyword}
               onChange={onChange}
-              disabled={!view}
+              disabled={view}
             />
           </div>
         </div>
         <div className="row mb-3">
           <label htmlFor="content" className="col-sm-2 fs-4 col-form-label">Content</label>
           <div className="col-sm-10">
-            <Editor value={content} onChange={onChange} disabled={!view} />
+            <Editor value={content} onChange={onChange} disabled={view} />
             {contentError && (<div className='fv-plugins-message-container'>
               <div className='fv-help-block'>Content is required</div>
             </div>)}
@@ -367,14 +372,14 @@ const AddArticle = () => {
           <div className="col-sm-2 fs-4 col-form-label"></div>
           <div className="col-sm-10">
             {
-              view && (
+              !view && (
                 <>
                   <button type="button" className="btn btn-secondary" onClick={(e) => handleSubmit(e, 'pending')}>Submit</button> &nbsp;
                   <button type="button" className="btn btn-light" onClick={(e) => handleSubmit(e, 'draft')} >Save as Draft</button>
                 </>
               )
             }
-            <Link to={'/articles/list'}> <button type="button" className="btn btn-light">{view ? 'Cancel' : 'Back'}</button></Link>
+            <Link to={'/articles/list'}> <button type="button" className="btn btn-light">{!view ? 'Cancel' : 'Back'}</button></Link>
           </div>
         </div>
       </form>

@@ -78,16 +78,14 @@ const Payment = () => {
     const res = await getPaymentDetailsApi({ token: auth?.token })
     if (res && res.status === 200) {
       let data = res.data[0];
-      console.log(data)
-      // setFormValues(data)
       setInitialValues({
         name: data.user_pay_name,
         address: data.user_pay_address,
-        bankAccNo: data.user_pay_account,
+        bankAccNo: data.user_pay_account === null ? '' : data.user_pay_account,
         aadharcard: "",
         pancard: "",
-        ifsc: data.user_pay_ifsc,
-        bankName: data.user_pay_bank,
+        ifsc: data.user_pay_ifsc === null ? '' : data.user_pay_ifsc,
+        bankName: data.user_pay_bank === null ? '' : data.user_pay_bank,
         upi: data.user_pay_upi === null ? '' : data.user_pay_upi,
         isUpi: data.user_pay_type === 'bank-transfer' ? false : true,
         isEdit: true,

@@ -29,6 +29,7 @@ const Configuration = () => {
     const response = await getPayoutMarginApi({ token: auth?.token });
     if (response && response.status === 200) {
       setCurrentMargin(response.data.payout_margin);
+      setMargin(response.data.payout_margin);
       setLoader(false)
     }
   }
