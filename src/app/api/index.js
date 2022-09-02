@@ -350,6 +350,7 @@ export const deleteCategoryApi = async ({ token, id }) => {
     );
     return data;
   } catch (error) {
+     // get axios errors from error.response
     console.log(error);
     return error.response.data
   }
@@ -499,10 +500,26 @@ export const addPayoffApi = async ({ token, payload }) => {
   }
 }
 
-// get all payoff list (MONTHS)
-export const getPayoffAllApi = async ({ token }) => {
+// update payout margin  (POST)
+export const updatePayoffApi = async ({ token, payload, id }) => {
   try {
-    const { data } = await client().get(`/payoff/all`, {
+    const { data } = await client().post(`/payoff/create/${id}`, payload, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// get all payoff list (MONTHS)
+export const getPayoffAllApi = async ({ token, page = 1, limit = 10 }) => {
+  try {
+    const { data } = await client().get(`/payoff/all?page=${page}&limit=${limit}`, {
       headers: {
         Authorization: token
       }

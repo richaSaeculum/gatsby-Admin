@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { useAuth } from '../../../auth'
-import { addPayoffApi, getPayoffAllApi, getPayoffsByMonthApi, getPayoutMarginApi, getPostListByMonthApi } from '../../../../api'
+import { addPayoffApi, getPayoffAllApi, getPayoffsByMonthApi, getPayoutMarginApi, getPostListByMonthApi, updatePayoffApi } from '../../../../api'
 import { useLayout } from '../../../../../_metronic/layout/core'
 import PayoffsTable from './payoffstable/PayoffsTable'
 import { useNavigate } from 'react-router-dom'
@@ -16,31 +16,39 @@ const Payoffs = () => {
   const { setLoader } = useLayout()
   const [open, setOpen] = useState<boolean>(false)
   const navigate = useNavigate();
-  const [month, setMonth] = useState<any>(new Date());
-  const [revenue, setRevenue] = useState<any>(0);
-  const [amount, setAmount] = useState<any>();
-  const [articleCount, setArticleCount] = useState<any>();
+  const [month, setMonth] = useState<Date>(new Date());
+  const [revenue, setRevenue] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(0);
+  const [articleCount, setArticleCount] = useState<number>(0);
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
   const [confirmationInfo, setConfirmationInfo] = useState<any>();
-  const [margin, setMargin] = useState<number>(0)
-
+  const [margin, setMargin] = useState<number>(0);
+  const [editId, setEditID] = useState<string | null>(null);
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [payoffsList, setPayoffsList] = useState<any>();
 
-  const getPayofflist = async () => {
-    const res = await getPayoffAllApi({ token: auth?.token })
+  const getPayofflist = async ({ page }: any) => {
+    setLoader(true);
+    let limit = 5
+    const res = await getPayoffAllApi({ token: auth?.token, page, limit })
     if (res && res.status === 200) {
-      setPayoffsList(res.data);
+      setTotalPage(parseInt(res.data.pageCount))
+      let a = res?.data?.payoffs.map((item: any, index: number) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
+      setPayoffsList(a);
+      setLoader(false);
     }
   }
+
   useEffect(() => {
-    getPayofflist();
+    getPayofflist({ page: currentPage });
   }, [])
 
   useEffect(() => {
     calculateAmountPerArticle();
   }, [month, revenue, articleCount])
 
-  const getTotalArticleOfMonth = async (after: any, before: any) => {
+  const getTotalArticleOfMonth = async (after: string, before: string) => {
     const response = await getPostListByMonthApi({ token: auth?.token, after, before, status: 'publish' });
     if (response && response.status === 200) {
       setArticleCount(response.data.articlesCount);
@@ -48,8 +56,8 @@ const Payoffs = () => {
   }
 
   const calculateAmountPerArticle = () => {
-    if (revenue !== null && articleCount > 0 && margin != 0) {
-      const amount: any = (revenue - (revenue * margin) / 100) / articleCount;
+    if (revenue > 0 && articleCount > 0 && margin > 0) {
+      const amount: number = (revenue - (revenue * margin) / 100) / articleCount;
       setAmount(amount);
     } else {
       setAmount(0);
@@ -63,6 +71,7 @@ const Payoffs = () => {
       submitForm();
     } else if (info.action === 'alert') {
       setConfirmationOpen(false);
+      getPayofflist({ page: currentPage });
     } else if (info.action === 'error') {
       setConfirmationOpen(false);
     } else {
@@ -75,7 +84,7 @@ const Payoffs = () => {
     setConfirmationOpen(!confirmationOpen);
   }
 
-  const onMonthChange = (month: any) => {
+  const onMonthChange = (month: Date) => {
     const now = new Date(month);
     // const after = new Date(now.getFullYear(), now.getMonth(), 2).toISOString();
     // const before = new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString();
@@ -87,7 +96,13 @@ const Payoffs = () => {
   }
 
   const onEditRow = async (row: any) => {
-    setLoader(false)
+    setLoader(false);
+    onMonthChange(new Date(moment(row.monthYear, "MMMM YYYY").toISOString()));
+    getPayoffMargin();
+    setMonth(new Date(moment(row.monthYear, "MMMM YYYY").toISOString()))
+    setRevenue(row.totalRevenue);
+    setAmount(row.perArticleRevenue);
+    setEditID(row.id);
     setOpen(true);
   }
 
@@ -96,17 +111,18 @@ const Payoffs = () => {
   }
 
   const onShowPaymentList = (row: any) => {
-    if (row.month && row.yaer) {
-      navigate(`/settings/payoffs/${row.month}-${row.yaer}`);
+    if (row.month && row.year) {
+      navigate(`/settings/payoffs/${row.month}-${row.year}`);
     }
   }
 
   const onCloseModal = () => {
     setOpen(false);
+    setEditID(null);
   }
 
   const submitForm = async () => {
-    let response: any;
+    let response;
     let payload = {
       "month": moment(month).format("M"),
       "year": moment(month).format("YYYY"),
@@ -114,24 +130,20 @@ const Payoffs = () => {
       "amount_per_article": amount
     }
 
-    if (false) {
-      // response = await updateCategoryApi({ token: auth?.token, payload, id: category.id });
-      // if (response && response.status === 200) {
-      //   const info = { action: 'alert', message: 'Category successfully updated' }
-      //   toggleModal(info);
-      //   return
-      // } else if (response && response.status === 500) {
-      //   const info = { action: 'error', message: 'Category with same name is already exists' }
-      //   toggleModal(info);
-      //   return
-      // } else {
-      //   const info = { action: 'error', message: response.message };
-      //   toggleModal(info);
-      // }
+    if (editId) {
+      response = await updatePayoffApi({ token: auth?.token, payload, id: editId });
+      if (response && response.status === 200) {
+        const info = { action: 'alert', message: 'Payoff successfully updated' }
+        toggleModal(info);
+        return
+      } else {
+        const info = { action: 'error', message: response.message };
+        toggleModal(info);
+      }
     } else {
       response = await addPayoffApi({ token: auth?.token, payload });
       if (response && response.status === 200) {
-        const info = { action: 'alert', message: 'Payoff successfully added ' }
+        const info = { action: 'alert', message: 'Payoff successfully added' }
         toggleModal(info);
         return
       } else {
@@ -143,7 +155,7 @@ const Payoffs = () => {
 
   const handleSubmit = async () => {
     let valid = true;
-    if (typeof revenue == 'undefined' || revenue < 1) {
+    if (revenue < 1) {
       let info = { action: 'alert', message: 'Please enter correct revenue.' }
       toggleModal(info);
       valid = false;
@@ -158,10 +170,20 @@ const Payoffs = () => {
   const onPayoffModalOpen = async () => {
     setOpen(true);
     onMonthChange(month);
+    getPayoffMargin();
+  }
+
+  const getPayoffMargin = async () => {
     const res = await getPayoutMarginApi({ token: auth?.token });
     if (res && res.status === 200) {
-      setMargin(res.data.payout_margin)
+      setMargin(res.data.payout_margin);
     }
+  }
+
+  const handlePageChange = async (selectedPage: number) => {
+    // return
+    await getPayofflist({ page: selectedPage });
+    setCurrentPage(selectedPage);
   }
 
   return (
@@ -188,7 +210,7 @@ const Payoffs = () => {
       >
         <div className="modal-content bg-gray-200">
           <div className="modal-header">
-            <h2 className="fw-bolder">Add Payoff</h2>
+            <h2 className="fw-bolder">   {editId ? 'Update' : 'Add'} Payoff</h2>
             <button type='button' className="btn btn-icon btn-sm btn-active-icon-primary" onClick={onCloseModal}>
               <span className="svg-icon svg-icon-1">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mh-50px">
@@ -253,7 +275,7 @@ const Payoffs = () => {
                   placeholder="Total Revenue"
                   name='revenue'
                   value={revenue}
-                  onChange={e => { setRevenue(e.target.value) }}
+                  onChange={e => { setRevenue(parseInt(e.target.value)) }}
                 />
                 <div className="fv-plugins-message-container invalid-feedback">
                 </div>
@@ -287,6 +309,7 @@ const Payoffs = () => {
         onDeleteRow={onDeleteRow}
         onShowPaymentList={onShowPaymentList}
         data={payoffsList}
+        paginationConfig={{ totalPage, handlePageChange }}
       />
     </>
   )

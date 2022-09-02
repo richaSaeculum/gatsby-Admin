@@ -106,7 +106,8 @@ const SettingsPage = () => {
             )
           }
           <Route index element={<Navigate to={'/settings/payment'} />} />
-          <Route path="*" element={<Navigate to={'/settings/payment'} />} />
+          {/* Page Not Found */}
+          <Route path='*' element={<Navigate to='/error/404' replace />} />
         </Route>
       </Routes>
     </>

@@ -1,7 +1,7 @@
 import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import '../style.scss'
-import RichTextEditor, { EditorValue, ToolbarConfig } from 'react-rte';
+import RichTextEditor, { EditorValue } from 'react-rte';
 
 import Editor from './editor/Editor';
 import { addPostApi, getCategoriesListApi, getSinglePostApi, updatePostApi } from '../../../api';
@@ -68,8 +68,7 @@ const AddArticle = () => {
 
   const param = useParams()
   const { setLoader } = useLayout();
-  const { wpAuth, auth } = useAuth()
-  const wpAuthToken = wpAuth?.token;
+  const { auth } = useAuth()
   const navigate = useNavigate();
 
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
@@ -86,7 +85,7 @@ const AddArticle = () => {
   const ref = useRef(false);
   const [titleError, setTitleError] = useState<Boolean>(false);
   const [contentError, setContentError] = useState<Boolean>(false);
-  const [view, setView] = useState<any>(false);
+  const [view, setView] = useState<boolean>(false);
 
   useEffect(() => {
     if (!ref.current) {
@@ -143,7 +142,7 @@ const AddArticle = () => {
       }
       setCategory(arr);
       setTitle(title.rendered);
-      setContent(RichTextEditor.createValueFromString(content.rendered, 'html'));
+      setContent(RichTextEditor.createValueFromString(content.raw, 'html'));
       // setContent(content.rendered);
     }
   }
@@ -224,8 +223,9 @@ const AddArticle = () => {
   const submitForm = async (info: any) => {
     const keywordArr = keyword?.split(',').filter(a => a !== ' ').map(b => b.trim());
     let payload = generatePayload(info);
+    let response;
     if (id) {
-      let response: any = await updatePostApi({ token: auth?.token, id, payload });
+      response = await updatePostApi({ token: auth?.token, id, payload });
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Article successfully updated' }
         toggleModal(info);
@@ -235,7 +235,7 @@ const AddArticle = () => {
         toggleModal(info);
       }
     } else {
-      let response = await addPostApi({ token: auth?.token, payload });
+      response = await addPostApi({ token: auth?.token, payload });
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Article successfully added' }
         toggleModal(info);
@@ -277,7 +277,6 @@ const AddArticle = () => {
       categories: category?.map((item: any) => item.value),
       status: info.status
     }
-    console.log(payload);
     return payload
   }
 

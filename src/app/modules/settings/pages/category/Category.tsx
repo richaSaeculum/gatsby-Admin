@@ -10,7 +10,7 @@ import ConfirmationModal from '../../../../components/modal/ConfirmationModal'
 
 const Category = () => {
 
-  const { wpAuth, auth } = useAuth();
+  const { auth } = useAuth();
   const { setLoader } = useLayout();
   const [categories, setCategories] = useState();
   const [open, setOpen] = useState<boolean>(false);
@@ -21,21 +21,11 @@ const Category = () => {
   const [confirmationInfo, setConfirmationInfo] = useState<any>();
   const [totalPage, setTotalPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [editId, setEditId] = useState<string | null>(null);
 
   useEffect(() => {
     getCategories({ page: currentPage });
   }, [])
-
-  const onEdit = async (row: any) => {
-    setLoader(true);
-    const res = await getSingleCategoryApi({ token: auth?.token, id: row.id })
-    if (res && res.status === 200) {
-      setTitle(res.data.name);
-      setOpen(true);
-      setCategory(res.data);
-      setLoader(false);
-    }
-  }
 
   const confirmationCallback = (success: boolean, info: any) => {
     if (success && info.action === 'confirmation') {
@@ -88,11 +78,9 @@ const Category = () => {
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Category successfully updated' }
         toggleModal(info);
-        return
       } else if (response && response.status === 500) {
         const info = { action: 'error', message: 'Category with same name is already exists' }
         toggleModal(info);
-        return
       } else {
         const info = { action: 'error', message: response.message };
         toggleModal(info);
@@ -102,11 +90,9 @@ const Category = () => {
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Category successfully added ' }
         toggleModal(info);
-        return
       } else if (response && response.status === 500) {
         const info = { action: 'error', message: 'Category with same name is already exists' }
         toggleModal(info);
-        return
       } else {
         const info = { action: 'error', message: response.message };
         toggleModal(info);
@@ -114,6 +100,18 @@ const Category = () => {
     }
     setIsError(false);
     setLoader(false);
+  }
+
+  const onEdit = async (row: any) => {
+    setLoader(true);
+    const res = await getSingleCategoryApi({ token: auth?.token, id: row.id });
+    if (res && res.status === 200) {
+      setEditId(res.data.id);
+      setTitle(res.data.name);
+      setOpen(true);
+      setCategory(res.data);
+      setLoader(false);
+    }
   }
 
   const onDelete = async (row: any) => {
@@ -128,6 +126,8 @@ const Category = () => {
     setOpen(false);
     setIsError(false);
     setTitle('');
+    setEditId(null);
+    setLoader(false);
   }
 
   const handlePageChange = async (selectedPage: number) => {
@@ -164,7 +164,7 @@ const Category = () => {
       >
         <div className="modal-content bg-gray-200">
           <div className="modal-header">
-            <h2 className="fw-bolder">Add Category</h2>
+            <h2 className="fw-bolder">{editId ? 'Update' : 'Add'} Category</h2>
             <button type='button' className="btn btn-icon btn-sm btn-active-icon-primary" onClick={onCloseModal}>
               <span className="svg-icon svg-icon-1">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mh-50px">

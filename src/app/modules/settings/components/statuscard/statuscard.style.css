@@ -2,3 +2,8 @@
     border-radius: 18px;
     box-shadow: -14px 23px 45px -20px rgba(7, 19, 65, 0.15);
 }
+
+
+.break-all {
+    word-break: break-all;
+}

@@ -25,12 +25,17 @@ const Configuration = () => {
   }, [confirmationInfo])
 
   const getPayoutMargin = async () => {
-    setLoader(true)
-    const response = await getPayoutMarginApi({ token: auth?.token });
-    if (response && response.status === 200) {
-      setCurrentMargin(response.data.payout_margin);
-      setMargin(response.data.payout_margin);
-      setLoader(false)
+    setLoader(true);
+    try {
+      const response = await getPayoutMarginApi({ token: auth?.token });
+      if (response && response.status === 200) {
+        setCurrentMargin(response.data.payout_margin);
+        setMargin(response.data?.payout_margin);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoader(false);
     }
   }
 

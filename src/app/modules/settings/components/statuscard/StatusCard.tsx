@@ -36,7 +36,7 @@ const StatusCard: React.FC<Props> = ({
 					<i className={`fa-solid fa-3x ${faIcon}`} ></i>
 					<div>
 						<div className={`text-${titleColor} fs-3 fw-semibold mb-2`}>{title}</div>
-						<div className={`fw-bold text-${valueColor} fs-1`}>{value}</div>
+						<div className={`fw-bold text-${valueColor} fs-1 break-all`}>{value}</div>
 						<div className=''>{summery} </div>
 					</div>
 				</div>
