@@ -3,6 +3,7 @@ import React, { ReactElement, useState } from 'react'
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal'
 import clsx from 'clsx'
 import Pagination from '../../../../components/pagination/Pagination'
+import { decode } from 'html-entities';
 
 
 type PaginationConfig = {
@@ -58,7 +59,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
         </td>
         <td>
           <a href='#' className='text-dark fw-bold fs-6'>
-            {row.title.rendered}
+            {decode(row.title.rendered)}
           </a>
         </td>
         <td>

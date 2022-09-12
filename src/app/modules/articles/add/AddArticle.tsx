@@ -9,6 +9,7 @@ import { useLayout } from '../../../../_metronic/layout/core';
 import { useAuth } from '../../auth';
 import ConfirmationModal from '../../../components/modal/ConfirmationModal';
 import Select from 'react-select'
+import { decode } from 'html-entities';
 
 const customStyles = {
   menu: (provided: any, state: any) => ({
@@ -141,7 +142,7 @@ const AddArticle = () => {
         }
       }
       setCategory(arr);
-      setTitle(title.rendered);
+      setTitle(decode(title.rendered));
       setContent(RichTextEditor.createValueFromString(content.raw, 'html'));
       // setContent(content.rendered);
     }

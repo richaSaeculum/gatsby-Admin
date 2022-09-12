@@ -2,6 +2,7 @@
 import React, { ReactElement } from 'react'
 import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
 import Tabledata from './sample_article.json'
+import { decode } from 'html-entities';
 
 type Props = {
     data?: any
@@ -20,7 +21,7 @@ const ArticleTable = ({ data }: Props) => {
                 </td>
                 <td>
                     <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
-                        {row.title.rendered}
+                        {decode(row.title.rendered)}
                     </a>
                 </td>
                 <td>

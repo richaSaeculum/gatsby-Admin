@@ -42,7 +42,7 @@ const AsideDefault: FC = () => {
               className='h-25px logo'
               src={toAbsoluteUrl('/media/logos/default-dark.svg')}
             /> */}
-            <h1 className='text-secondary'>Company Logo</h1>
+            <h1 className='text-secondary'>The Common Logic</h1>
           </Link>
         )}
         {aside.theme === 'light' && (
@@ -52,7 +52,7 @@ const AsideDefault: FC = () => {
               className='h-25px logo'
               src={toAbsoluteUrl('/media/logos/default.svg')}
             /> */}
-            <h1 className='text-secondary'>Company Logo</h1>
+            <h1 className='text-secondary fs-2'>The Common Logic</h1>
           </Link>
         )}
         {/* end::Logo */}

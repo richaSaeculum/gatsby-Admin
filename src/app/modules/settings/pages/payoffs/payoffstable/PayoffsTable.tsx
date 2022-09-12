@@ -80,6 +80,7 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data, paginat
           <button
             className='btn btn-secondary btn-sm px-4 me-2'
             onClick={() => { onEditRow(row) }}
+            disabled={row.is_payment_done}
           >
             Edit
           </button>
