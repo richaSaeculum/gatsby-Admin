@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { ReactElement, useState } from 'react'
+import React, { Dispatch, ReactElement, SetStateAction, useState } from 'react'
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal'
 import clsx from 'clsx'
 import Pagination from '../../../../components/pagination/Pagination'
@@ -8,7 +8,10 @@ import { decode } from 'html-entities';
 
 type PaginationConfig = {
   totalPage: number
-    handlePageChange: (page: number) => void
+  handlePageChange: (page: number) => void
+  totalArticle: number
+  limitNo: number
+  setLimitNo: Dispatch<SetStateAction<number>>
 }
 
 type Props = {
@@ -70,7 +73,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
           </span>
         </td>
         <td>
-          <span className={clsx('badge', {
+          <span className={clsx('badge text-capitalize', {
             'badge-light-success': row.status === 'publish',
             'badge-light-primary': row.status === 'draft',
             'badge-light-warning': row.status === 'pending',
@@ -81,13 +84,13 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
         <td>
           <span className='fw-semibold d-block fs-7'>
             {/* {row.views} */}
-            not find in res
+            -
           </span>
         </td>
         <td>
           <span className='fw-semibold d-block fs-7'>
             {/* {row.ctr} */}
-            not find in res
+            -
           </span>
         </td>
         <td className='text-end d-flex'>
@@ -131,7 +134,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
   }
 
   const handlePageClick = (a: any) => {
-        paginationConfig.handlePageChange(a.selected + 1);
+    paginationConfig.handlePageChange(a.selected + 1);
   }
 
   return (
@@ -169,21 +172,26 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
             {/* end::Table */}
           </div>
           {/* end::Table container */}
-                    <div className="card-footer d-flex justify-content-end align-items-center flex-wrap">
-                        <Pagination
-                            handlePageClick={handlePageClick}
-                            totalPage={paginationConfig.totalPage}
-                        />
-                        {/* <div className="d-flex align-items-center py-3">
-                            <select className="form-control form-select form-control-sm font-weight-bold mr-4 border-0 bg-light" style={{ width: '75px' }}>
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="30">30</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                </select>
-                            <span className="text-muted ms-2">Displaying 10 of 230 records</span>
-                        </div> */}
+          <div className="card-footer d-flex justify-content-between align-items-center flex-wrap">
+            <select
+              value={paginationConfig.limitNo}
+              onChange={(e: any) => { paginationConfig?.setLimitNo(e.target.value); console.log(typeof e.target.value) }}
+              className="form-control form-select form-control-sm font-weight-bold mr-4 border-0 bg-light"
+              style={{ width: '75px' }}
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+            <div className="d-flex align-items-center py-3">
+              <Pagination
+                handlePageClick={handlePageClick}
+                totalPage={paginationConfig.totalPage}
+              />
+              <span className="text-muted ms-2">Displaying {(paginationConfig.limitNo > paginationConfig.totalArticle) ? paginationConfig.totalArticle : paginationConfig.limitNo } of {paginationConfig.totalArticle} records</span>
+            </div>
           </div>
         </div>
         {/* begin::Body */}

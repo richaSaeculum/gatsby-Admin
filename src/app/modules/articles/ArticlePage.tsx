@@ -3,6 +3,7 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { PageLink, PageTitle } from '../../../_metronic/layout/core'
 import AddArticle from './add/AddArticle'
 import ArticleList from './list/ArticleList'
+import Preview from './preview/Preview'
 
 const ArticleBreadcrumb: Array<PageLink> = [
   {
@@ -37,6 +38,15 @@ const ArticlePage = () => {
             }
           />
           <Route
+            path='preview/:id'
+            element={
+              <>
+                <PageTitle breadcrumbs={ArticleBreadcrumb}>Preview</PageTitle>
+                <Preview />
+              </>
+            }
+          />
+          <Route
             path='add-article'
             element={
               <>
@@ -55,7 +65,7 @@ const ArticlePage = () => {
             }
           />
           <Route index element={<Navigate to={'/articles/list'} />} />
-          <Route path="*" element={<Navigate to={'/articles/list'}/>}/>
+          {/* <Route path="*" element={<Navigate to={'/articles/list'}/>}/> */}
         </Route>
       </Routes>
     </>

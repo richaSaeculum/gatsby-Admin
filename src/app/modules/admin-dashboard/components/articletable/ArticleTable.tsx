@@ -27,13 +27,13 @@ const ArticleTable = ({ data }: Props) => {
                 <td>
                     <span className='fw-semibold d-block fs-7'>
                         {/* {row.views} */}
-                        not found
+                        -
                     </span>
                 </td>
                 <td>
                     <span className='fw-semibold d-block fs-7'>
                         {/* {row.ctr} */}
-                        not found
+                        -
                     </span>
                 </td>
                 {/* <td className='text-end'>

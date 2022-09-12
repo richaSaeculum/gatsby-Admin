@@ -11,21 +11,23 @@ const ArticleList = () => {
   const { setLoader } = useLayout()
   const [articleData, setArticleData] = useState<any>();
   const [totalPage, setTotalPage] = useState<number>(0);
+  const [totalArticle, setTotalArticle] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [limitNo, setLimitNo] = useState<number>(5);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllPost({ page: currentPage });
-  }, [])
+    getAllPost({ page: 1 });
+  }, [limitNo])
 
   const getAllPost = async ({ page }: any) => {
     setLoader(true);
-    let limit = 5;
-    let response = await getPostListApi({ token: auth?.token, page, limit });
+    let response = await getPostListApi({ token: auth?.token, page, limit: limitNo });
     if (response && response.status === 200) {
-      setTotalPage(parseInt(response.data.pageCount))
-      let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item), rowNo: (page - 1) * limit + index + 1 }) })
+      setTotalPage(parseInt(response.data.pageCount));
+      setTotalArticle(parseInt(response.data.articlesCount))
+      let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item), rowNo: (page - 1) * limitNo + index + 1 }) })
       setArticleData(a)
       setLoader(false)
     }
@@ -84,7 +86,7 @@ const ArticleList = () => {
           onEditRow={onEditRow}
           onDeleteRow={onDeleteRow}
           data={articleData}
-          paginationConfig={{ totalPage, handlePageChange }}
+          paginationConfig={{ totalPage, handlePageChange, totalArticle, limitNo, setLimitNo }}
         /> :
           <div className={`card`}>
             <div className='card-body py-3'>

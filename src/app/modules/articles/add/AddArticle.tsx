@@ -281,6 +281,10 @@ const AddArticle = () => {
     return payload
   }
 
+  const onPreviewClick = () => {
+    navigate(`/articles/preview/${id}`);
+  }
+
   return (
     <>
       {confirmationOpen && <ConfirmationModal
@@ -291,7 +295,7 @@ const AddArticle = () => {
       />}
       <div className="card-header d-flex justify-content-between align-items-center mb-7">
         <h1 className='mb-0'>Title</h1>
-        <button type='button' className='btn btn-secondary'>Preview</button>
+        {id && <button type='button' className='btn btn-secondary' onClick={onPreviewClick}>Preview</button>}
       </div>
       <form>
         <div className="row mb-3">

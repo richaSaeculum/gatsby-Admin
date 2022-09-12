@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
 import './trendscard.style.css'
-import { decode } from 'html-entities';
 
 type Props = {
     data: any,
@@ -13,11 +12,11 @@ const TreandsCard = ({ data, title }: Props) => {
         data?.slice(0,5).forEach((row: any, index: any) =>
             list.push(
                 <li key={index} className="list-group-item bg-transparent d-flex justify-content-between align-items-center p-5">
-                    <span>
+                    <span className='text-truncate pe-5'>
                         <span className='fs-3 fw-bold'>{index + 1}. &nbsp;</span>
-                        <span className='fs-4 fw-semibold'>{decode(row.title.rendered)}</span>
+                        <span className='fs-4 fw-semibold'>{row.title.rendered}</span>
                     </span>
-                    <small className='fw-bold fs-7'>{"not found"}</small>
+                    <small className='fw-bold fs-7'>{"-"}</small>
                 </li>)
         )
         return list;
