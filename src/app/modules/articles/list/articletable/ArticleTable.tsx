@@ -108,17 +108,12 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
           >
             Edit
           </button> */}
-          {row.status !== 'draft' ? <button
+          <button
             className={clsx('btn btn-secondary btn-sm px-4 me-2')}
             onClick={() => { onEditRow(row) }}
           >
-            View
-          </button> : <button
-            className={clsx('btn btn-secondary btn-sm px-4 me-2')}
-            onClick={() => { onEditRow(row) }}
-          >
-            Edit
-          </button>}
+            {row.status === 'draft' ? "Edit" : "View"}
+          </button>
 
           <button
             className='btn btn-light  btn-sm px-4'
@@ -190,7 +185,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
                 handlePageClick={handlePageClick}
                 totalPage={paginationConfig.totalPage}
               />
-              <span className="text-muted ms-2">Displaying {(paginationConfig.limitNo > paginationConfig.totalArticle) ? paginationConfig.totalArticle : paginationConfig.limitNo } of {paginationConfig.totalArticle} records</span>
+              <span className="text-muted ms-2">Displaying {(paginationConfig.limitNo > paginationConfig.totalArticle) ? paginationConfig.totalArticle : paginationConfig.limitNo} of {paginationConfig.totalArticle} records</span>
             </div>
           </div>
         </div>

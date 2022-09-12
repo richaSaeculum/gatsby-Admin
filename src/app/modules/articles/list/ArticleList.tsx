@@ -52,8 +52,10 @@ const ArticleList = () => {
   }
 
   const onEditRow = (row: any) => {
-    if (row.id) {
+    if (row.id && row.status === 'draft'){
       navigate(`/articles/edit-article/${row.id}`);
+    }else {
+      navigate(`/articles/preview/${row.id}`);
     }
   }
 
