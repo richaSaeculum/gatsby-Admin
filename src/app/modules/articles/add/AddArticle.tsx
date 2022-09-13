@@ -156,7 +156,7 @@ const AddArticle = () => {
     } else if (info.action === 'alert') {
       setConfirmationOpen(!confirmationOpen);
       setLoader(false);
-      navigate('articles/list');
+      navigate('/articles/list');
     } else if (info.action === 'error') {
       setConfirmationOpen(!confirmationOpen);
       setLoader(false);
