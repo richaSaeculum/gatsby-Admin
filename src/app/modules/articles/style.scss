@@ -1,3 +1,10 @@
+// select
+.css-aezlqh-control:hover,
+.css-3tqmgl-control:hover {
+  border-color: #313B54 !important;
+  border: 1px solid #313B54 !important;
+}
+
 /* Root Text Editor Div */
 .mantine-RichTextEditor-root {
   border: 1px solid #313B54 !important;
@@ -16,13 +23,25 @@
   border-color: #313B54 !important;
 }
 
-/* Text Editor Toolbar Div */
 .mantine-RichTextEditor-toolbar {
   background-color: #fff;
   margin: 0;
   padding: 10px;
   border: 0;
   border-bottom: 1px solid #313B54 !important;
+}
+
+.mantine-h9r4bm.ql-active {
+  color: #313B54;
+  background-color: #6FD6FF90;
+}
+
+.mantine-h9r4bm:hover {
+  background-color: rgba(231, 245, 255, 1);
+}
+
+.mantine-h9r4bm.ql-active:hover {
+  background-color: #6FD6FF90;
 }
 
 .preview_title {
