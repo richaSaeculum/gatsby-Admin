@@ -1,7 +1,6 @@
-import React, { FormEvent, useEffect, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { FormEvent, useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import '../style.scss'
-import RichTextEditor, { EditorValue } from 'react-rte';
 
 import Editor from './editor/Editor';
 import { addPostApi, getCategoriesListApi, getSinglePostApi, updatePostApi } from '../../../api';
@@ -79,7 +78,7 @@ const AddArticle = () => {
   const [categoryList, setCategoryList] = useState<any>();
   const [title, setTitle] = useState<string | undefined>('');
   const [keyword, setKeyword] = useState<string | undefined>('');
-  const [content, setContent] = useState<EditorValue>(RichTextEditor.createEmptyValue())
+  const [content, setContent] = useState<any>()
   const [seoScore, setSeoScore] = useState<number | undefined>();
   const [seoTips, setSeoTips] = useState<string | undefined>('');
   const [id, setId] = useState<string>();
@@ -109,8 +108,6 @@ const AddArticle = () => {
       setId(id);
     }
   }, [])
-
-
 
   const getCategories = async () => {
     setLoader(true);
@@ -143,7 +140,7 @@ const AddArticle = () => {
       }
       setCategory(arr);
       setTitle(decode(title.rendered));
-      setContent(RichTextEditor.createValueFromString(content.raw, 'html'));
+      setContent(content.raw);
       // setContent(content.rendered);
     }
   }
@@ -170,7 +167,7 @@ const AddArticle = () => {
 
   const onChange = (e: any) => {
     const { name, value } = e.target;
-
+    console.log(e)
     if (name == 'title' && value !== '') {
       setTitleError(false)
     }
@@ -214,7 +211,6 @@ const AddArticle = () => {
       setContentError(true)
       valid = false
     }
-    console.log(valid)
     if (valid) {
       let info = { action: 'confirmation', message: 'Are You Sure To Save?', status: status }
       toggleModal(info);
@@ -383,7 +379,7 @@ const AddArticle = () => {
                 </>
               )
             }
-            <Link to={'/articles/list'}> <button type="button" className="btn btn-light">{!view ? 'Cancel' : 'Back'}</button></Link>
+            <button type="button" className="btn btn-light" onClick={() => { navigate(-1) }}>{!view ? 'Cancel' : 'Back'}</button>
           </div>
         </div>
       </form>

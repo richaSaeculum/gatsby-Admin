@@ -1,7 +1,7 @@
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom';
 import { decode } from 'html-entities';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
 import { useLayout } from '../../../../_metronic/layout/core';
 import { getSinglePostApi } from '../../../api';
 import { useAuth } from '../../auth';
@@ -41,7 +41,6 @@ const Preview = () => {
           ...response.data,
           categories: arr
         });
-        console.log(post)
       }
     } catch (err) {
       console.log(err);
@@ -53,10 +52,10 @@ const Preview = () => {
   return (
     <div className='container'>
       <h1 className='preview_title'>{decode(post?.title?.raw)}</h1>
-      <div style={{ display: 'flex', alignItems: 'center', marginTop: "16px" }}>
-        <i className="fa-sharp fa-solid fa-calendar" style={{ fontSize: 20, marginRight: '10px', color:'#313B54' }}></i>
+      {post?.date && <div style={{ display: 'flex', alignItems: 'center', marginTop: "16px" }}>
+        <i className="fa-sharp fa-solid fa-calendar" style={{ fontSize: 20, marginRight: '10px', color: '#313B54' }}></i>
         <span className='preview_date'>{moment(post?.date).format('DD MMM, YYYY')}</span>
-      </div>
+      </div>}
       {post?.categories == null ? null : (
         <div className='preview_tags'>
           <i className="fa-solid fa-tags" style={{ fontSize: 20, marginRight: '10px', color: '#313B54' }}></i>
