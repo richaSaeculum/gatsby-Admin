@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { Dispatch, ReactElement, SetStateAction, useState } from 'react'
-import ConfirmationModal from '../../../../components/modal/ConfirmationModal'
-import clsx from 'clsx'
-import Pagination from '../../../../components/pagination/Pagination'
-import { decode } from 'html-entities';
+import { Dispatch, ReactElement, SetStateAction, useState } from 'react';
 
+import { decode } from 'html-entities';
+import clsx from 'clsx';
+
+import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
+import Pagination from '../../../../components/pagination/Pagination';
 
 type PaginationConfig = {
   totalPage: number
@@ -170,7 +171,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
           <div className="card-footer d-flex justify-content-between align-items-center flex-wrap">
             <select
               value={paginationConfig.limitNo}
-              onChange={(e: any) => { paginationConfig?.setLimitNo(e.target.value); console.log(typeof e.target.value) }}
+              onChange={(e: any) => { paginationConfig?.setLimitNo(e.target.value); }}
               className="form-control form-select form-control-sm font-weight-bold mr-4 border-0 bg-light"
               style={{ width: '75px' }}
             >

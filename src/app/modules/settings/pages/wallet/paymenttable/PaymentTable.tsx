@@ -1,7 +1,8 @@
-import moment from 'moment'
-import React, { ReactElement } from 'react'
-import Pagination from '../../../../../components/pagination/Pagination'
-import Tabledata from './sample_payment.json'
+import { ReactElement } from 'react';
+
+import moment from 'moment';
+
+import Pagination from '../../../../../components/pagination/Pagination';
 
 type PaginationConfig = {
   totalPage: number
@@ -20,10 +21,10 @@ const PaymentTable = ({ data, paginationConfig }: Props) => {
     data?.forEach((row: any, index: any) => {
       arr.push(<tr key={index + 1}>
         {/* <td>
-                    <span className='fw-semibold d-block fs-6'>
-                        {index + 1}
-                    </span>
-                </td> */}
+          <span className='fw-semibold d-block fs-6'>
+            {index + 1}
+          </span>
+        </td> */}
         <td>
           <span className='text-dark fw-bold d-block fs-5'>
             {row.txn_id}

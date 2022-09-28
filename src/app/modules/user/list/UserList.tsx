@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useLayout } from '../../../../_metronic/layout/core'
-import { deleteUserApi, getUsersListApi } from '../../../api';
+import { useLayout } from '../../../../_metronic/layout/core';
 import { useAuth } from '../../auth';
+
+import { deleteUserApi, getUsersListApi } from '../../../api';
+
 import UserTable from './usertable/UserTable';
 
 const UserList = () => {
 
-  const { wpAuth, auth } = useAuth();
+  const { auth } = useAuth();
   const { setLoader } = useLayout();
   const [usersData, setUsersData] = useState<any>();
 

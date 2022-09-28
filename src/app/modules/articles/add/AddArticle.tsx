@@ -1,14 +1,18 @@
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import '../style.scss'
+import { decode } from 'html-entities';
+import Select from 'react-select';
 
-import Editor from './editor/Editor';
-import { addPostApi, getCategoriesListApi, getSinglePostApi, updatePostApi } from '../../../api';
 import { useLayout } from '../../../../_metronic/layout/core';
 import { useAuth } from '../../auth';
+
 import ConfirmationModal from '../../../components/modal/ConfirmationModal';
-import Select from 'react-select'
-import { decode } from 'html-entities';
+
+import { addPostApi, getCategoriesListApi, getSinglePostApi, updatePostApi } from '../../../api';
+
+import Editor from './editor/Editor';
+
+import '../style.scss';
 
 const customStyles = {
   menu: (provided: any, state: any) => ({
@@ -167,7 +171,6 @@ const AddArticle = () => {
 
   const onChange = (e: any) => {
     const { name, value } = e.target;
-    console.log(e)
     if (name == 'title' && value !== '') {
       setTitleError(false)
     }

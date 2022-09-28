@@ -1,13 +1,17 @@
-import React, { FC, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useLayout } from '../../../_metronic/layout/core'
-import { getDashboardApi, getPostListApi, getPostListByMonthApi } from '../../api'
-import { useAuth } from '../auth'
-import ArticleTable from './components/articletable/ArticleTable'
-import EarnersCard from './components/earnerscard/EarnersCard'
-import TreandsCard from './components/trendscard/TrendsCard'
-import StatusCard from './components/statuscard/StatusCard'
-import moment from 'moment'
+import { FC, useEffect, useState } from 'react';
+
+import moment from 'moment';
+import { Link } from 'react-router-dom';
+
+import { useLayout } from '../../../_metronic/layout/core';
+import { useAuth } from '../auth';
+
+import { getDashboardApi, getPostListApi, getPostListByMonthApi } from '../../api';
+
+import ArticleTable from './components/articletable/ArticleTable';
+import EarnersCard from './components/earnerscard/EarnersCard';
+import TreandsCard from './components/trendscard/TrendsCard';
+import StatusCard from './components/statuscard/StatusCard';
 
 const Dashboard: FC = () => {
 

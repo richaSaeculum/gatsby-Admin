@@ -1,12 +1,17 @@
-import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
-import { PaymentFormFieldsTypes, PaymentInitValues } from './_payment'
-import * as Yup from 'yup'
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-import { Formik, useFormik } from 'formik'
-import { addPaymentDetailsApi, fileUploadApi, getPaymentDetailsApi, validateIFSC } from '../../../../api'
-import { useAuth } from '../../../auth'
-import ConfirmationModal from '../../../../components/modal/ConfirmationModal'
-import { useLayout } from '../../../../../_metronic/layout/core'
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+import { useLayout } from '../../../../../_metronic/layout/core';
+import { useAuth } from '../../../auth';
+
+import { addPaymentDetailsApi, fileUploadApi, getPaymentDetailsApi, validateIFSC } from '../../../../api';
+
+import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
+
+import { PaymentInitValues } from './_payment';
+
 import './style.scss'
 
 const paymentDetailsSchema = Yup.object().shape({
@@ -151,7 +156,6 @@ const Payment = () => {
   }
 
   const generatePayload = (values: any) => {
-    console.log(values.isUpi)
     let payload = {
       user_pay_type: values.isUpi ? "upi" : "bank-transfer",
       user_pay_name: values.name,
@@ -163,7 +167,6 @@ const Payment = () => {
       pan_image: imgUrl.pancard,
       user_pay_upi: values.isUpi ? values.upi : ""
     }
-    console.log(payload)
     return payload;
   }
 
@@ -189,7 +192,6 @@ const Payment = () => {
       getPaymentDetails();
       setLoader(false);
     }
-    console.log(info)
   }
 
   const handleSubmit = async (values: any, actions: any) => {

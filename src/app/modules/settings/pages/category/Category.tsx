@@ -1,12 +1,14 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
-import CategoryTable from './categorytable/CategoryTable'
-import { Modal } from 'react-bootstrap'
-import { useAuth } from '../../../auth'
-import { addCategoryApi, deleteCategoryApi, getCategoriesListApi, getSingleCategoryApi, updateCategoryApi } from '../../../../api'
-import { useLayout } from '../../../../../_metronic/layout/core'
-import ConfirmationModal from '../../../../components/modal/ConfirmationModal'
+import { ChangeEvent, useEffect, useState } from 'react';
 
+import { Modal } from 'react-bootstrap';
 
+import { useLayout } from '../../../../../_metronic/layout/core';
+import { useAuth } from '../../../auth';
+
+import { addCategoryApi, deleteCategoryApi, getCategoriesListApi, getSingleCategoryApi, updateCategoryApi } from '../../../../api';
+
+import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
+import CategoryTable from './categorytable/CategoryTable';
 
 const Category = () => {
 

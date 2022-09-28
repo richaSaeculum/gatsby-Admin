@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import PaymentTable from './paymenttable/PaymentTable'
-import { getTransactionsApi, getWalletDetailsApi } from '../../../../api'
-import { useAuth } from '../../../auth'
-import { useLayout } from '../../../../../_metronic/layout/core'
-import StatusCard from '../../components/statuscard/StatusCard'
-import moment from 'moment'
+import { useEffect, useState } from 'react';
+
+import moment from 'moment';
+
+import { useLayout } from '../../../../../_metronic/layout/core';
+import { useAuth } from '../../../auth';
+
+import { getTransactionsApi, getWalletDetailsApi } from '../../../../api';
+
+import StatusCard from '../../components/statuscard/StatusCard';
+import PaymentTable from './paymenttable/PaymentTable';
 
 const Wallet = () => {
 
@@ -17,7 +21,7 @@ const Wallet = () => {
 
   const getWalletDetails = async () => {
     try {
-      setLoader(true)
+      setLoader(true);
       const res = await getWalletDetailsApi({ token: auth?.token })
       if (res && res.status === 200) {
         setWallet(res.data);
@@ -41,7 +45,7 @@ const Wallet = () => {
     } catch (err) {
       console.log(err);
     } finally {
-      setLoader(false)
+      setLoader(false);
     }
   }
 

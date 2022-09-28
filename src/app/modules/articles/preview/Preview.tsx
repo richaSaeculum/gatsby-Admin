@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+
 import { useParams } from 'react-router-dom';
 import { decode } from 'html-entities';
 import moment from 'moment';
+
 import { useLayout } from '../../../../_metronic/layout/core';
-import { getSinglePostApi } from '../../../api';
 import { useAuth } from '../../auth';
+
+import { getSinglePostApi } from '../../../api';
 
 const Preview = () => {
 
@@ -12,7 +15,6 @@ const Preview = () => {
   const { setLoader } = useLayout();
   const { auth } = useAuth();
   const [post, setPost] = useState<any>();
-
 
   useEffect(() => {
     const { id } = param;
@@ -66,7 +68,6 @@ const Preview = () => {
           ))}
         </div>
       )}
-
 
       <div
         className='preview_description'

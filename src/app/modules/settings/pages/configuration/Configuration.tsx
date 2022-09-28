@@ -1,8 +1,11 @@
-import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+
 import { useLayout } from '../../../../../_metronic/layout/core';
-import { addPayoutMarginApi, getPayoutMarginApi } from '../../../../api';
-import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 import { useAuth } from '../../../auth';
+
+import { addPayoutMarginApi, getPayoutMarginApi } from '../../../../api';
+
+import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 
 const Configuration = () => {
 
@@ -62,7 +65,6 @@ const Configuration = () => {
 
 
   const toggleModal = (info?: any) => {
-    console.log(confirmationOpen, 'in toggle')
     setConfirmationInfo(info);
     setConfirmationOpen(!confirmationOpen);
   }

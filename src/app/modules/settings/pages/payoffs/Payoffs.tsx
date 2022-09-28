@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { Modal } from 'react-bootstrap'
-import { useAuth } from '../../../auth'
-import { addPayoffApi, getPayoffAllApi, getPayoffsByMonthApi, getPayoutMarginApi, getPostListByMonthApi, updatePayoffApi } from '../../../../api'
-import { useLayout } from '../../../../../_metronic/layout/core'
-import PayoffsTable from './payoffstable/PayoffsTable'
-import { useNavigate } from 'react-router-dom'
-import DatePicker from '../../../../components/datepicker/DatePicker'
-import moment from 'moment'
-import ConfirmationModal from '../../../../components/modal/ConfirmationModal'
+import { useEffect, useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
+import { Modal } from 'react-bootstrap';
+
+import { useLayout } from '../../../../../_metronic/layout/core';
+import { useAuth } from '../../../auth';
+
+import { addPayoffApi, getPayoffAllApi, getPayoutMarginApi, getPostListByMonthApi, updatePayoffApi } from '../../../../api';
+
+import DatePicker from '../../../../components/datepicker/DatePicker';
+import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
+import PayoffsTable from './payoffstable/PayoffsTable';
 
 const Payoffs = () => {
 
@@ -235,36 +238,7 @@ const Payoffs = () => {
                         <div className='fv-help-block'>There are 0 article in selected month</div>
                       </div>)
                     }
-                    {/* <select
-                      className="form-select form-control"
-                      {...formik.getFieldProps('month')}
-                    >
-                      <option value="january">January</option>
-                      <option value="february">February</option>
-                      <option value="march">March</option>
-                      <option value="april">April</option>
-                      <option value="may">May</option>
-                      <option value="june">June</option>
-                      <option value="july">July</option>
-                      <option value="august">August</option>
-                      <option value="september">September</option>
-                      <option value="october">October</option>
-                      <option value="november">November</option>
-                      <option value="december">December</option>
-                    </select>
-                    <div className="fv-plugins-message-container invalid-feedback">
-                    </div> */}
                   </div>
-                  {/* <div className="col-6">
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Year"
-                      {...formik.getFieldProps('year')}
-                    />
-                    <div className="fv-plugins-message-container invalid-feedback">
-                    </div>
-                  </div> */}
                 </div>
               </div>
               <div className="fv-row mb-5">

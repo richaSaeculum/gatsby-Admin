@@ -1,9 +1,10 @@
-import React from 'react'
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
-import { PageLink, PageTitle } from '../../../_metronic/layout/core'
-import AddArticle from './add/AddArticle'
-import ArticleList from './list/ArticleList'
-import Preview from './preview/Preview'
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+
+import { PageLink, PageTitle } from '../../../_metronic/layout/core';
+
+import AddArticle from './add/AddArticle';
+import ArticleList from './list/ArticleList';
+import Preview from './preview/Preview';
 
 const ArticleBreadcrumb: Array<PageLink> = [
   {

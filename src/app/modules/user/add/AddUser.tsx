@@ -1,11 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
-import * as Yup from 'yup'
-import { Formik } from 'formik'
-import { useAuth } from '../../auth'
-import { addUserApi, getSingleUsersListApi, updateUserApi } from '../../../api'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useLayout } from '../../../../_metronic/layout/core'
-import ConfirmationModal from '../../../components/modal/ConfirmationModal'
+import { useEffect, useRef, useState } from 'react';
+
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+import { useLayout } from '../../../../_metronic/layout/core';
+import { useAuth } from '../../auth';
+
+import { addUserApi, getSingleUsersListApi, updateUserApi } from '../../../api';
+
+import ConfirmationModal from '../../../components/modal/ConfirmationModal';
 
 const userDetailsSchema = Yup.object().shape({
   id: Yup.string(),
@@ -108,7 +112,6 @@ const AddUser = () => {
   }
 
   const toggleModal = (info?: any) => {
-    console.log(confirmationOpen, 'in toggle')
     setConfirmationInfo(info)
     setConfirmationOpen(!confirmationOpen)
   }

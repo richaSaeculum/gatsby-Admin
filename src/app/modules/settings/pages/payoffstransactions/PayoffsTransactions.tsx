@@ -1,46 +1,49 @@
-import React, { useEffect, useState } from 'react'
-import { useLayout } from '../../../../../_metronic/layout/core'
-import { getSuccessPayoffListApi } from '../../../../api'
-import { useAuth } from '../../../auth'
-import TransactionTable from './TransactionTable'
+import { useEffect, useState } from 'react';
 
-const data = [
-	{
-		username: 'demouser1',
-		payout: '1000',
-		payoutMonth: 'July 2022',
-		date: '31 July 2022',
-		articles: 2
-	},
-	{
-		username: 'demouser2',
-		payout: '4000',
-		payoutMonth: 'March 2022',
-		date: '31 March 2022',
-		articles: 4
-	},
-	{
-		username: 'demouser3',
-		payout: '1000',
-		payoutMonth: 'July 2022',
-		date: '31 July 2022',
-		articles: 5
-	},
-	{
-		username: 'demouser4',
-		payout: '1000',
-		payoutMonth: 'July 2022',
-		date: '31 July 2022',
-		articles: 2
-	},
-	{
-		username: 'demouser5',
-		payout: '1000',
-		payoutMonth: 'July 2022',
-		date: '31 July 2022',
-		articles: 2
-	},
-]
+import { useLayout } from '../../../../../_metronic/layout/core';
+import { useAuth } from '../../../auth';
+
+import { getSuccessPayoffListApi } from '../../../../api';
+
+import TransactionTable from './TransactionTable';
+
+// const data = [
+// 	{
+// 		username: 'demouser1',
+// 		payout: '1000',
+// 		payoutMonth: 'July 2022',
+// 		date: '31 July 2022',
+// 		articles: 2
+// 	},
+// 	{
+// 		username: 'demouser2',
+// 		payout: '4000',
+// 		payoutMonth: 'March 2022',
+// 		date: '31 March 2022',
+// 		articles: 4
+// 	},
+// 	{
+// 		username: 'demouser3',
+// 		payout: '1000',
+// 		payoutMonth: 'July 2022',
+// 		date: '31 July 2022',
+// 		articles: 5
+// 	},
+// 	{
+// 		username: 'demouser4',
+// 		payout: '1000',
+// 		payoutMonth: 'July 2022',
+// 		date: '31 July 2022',
+// 		articles: 2
+// 	},
+// 	{
+// 		username: 'demouser5',
+// 		payout: '1000',
+// 		payoutMonth: 'July 2022',
+// 		date: '31 July 2022',
+// 		articles: 2
+// 	},
+// ]
 
 const PayoffsTransactions = () => {
 
@@ -52,7 +55,6 @@ const PayoffsTransactions = () => {
 	const [currentPage, setCurrentPage] = useState<number>(1);
 
 	const handlePageChange = async (selectedPage: number) => {
-		// return
 		await getSuccessPayoff({ page: selectedPage });
 		setCurrentPage(selectedPage);
 	}

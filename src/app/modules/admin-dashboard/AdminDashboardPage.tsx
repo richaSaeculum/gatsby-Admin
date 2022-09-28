@@ -1,8 +1,6 @@
-import React from 'react'
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
-import { PageLink, PageTitle } from '../../../_metronic/layout/core'
-import Dashboard from './Dashboard'
+import { PageLink, PageTitle } from '../../../_metronic/layout/core';
 
+import Dashboard from './Dashboard';
 
 const AdminDashboardBreadcrumb: Array<PageLink> = [
     {

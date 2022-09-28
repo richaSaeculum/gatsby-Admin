@@ -1,7 +1,7 @@
-import React, { ReactElement, useState } from 'react'
-import ConfirmationModal from '../../../../../components/modal/ConfirmationModal'
-import Pagination from '../../../../../components/pagination/Pagination'
+import { ReactElement, useState } from 'react';
 
+import ConfirmationModal from '../../../../../components/modal/ConfirmationModal';
+import Pagination from '../../../../../components/pagination/Pagination';
 
 type PaginationConfig = {
   totalPage: number
@@ -33,7 +33,6 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data, paginat
       setConfirmationOpen(!confirmationOpen)
     }
   }
-
 
   const actionClick = (row: any, confirmation: boolean) => {
     if (confirmation) {
