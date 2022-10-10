@@ -7,6 +7,7 @@ import TopBarProgress from 'react-topbar-progress-indicator'
 import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils'
 import { WithChildren } from '../../_metronic/helpers'
 import { useAuth } from '../modules/auth'
+import { UserType } from '../constants/user/user_type'
 // import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 
 const PrivateRoutes = () => {
@@ -102,7 +103,7 @@ const PrivateRoutes = () => {
             </SuspensedView>
           }
         />
-        {auth?.user?.user_role === 'administrator' && <Route
+        {auth?.user?.user_role === UserType.ADMINISTRATOR && <Route
           path='users/*'
           element={
             <SuspensedView>

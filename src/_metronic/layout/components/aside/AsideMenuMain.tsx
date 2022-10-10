@@ -5,6 +5,7 @@ import { KTSVG } from '../../../helpers'
 import { AsideMenuItemWithSub } from './AsideMenuItemWithSub'
 import { AsideMenuItem } from './AsideMenuItem'
 import { useAuth } from '../../../../app/modules/auth'
+import { UserType } from '../../../../app/constants/user/user_type'
 
 export function AsideMenuMain() {
   const intl = useIntl()
@@ -25,7 +26,7 @@ export function AsideMenuMain() {
         fontIcon='bi-layers'
       /> */}
 
-      {auth?.user?.user_role === 'administrator' && <AsideMenuItem
+      {auth?.user?.user_role === UserType.ADMINISTRATOR && <AsideMenuItem
         to='/users'
         icon='/media/icons/duotune/art/art002.svg'
         title={'User'}
@@ -53,7 +54,7 @@ export function AsideMenuMain() {
       >
         <AsideMenuItem to='/settings/payment' title='Payment' hasBullet={true} />
         <AsideMenuItem to='/settings/wallet' title='Wallet' hasBullet={true} />
-        {auth?.user?.user_role === 'administrator' && (
+        {auth?.user?.user_role === UserType.ADMINISTRATOR && (
           <>
             <AsideMenuItem to='/settings/category' title='Category' hasBullet={true} />
             <AsideMenuItem to='/settings/config' title='Configuration' hasBullet={true} />

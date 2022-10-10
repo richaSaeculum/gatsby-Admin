@@ -13,6 +13,7 @@ import { addPostApi, getCategoriesListApi, getSinglePostApi, updatePostApi } fro
 import Editor from './editor/Editor';
 
 import '../style.scss';
+import { ArticleStatusType } from '../../../constants/articles/article_status_type';
 
 const customStyles = {
   menu: (provided: any, state: any) => ({
@@ -128,7 +129,7 @@ const AddArticle = () => {
     let response: any = await getSinglePostApi({ token: auth?.token, id });
     if (response && response.status === 200) {
       const { content, id, title, status } = response.data;
-      if (status !== 'draft' && status !== 'rejected') {
+      if (status !== ArticleStatusType.DRAFT && status !== ArticleStatusType.REJECTED) {
         setView(true);
       }
       let arr: any = [];
@@ -377,8 +378,8 @@ const AddArticle = () => {
             {
               !view && (
                 <>
-                  <button type="button" className="btn btn-secondary" onClick={(e) => handleSubmit(e, 'pending')}>Submit</button> &nbsp;
-                  <button type="button" className="btn btn-light" onClick={(e) => handleSubmit(e, 'draft')} >Save as Draft</button>
+                  <button type="button" className="btn btn-secondary" onClick={(e) => handleSubmit(e, ArticleStatusType.PENDING)}>Submit</button> &nbsp;
+                  <button type="button" className="btn btn-light" onClick={(e) => handleSubmit(e, ArticleStatusType.DRAFT)} >Save as Draft</button>
                 </>
               )
             }

@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 import Pagination from '../../../../components/pagination/Pagination';
 import { KTSVG } from '../../../../../_metronic/helpers';
+import { ArticleStatusType } from '../../../../constants/articles/article_status_type';
 
 type PaginationConfig = {
   totalPage: number
@@ -77,10 +78,10 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
         </td>
         <td>
           <span className={clsx('badge text-capitalize', {
-            'badge-light-success': row.status === 'publish',
-            'badge-light-primary': row.status === 'draft',
-            'badge-light-warning': row.status === 'pending',
-            'badge-light-danger': row.status === 'rejected',
+            'badge-light-success': row.status === ArticleStatusType.PUBLISH,
+            'badge-light-primary': row.status === ArticleStatusType.DRAFT,
+            'badge-light-warning': row.status === ArticleStatusType.PENDING,
+            'badge-light-danger': row.status === ArticleStatusType.REJECTED,
           })}>
             {row.status}
           </span>
@@ -115,7 +116,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
               // className='btn btn-icon btn-light-primary btn-active-color-primary btn-active-icon-gray-100 btn-sm me-1' // btn-active-light-primary 
               className='btn btn-active-icon-gray-100 btn-icon btn-light-twitter btn-sm me-1' // btn-active-light-primary 
               onClick={() => { onEditRow(row) }}
-              disabled={(row.status === 'pending' || row.status === 'publish')}
+              disabled={(row.status === ArticleStatusType.PENDING || row.status === ArticleStatusType.PUBLISH)}
             >
               <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
             </button>
@@ -123,7 +124,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
             < button
               className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm' // btn-active-light-danger
               onClick={() => { actionClick(row, true) }}
-              disabled={row.status === 'publish'}
+              disabled={row.status === ArticleStatusType.PUBLISH}
             >
               <KTSVG
                 path='/media/icons/duotune/general/gen027.svg'

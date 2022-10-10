@@ -12,6 +12,7 @@ import { addPayoffApi, getPayoffAllApi, getPayoutMarginApi, getPostListByMonthAp
 import DatePicker from '../../../../components/datepicker/DatePicker';
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 import PayoffsTable from './payoffstable/PayoffsTable';
+import { ArticleStatusType } from '../../../../constants/articles/article_status_type';
 
 const Payoffs = () => {
 
@@ -52,7 +53,7 @@ const Payoffs = () => {
   }, [month, revenue, articleCount])
 
   const getTotalArticleOfMonth = async (after: string, before: string) => {
-    const response = await getPostListByMonthApi({ token: auth?.token, after, before, status: 'publish' });
+    const response = await getPostListByMonthApi({ token: auth?.token, after, before, status: ArticleStatusType.PUBLISH });
     if (response && response.status === 200) {
       setArticleCount(response.data.articlesCount);
     }

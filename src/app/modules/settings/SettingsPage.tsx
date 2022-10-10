@@ -1,6 +1,7 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
 import { PageLink, PageTitle } from '../../../_metronic/layout/core';
+import { UserType } from '../../constants/user/user_type';
 import { useAuth } from '../auth';
 
 import Category from './pages/category/Category';
@@ -44,7 +45,7 @@ const SettingsPage = () => {
               </>
             }
           />
-          {auth?.user?.user_role === 'administrator' &&
+          {auth?.user?.user_role === UserType.ADMINISTRATOR &&
             (
               <>
                 <Route
