@@ -52,11 +52,11 @@ const ArticleList = () => {
   }
 
   const onEditRow = (row: any) => {
-    if (row.id && row.status === 'draft'){
-      navigate(`/articles/edit-article/${row.id}`);
-    }else {
-      navigate(`/articles/preview/${row.id}`);
-    }
+    navigate(`/articles/edit-article/${row.id}`);
+  }
+
+  const onViewRow = (row: any) => {
+    navigate(`/articles/preview/${row.id}`);
   }
 
   const handlePageChange = async (selectedPage: number) => {
@@ -87,6 +87,7 @@ const ArticleList = () => {
         {articleData?.length > 0 ? <ArticleTable
           onEditRow={onEditRow}
           onDeleteRow={onDeleteRow}
+          onViewRow={onViewRow}
           data={articleData}
           paginationConfig={{ totalPage, handlePageChange, totalArticle, limitNo, setLimitNo }}
         /> :

@@ -6,6 +6,7 @@ import clsx from 'clsx';
 
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 import Pagination from '../../../../components/pagination/Pagination';
+import { KTSVG } from '../../../../../_metronic/helpers';
 
 type PaginationConfig = {
   totalPage: number
@@ -18,11 +19,12 @@ type PaginationConfig = {
 type Props = {
   onEditRow: (row: any) => void
   onDeleteRow: (row: any) => void
+  onViewRow: (row: any) => void
   paginationConfig: PaginationConfig
   data?: any
 }
 
-const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props) => {
+const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfig }: Props) => {
 
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
   const [deleteRow, setDeleteRow] = useState<any>();
@@ -78,6 +80,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
             'badge-light-success': row.status === 'publish',
             'badge-light-primary': row.status === 'draft',
             'badge-light-warning': row.status === 'pending',
+            'badge-light-danger': row.status === 'rejected',
           })}>
             {row.status}
           </span>
@@ -95,6 +98,40 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
           </span>
         </td>
         <td className='text-end d-flex'>
+
+          <div className='d-flex justify-content-end flex-shrink-0'>
+            {/* View Icon */}
+            <button
+              className='btn btn-icon btn-light-info btn-active-color-info btn-active-icon-gray-100 btn-sm me-1' // btn-active-light-info
+              onClick={() => { onViewRow(row) }}
+            >
+              <KTSVG
+                path='/media/icons/duotune/general/view.svg'
+                className='svg-icon-3'
+              />
+            </button>
+            {/* Edit Icon btn-bg-light btn-active-color-primary */}
+            <button
+              // className='btn btn-icon btn-light-primary btn-active-color-primary btn-active-icon-gray-100 btn-sm me-1' // btn-active-light-primary 
+              className='btn btn-active-icon-gray-100 btn-icon btn-light-twitter btn-sm me-1' // btn-active-light-primary 
+              onClick={() => { onEditRow(row) }}
+              disabled={(row.status === 'pending' || row.status === 'publish')}
+            >
+              <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
+            </button>
+            {/* Delete Icon */}
+            < button
+              className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm' // btn-active-light-danger
+              onClick={() => { actionClick(row, true) }}
+              disabled={row.status === 'publish'}
+            >
+              <KTSVG
+                path='/media/icons/duotune/general/gen027.svg'
+                className='svg-icon-3'
+              />
+            </button>
+          </div>
+
           {/* <a
             href='#'
             className='btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4 me-2'
@@ -109,7 +146,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
           >
             Edit
           </button> */}
-          <button
+          {/* <button
             className={clsx('btn btn-secondary btn-sm px-4 me-2')}
             onClick={() => { onEditRow(row) }}
           >
@@ -121,7 +158,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props)
             onClick={() => { actionClick(row, true) }}
           >
             Delete
-          </button>
+          </button> */}
         </td>
       </tr >)
     })

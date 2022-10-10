@@ -128,7 +128,7 @@ const AddArticle = () => {
     let response: any = await getSinglePostApi({ token: auth?.token, id });
     if (response && response.status === 200) {
       const { content, id, title, status } = response.data;
-      if (status !== 'draft') {
+      if (status !== 'draft' && status !== 'rejected') {
         setView(true);
       }
       let arr: any = [];
