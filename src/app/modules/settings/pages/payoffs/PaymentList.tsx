@@ -89,7 +89,7 @@ const PaymentList = () => {
     if (res && res.status === 200) {
       const a = res?.data.map((a: any) => ({ ...a, isSelected: false }))
       setData(a);
-      setMonthYear(res.data[0].month);
+      // setMonthYear(res.data[0].month);
       setLoader(false)
     }
   }
