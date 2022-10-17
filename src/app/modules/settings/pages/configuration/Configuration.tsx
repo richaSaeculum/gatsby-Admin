@@ -80,47 +80,55 @@ const Configuration = () => {
   }, [confirmationInfo])
 
   async function getTierConfigDetails() {
-    const res = await getTierConfigApi({ token: auth?.token })
-    if (res && res.status === 200) {
-      let data = res.data;
-      let bronze = data.find((item: any) => item.name === 'bronze');
-      let silver = data.find((item: any) => item.name === 'silver');
-      let gold = data.find((item: any) => item.name === 'gold');
-      setBronzeInitialValues({
-        id: bronze.id,
-        name: bronze.name,
-        type: bronze.type,
-        fixedPay: bronze.type === 'fixed_and_variable' ? bronze.fixedPay : '',
-        socialPayRate: bronze.socialPayRate,
-        organicPayRate: bronze.organicPayRate,
-        paidPayRate: bronze.paidPayRate,
-      });
-      setSilverInitialValues({
-        id: silver.id,
-        name: silver.name,
-        article: silver.article,
-        pageViews: silver.pageViews,
-        seoScore: silver.seoScore,
-        type: silver.type,
-        fixedPay: silver.fixedPay,
-        socialPayRate: silver.socialPayRate,
-        organicPayRate: silver.organicPayRate,
-        paidPayRate: silver.paidPayRate,
-      });
-      setGoldInitialValues({
-        id: gold.id,
-        name: gold.name,
-        article: gold.article,
-        pageViews: gold.pageViews,
-        seoScore: gold.seoScore,
-        type: gold.type,
-        fixedPay: gold.fixedPay,
-        socialPayRate: gold.socialPayRate,
-        organicPayRate: gold.organicPayRate,
-        paidPayRate: gold.paidPayRate,
-      })
+    setLoader(true);
+    try {
+      const res = await getTierConfigApi({ token: auth?.token })
+      if (res && res.status === 200) {
+        let data = res.data;
+        let bronze = data.find((item: any) => item.name === 'bronze');
+        let silver = data.find((item: any) => item.name === 'silver');
+        let gold = data.find((item: any) => item.name === 'gold');
+        setBronzeInitialValues({
+          id: bronze.id,
+          name: bronze.name,
+          type: bronze.type,
+          fixedPay: bronze.type === 'fixed_and_variable' ? bronze.fixedPay : '',
+          socialPayRate: bronze.socialPayRate,
+          organicPayRate: bronze.organicPayRate,
+          paidPayRate: bronze.paidPayRate,
+        });
+        setSilverInitialValues({
+          id: silver.id,
+          name: silver.name,
+          article: silver.article,
+          pageViews: silver.pageViews,
+          seoScore: silver.seoScore,
+          type: silver.type,
+          fixedPay: silver.fixedPay,
+          socialPayRate: silver.socialPayRate,
+          organicPayRate: silver.organicPayRate,
+          paidPayRate: silver.paidPayRate,
+        });
+        setGoldInitialValues({
+          id: gold.id,
+          name: gold.name,
+          article: gold.article,
+          pageViews: gold.pageViews,
+          seoScore: gold.seoScore,
+          type: gold.type,
+          fixedPay: gold.fixedPay,
+          socialPayRate: gold.socialPayRate,
+          organicPayRate: gold.organicPayRate,
+          paidPayRate: gold.paidPayRate,
+        })
+      }
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoader(false)
     }
   }
+
 
   const confirmationCallback = (success: boolean, info: any) => {
     setConfirmationOpen(false)
@@ -210,110 +218,106 @@ const Configuration = () => {
           enableReinitialize={true}
           onSubmit={handleSubmit}
         >
-          {props => {
-            console.log(props)
-            return (
-              <>
-                <form onSubmit={props.handleSubmit} className="form fv-plugins-bootstrap5 fv-plugins-framework" action="#">
-                  {/* Bronze level */}
-                  <div className='card mb-4'>
-                    <div className="card-header min-h-65px d-flex">
-                      <div className='card-title m-0'>
-                        <h3>Bronze Level</h3>
-                      </div>
-                      <div className="d-flex justify-content-end align-items-center">
-                        <button type="submit" className="btn btn-secondary" disabled={!props.isValid}>Submit</button>
-                      </div>
+          {props => (
+            <>
+              <form onSubmit={props.handleSubmit} className="form fv-plugins-bootstrap5 fv-plugins-framework" action="#">
+                {/* Bronze level */}
+                <div className='card mb-4'>
+                  <div className="card-header min-h-65px d-flex">
+                    <div className='card-title m-0'>
+                      <h3>Bronze Level</h3>
                     </div>
-                    <div className="card-body">
-                      <div className="row row-cols-1 row-cols-sm-4 rol-cols-md-5 row-cols-lg-5">
-                        <div className="col">
-                          <div className="fv-row mb-7 fv-plugins-icon-container">
-                            <label className="fs-4 fw-semibold form-label">Payment Type</label>
-                            <select
-                              className="form-select"
-                              {...props.getFieldProps('type')}
-                            >
-                              <option value="variable">Variable</option>
-                              <option value="fixed_and_variable">Fixed + Variable</option>
-                            </select>
-                            {props.touched.type && props.errors.type && (
-                              <div className='fv-plugins-message-container'>
-                                <div className='fv-help-block'>{props.errors.type}</div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <div className="col">
-                          <div className="fv-row mb-7 fv-plugins-icon-container">
-                            <label className="fs-4 fw-semibold form-label">Social Media Margin(%)</label>
-                            <input
-                              className="form-control"
-                              type="number"
-                              {...props.getFieldProps('socialPayRate')}
-                            />
-                            {props.touched.socialPayRate && props.errors.socialPayRate && (
-                              <div className='fv-plugins-message-container'>
-                                <div className='fv-help-block'>{props.errors.socialPayRate}</div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <div className="col">
-                          <div className="fv-row mb-7 fv-plugins-icon-container">
-                            <label className="fs-4 fw-semibold form-label">Campaign Margin(%)</label>
-                            <input
-                              className="form-control"
-                              type="number"
-                              {...props.getFieldProps('paidPayRate')}
-                            />
-                            {props.touched.paidPayRate && props.errors.paidPayRate && (
-                              <div className='fv-plugins-message-container'>
-                                <div className='fv-help-block'>{props.errors.paidPayRate}</div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <div className="col">
-                          <div className="fv-row mb-7 fv-plugins-icon-container">
-                            <label className="fs-4 fw-semibold form-label">Organic Margin(%)</label>
-                            <input
-                              className="form-control"
-                              type="number"
-                              {...props.getFieldProps('organicPayRate')}
-                            />
-                            {props.touched.organicPayRate && props.errors.organicPayRate && (
-                              <div className='fv-plugins-message-container'>
-                                <div className='fv-help-block'>{props.errors.organicPayRate}</div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        {
-                          props.values.type === 'fixed_and_variable' && (<div className="col">
-                            <div className="fv-row mb-7 fv-plugins-icon-container">
-                              <label className="fs-4 fw-semibold form-label">Fixed Pay Amount</label>
-                              <input
-                                className="form-control"
-                                type="number"
-                                {...props.getFieldProps('fixedPay')}
-                              />
-                              {props.touched.fixedPay && props.errors.fixedPay && (
-                                <div className='fv-plugins-message-container'>
-                                  <div className='fv-help-block'>{props.errors.fixedPay}</div>
-                                </div>
-                              )}
-                            </div>
-                          </div>)
-                        }
-                      </div>
+                    <div className="d-flex justify-content-end align-items-center">
+                      <button type="submit" className="btn btn-secondary" disabled={!props.isValid}>Submit</button>
                     </div>
                   </div>
-                </form>
-              </>
-            )
-          }
-          }
+                  <div className="card-body">
+                    <div className="row row-cols-1 row-cols-sm-4 rol-cols-md-5 row-cols-lg-5">
+                      <div className="col">
+                        <div className="fv-row mb-7 fv-plugins-icon-container">
+                          <label className="fs-4 fw-semibold form-label">Payment Type</label>
+                          <select
+                            className="form-select"
+                            {...props.getFieldProps('type')}
+                          >
+                            <option value="variable">Variable</option>
+                            <option value="fixed_and_variable">Fixed + Variable</option>
+                          </select>
+                          {props.touched.type && props.errors.type && (
+                            <div className='fv-plugins-message-container'>
+                              <div className='fv-help-block'>{props.errors.type}</div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="fv-row mb-7 fv-plugins-icon-container">
+                          <label className="fs-4 fw-semibold form-label">Social Media Margin(%)</label>
+                          <input
+                            className="form-control"
+                            type="number"
+                            {...props.getFieldProps('socialPayRate')}
+                          />
+                          {props.touched.socialPayRate && props.errors.socialPayRate && (
+                            <div className='fv-plugins-message-container'>
+                              <div className='fv-help-block'>{props.errors.socialPayRate}</div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="fv-row mb-7 fv-plugins-icon-container">
+                          <label className="fs-4 fw-semibold form-label">Campaign Margin(%)</label>
+                          <input
+                            className="form-control"
+                            type="number"
+                            {...props.getFieldProps('paidPayRate')}
+                          />
+                          {props.touched.paidPayRate && props.errors.paidPayRate && (
+                            <div className='fv-plugins-message-container'>
+                              <div className='fv-help-block'>{props.errors.paidPayRate}</div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="fv-row mb-7 fv-plugins-icon-container">
+                          <label className="fs-4 fw-semibold form-label">Organic Margin(%)</label>
+                          <input
+                            className="form-control"
+                            type="number"
+                            {...props.getFieldProps('organicPayRate')}
+                          />
+                          {props.touched.organicPayRate && props.errors.organicPayRate && (
+                            <div className='fv-plugins-message-container'>
+                              <div className='fv-help-block'>{props.errors.organicPayRate}</div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {
+                        props.values.type === 'fixed_and_variable' && (<div className="col">
+                          <div className="fv-row mb-7 fv-plugins-icon-container">
+                            <label className="fs-4 fw-semibold form-label">Fixed Pay Amount</label>
+                            <input
+                              className="form-control"
+                              type="number"
+                              {...props.getFieldProps('fixedPay')}
+                            />
+                            {props.touched.fixedPay && props.errors.fixedPay && (
+                              <div className='fv-plugins-message-container'>
+                                <div className='fv-help-block'>{props.errors.fixedPay}</div>
+                              </div>
+                            )}
+                          </div>
+                        </div>)
+                      }
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </>
+          )}
         </Formik>
 
         {/* SILVER LEVEL */}
