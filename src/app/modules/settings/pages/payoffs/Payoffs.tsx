@@ -45,7 +45,7 @@ const Payoffs = () => {
   }
 
   useEffect(() => {
-    getPayofflist({ page: currentPage });
+    // getPayofflist({ page: currentPage });
   }, [])
 
   useEffect(() => {
@@ -202,9 +202,9 @@ const Payoffs = () => {
         <div>
           <h1 className='fs-2hx fw-bold text-dark mb-0'>Payoffs</h1>
         </div>
-        <button type='button' className='btn btn-secondary' onClick={onPayoffModalOpen}>
+        {/* <button type='button' className='btn btn-secondary' onClick={onPayoffModalOpen}>
           Add Payoff
-        </button>
+        </button> */}
       </div>
 
       <Modal
