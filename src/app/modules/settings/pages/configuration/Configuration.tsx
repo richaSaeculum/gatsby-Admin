@@ -386,6 +386,8 @@ const Configuration = () => {
                           )}
                         </div>
                       </div>
+                    </div>
+                    <div className="row row-cols-1 row-cols-sm-4 rol-cols-md-5 row-cols-lg-5">
                       <div className="col">
                         <div className="fv-row mb-7 fv-plugins-icon-container">
                           <label className="fs-4 fw-semibold form-label">Payment Type</label>
@@ -539,6 +541,8 @@ const Configuration = () => {
                           )}
                         </div>
                       </div>
+                    </div>
+                    <div className="row row-cols-1 row-cols-sm-4 rol-cols-md-5 row-cols-lg-5">
                       <div className="col">
                         <div className="fv-row mb-7 fv-plugins-icon-container">
                           <label className="fs-4 fw-semibold form-label">Payment Type</label>
