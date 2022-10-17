@@ -1,48 +1,71 @@
-export interface ConfigurationFormFieldsTypes {
-  b_payment_type: string
-  b_fixed_amount: number
-  s_article_count: number 
-  s_views: number
-  s_seo_score: number
-  s_payment_type: string
-  s_fixed_amount: number
-  g_article_count: number
-  g_views: number
-  g_seo_score: number
-  g_payment_type: string
-  g_fixed_amount: number
-
-  b_var_social: number
-  b_var_organic: number
-  b_var_paid: number
-  s_var_social: number
-  s_var_organic: number
-  s_var_paid: number
-  g_var_social: number
-  g_var_organic: number
-  g_var_paid: number
+export interface BronzeFormFieldsTypes {
+  id: number
+  name: string
+  type: string
+  fixedPay: number
+  socialPayRate: number
+  organicPayRate: number
+  paidPayRate: number
 }
 
-export const ConfigurationInitValues: ConfigurationFormFieldsTypes = {
-  b_payment_type: 'variable',
-  b_fixed_amount: 0,
-  s_article_count: 0,
-  s_views: 0,
-  s_seo_score: 0,
-  s_payment_type: 'fixed_variable',
-  s_fixed_amount: 0,
-  g_article_count: 0,
-  g_views: 0,
-  g_seo_score: 0,
-  g_payment_type: 'fixed_variable',
-  g_fixed_amount: 0,
-  b_var_social: 0,
-  b_var_organic: 0,
-  b_var_paid: 0,
-  s_var_social: 0,
-  s_var_organic: 0,
-  s_var_paid: 0,
-  g_var_social: 0,
-  g_var_organic: 0,
-  g_var_paid: 0,
+export interface SilverFormFieldsTypes {
+  id: number
+  name: string
+  article: number
+  pageViews: number
+  seoScore: number
+  type: string
+  fixedPay: number
+  socialPayRate: number
+  organicPayRate: number
+  paidPayRate: number
+}
+
+export interface GoldFormFieldsTypes {
+  id: number
+  name: string
+  article: number
+  pageViews: number
+  seoScore: number
+  type: string
+  fixedPay: number
+  socialPayRate: number
+  organicPayRate: number
+  paidPayRate: number
+}
+
+export const BronzeInitValues: BronzeFormFieldsTypes = {
+  id: 1,
+  name: 'bronze',
+  type: 'variable',
+  fixedPay: 0,
+  socialPayRate: 0,
+  organicPayRate: 0,
+  paidPayRate: 0,
+}
+
+export const SilverInitValues: SilverFormFieldsTypes = {
+  id: 2,
+  name: 'silver',
+  article: 0,
+  pageViews: 0,
+  seoScore: 0,
+  type: 'fixed_and_variable',
+  fixedPay: 0,
+  socialPayRate: 0,
+  organicPayRate: 0,
+  paidPayRate: 0,
+}
+
+export const GoldInitValues: GoldFormFieldsTypes = {
+  id: 3,
+  name: 'gold',
+  article: 0,
+  pageViews: 0,
+  seoScore: 0,
+  type: 'fixed_and_variable',
+  fixedPay: 0,
+  socialPayRate: 0,
+  organicPayRate: 0,
+  paidPayRate: 0,
 }

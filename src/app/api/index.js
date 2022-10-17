@@ -451,6 +451,39 @@ export const addPayoutMarginApi = async ({ token, payload }) => {
   }
 }
 
+// update tier  (POST)
+export const updateTierApi = async ({ token, payload, id }) => {
+  try {
+    const { data } = await client().post(`/tier/config/create/${id}`, payload, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// get wallet details for user (GET)
+export const getTierConfigApi = async ({ token }) => {
+  try {
+    const { data } = await client().get(`/tier/config`, {
+      headers: {
+        Authorization: token
+      }
+    });
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+
 // get wallet details for user
 export const getWalletDetailsApi = async ({ token }) => {
   try {

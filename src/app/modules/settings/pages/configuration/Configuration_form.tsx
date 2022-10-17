@@ -10,7 +10,7 @@ import { getPaymentDetailsApi } from '../../../../api';
 
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 
-import { ConfigurationInitValues } from './_configuration';
+// import { ConfigurationInitValues } from './_configuration';
 
 const paymentDetailsSchema = Yup.object().shape({
   b_payment_type: Yup.string().required('Payment type is required'),
@@ -50,7 +50,7 @@ const Configuration = () => {
   const { setLoader } = useLayout();
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
   const [confirmationInfo, setConfirmationInfo] = useState<any>();
-  const [initialValues, setInitialValues] = useState<any>(ConfigurationInitValues);
+  const [initialValues, setInitialValues] = useState<any>();
 
   useEffect(() => {
     // getPaymentDetails();
