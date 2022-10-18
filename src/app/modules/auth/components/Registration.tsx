@@ -8,6 +8,7 @@ import { toAbsoluteUrl } from '../../../../_metronic/helpers'
 import { PasswordMeterComponent } from '../../../../_metronic/assets/ts/components'
 import { useAuth } from '../core/Auth'
 import { register } from '../../../api'
+import { UserType } from '../../../constants/user/user_type'
 
 const initialValues = {
   firstname: '',
@@ -16,7 +17,7 @@ const initialValues = {
   password: '',
   changepassword: '',
   username: '',
-  user_role: 'Author'
+  user_role: UserType.AUTHOR
 }
 
 const registrationSchema = Yup.object().shape({
@@ -28,6 +29,7 @@ const registrationSchema = Yup.object().shape({
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Username is required'),
+  user_role: Yup.string().required('User Role is required'),
   email: Yup.string()
     .email('Wrong email format')
     .min(3, 'Minimum 3 symbols')
@@ -67,7 +69,7 @@ export function Registration() {
           user_last_name: values.lastname,
           user_password: values.password,
           user_name: values.username,
-          user_role: 'author'
+          user_role: values.user_role
         }
         const response = await register(payload)
         setSuccessCode(response.status)
@@ -201,6 +203,27 @@ export function Registration() {
           <div className='fv-plugins-message-container'>
             <div className='fv-help-block'>
               <span role='alert'>{formik.errors.username}</span>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* end::Form group */}
+
+      {/* begin::Form group User Role */}
+      <div className='fv-row mb-7'>
+        <label className='form-label fw-bolder text-dark fs-6'>User Role</label>
+        <select
+          placeholder='User Role'
+          {...formik.getFieldProps('user_role')}
+          className={'form-control form-control-lg form-control-solid'}
+        >
+          <option value={UserType.AUTHOR}>Author</option>
+          <option value={UserType.EDITOR}>Editor</option>
+        </select>
+        {formik.touched.user_role && formik.errors.user_role && (
+          <div className='fv-plugins-message-container'>
+            <div className='fv-help-block'>
+              <span role='alert'>{formik.errors.user_role}</span>
             </div>
           </div>
         )}
