@@ -33,12 +33,12 @@ export function AsideMenuMain() {
         fontIcon='bi-app-indicator'
       />}
 
-      <AsideMenuItem
+      {auth?.user?.user_role !== UserType.EDITOR && <AsideMenuItem
         to='/admin-dashboard'
         icon='/media/icons/duotune/art/art002.svg'
         title={'Dashboard'}
         fontIcon='bi-app-indicator'
-      />
+      />}
 
       <AsideMenuItem
         to='/articles/list'
@@ -46,7 +46,8 @@ export function AsideMenuMain() {
         title={'Articles'}
         fontIcon='bi-app-indicator'
       />
-      <AsideMenuItemWithSub
+
+      {auth?.user?.user_role !== UserType.EDITOR && (<AsideMenuItemWithSub
         to='/settings'
         title='Settings'
         icon='/media/icons/duotune/communication/com006.svg'
@@ -62,7 +63,7 @@ export function AsideMenuMain() {
             <AsideMenuItem to='/settings/transactions' title='User Payoff Trasactions' hasBullet={true} />
           </>
         )}
-      </AsideMenuItemWithSub>
+      </AsideMenuItemWithSub>)}
 
       {/* <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>

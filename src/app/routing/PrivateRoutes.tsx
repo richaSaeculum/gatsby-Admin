@@ -30,14 +30,15 @@ const PrivateRoutes = () => {
       <Route element={<MasterLayout />}>
         {/* Redirect to Dashboard after success login/registartion */}
         <Route path='/*' element={<Navigate to='/auth' />} />
-        <Route path='auth/*' element={<Navigate to='/admin-dashboard' />} />
+        {auth?.user?.user_role !== UserType.EDITOR && <Route path='auth/*' element={<Navigate to='/admin-dashboard' />} />}
+        {auth?.user?.user_role === UserType.EDITOR && <Route path='auth/*' element={<Navigate to='/articles' />} />}
         {/* Pages */}
         {/* <Route path='dashboard' element={<DashboardWrapper />} /> */}
         {/* <Route path='builder' element={<BuilderPageWrapper />} /> */}
         {/* <Route path='menu-test' element={<MenuTestPage />} /> */}
 
         {/* Lazy Modules */}
-        <Route
+        {/* <Route
           path='crafted/pages/profile/*'
           element={
             <SuspensedView>
@@ -84,17 +85,17 @@ const PrivateRoutes = () => {
               <UsersPage />
             </SuspensedView>
           }
-        />
+        /> */}
 
-
-        <Route
+        {auth?.user?.user_role !== UserType.EDITOR && <Route
           path='admin-dashboard'
           element={
             <SuspensedView>
               <AdminDashboardPage />
             </SuspensedView>
           }
-        />
+        />}
+
         <Route
           path='articles/*'
           element={
@@ -103,6 +104,7 @@ const PrivateRoutes = () => {
             </SuspensedView>
           }
         />
+
         {auth?.user?.user_role === UserType.ADMINISTRATOR && <Route
           path='users/*'
           element={
@@ -111,14 +113,15 @@ const PrivateRoutes = () => {
             </SuspensedView>
           }
         />}
-        <Route
+
+        {auth?.user?.user_role !== UserType.EDITOR && <Route
           path='settings/*'
           element={
             <SuspensedView>
               <SettingsPage />
             </SuspensedView>
           }
-        />
+        />}
 
         {/* Page Not Found */}
         <Route path='*' element={<Navigate to='/error/404' />} />
