@@ -1,6 +1,8 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
 import { PageLink, PageTitle } from '../../../_metronic/layout/core';
+import { UserType } from '../../constants/user/user_type';
+import { useAuth } from '../auth';
 
 import AddArticle from './add/AddArticle';
 import ArticleList from './list/ArticleList';
@@ -25,6 +27,8 @@ const AddEditArticleBreadcrumb: Array<PageLink> = [
 ]
 
 const ArticlePage = () => {
+
+  const { auth } = useAuth();
   return (
     <>
       <Routes>
@@ -47,24 +51,28 @@ const ArticlePage = () => {
               </>
             }
           />
-          <Route
-            path='add-article'
-            element={
-              <>
-                <PageTitle breadcrumbs={AddEditArticleBreadcrumb}>Add Article</PageTitle>
-                <AddArticle />
-              </>
-            }
-          />
-          <Route
-            path='edit-article/:id'
-            element={
-              <>
-                <PageTitle breadcrumbs={AddEditArticleBreadcrumb}>Edit Article</PageTitle>
-                <AddArticle />
-              </>
-            }
-          />
+          {auth?.user?.user_role !== UserType.EDITOR && (
+            <>
+              <Route
+                path='add-article'
+                element={
+                  <>
+                    <PageTitle breadcrumbs={AddEditArticleBreadcrumb}>Add Article</PageTitle>
+                    <AddArticle />
+                  </>
+                }
+              />
+              <Route
+                path='edit-article/:id'
+                element={
+                  <>
+                    <PageTitle breadcrumbs={AddEditArticleBreadcrumb}>Edit Article</PageTitle>
+                    <AddArticle />
+                  </>
+                }
+              />
+            </>
+          )}
           <Route index element={<Navigate to={'/articles/list'} />} />
           {/* <Route path="*" element={<Navigate to={'/articles/list'}/>}/> */}
         </Route>

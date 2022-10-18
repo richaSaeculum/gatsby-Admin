@@ -1,4 +1,5 @@
 import { ReactElement, useState } from 'react';
+import { KTSVG } from '../../../../../_metronic/helpers';
 
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 import Pagination from '../../../../components/pagination/Pagination';
@@ -81,18 +82,22 @@ const UserTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props) =>
         </td> */}
         <td className='text-end'>
           <button
-            className='btn btn-secondary btn-sm px-4 me-2'
+            className='btn btn-active-icon-gray-100 btn-icon btn-light-twitter btn-sm me-1' 
             onClick={() => { onEditRow(row) }}
           >
-            Edit
+            <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
           </button>
 
-          <button
-            className='btn btn-light btn-sm px-4'
+          < button
+            className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm'
             onClick={() => { actionClick(row, true) }}
           >
-            Delete
+            <KTSVG
+              path='/media/icons/duotune/general/gen027.svg'
+              className='svg-icon-3'
+            />
           </button>
+
         </td>
       </tr>)
     })

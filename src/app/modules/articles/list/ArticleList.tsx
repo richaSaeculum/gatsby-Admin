@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
 import { deletePostApi, getDashboardApi, getPostListApi } from '../../../api'
+import { UserType } from '../../../constants/user/user_type'
 import { useAuth } from '../../auth'
 import ArticleTable from './articletable/ArticleTable'
 
@@ -72,16 +73,16 @@ const ArticleList = () => {
           <div>
             <h1 className='fs-2hx fw-bold text-dark mb-0'>Articles</h1>
           </div>
-          <div className='d-flex justify-content-between align-items-center gap-3'>
+          {auth?.user?.user_role !== UserType.EDITOR && (  <div className='d-flex justify-content-between align-items-center gap-3'>
             <Link to={'/articles/add-article'}>
               <button type='button' className='btn btn-secondary'>
                 Add Article
               </button>
             </Link>
-            <button type='button' className='btn btn-secondary'>
+            {/* <button type='button' className='btn btn-secondary'>
               Filter
-            </button>
-          </div>
+            </button> */}
+          </div>)}
         </div>
 
         {articleData?.length > 0 ? <ArticleTable

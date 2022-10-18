@@ -8,6 +8,8 @@ import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 import Pagination from '../../../../components/pagination/Pagination';
 import { KTSVG } from '../../../../../_metronic/helpers';
 import { ArticleStatusType } from '../../../../constants/articles/article_status_type';
+import { useAuth } from '../../../auth';
+import { UserType } from '../../../../constants/user/user_type';
 
 type PaginationConfig = {
   totalPage: number
@@ -27,6 +29,7 @@ type Props = {
 
 const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfig }: Props) => {
 
+  const { auth } = useAuth()
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
   const [deleteRow, setDeleteRow] = useState<any>();
   const confirmationInfo = {
@@ -54,6 +57,10 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
     setDeleteRow(row);
   }
 
+  const onEditorAction = (row?: any) => {
+    console.log(row)
+  }
+
   const renderTablerow = () => {
     let arr: Array<ReactElement> = [];
     data?.forEach((row: any, index: number) => {
@@ -69,6 +76,20 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
             {decode(row.title.rendered)}
           </a>
         </td>
+        {
+          auth?.user?.user_role !== UserType.AUTHOR && <>
+            <td>
+              <span className='fw-semibold d-block fs-7'>
+                {row.author}
+              </span>
+            </td>
+            <td>
+              <span className='fw-semibold d-block fs-7'>
+                {row['_embedded'].author[0].name}
+              </span>
+            </td>
+          </>
+        }
         <td>
           <span className='fw-semibold d-block fs-7 mw-100'>
             <ul className='list-unstyled mb-0'>
@@ -111,26 +132,48 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
                 className='svg-icon-3'
               />
             </button>
-            {/* Edit Icon btn-bg-light btn-active-color-primary */}
-            <button
-              // className='btn btn-icon btn-light-primary btn-active-color-primary btn-active-icon-gray-100 btn-sm me-1' // btn-active-light-primary 
-              className='btn btn-active-icon-gray-100 btn-icon btn-light-twitter btn-sm me-1' // btn-active-light-primary 
-              onClick={() => { onEditRow(row) }}
-              disabled={(row.status === ArticleStatusType.PENDING || row.status === ArticleStatusType.PUBLISH)}
-            >
-              <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
-            </button>
-            {/* Delete Icon */}
-            < button
-              className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm' // btn-active-light-danger
-              onClick={() => { actionClick(row, true) }}
-              disabled={row.status === ArticleStatusType.PUBLISH}
-            >
-              <KTSVG
-                path='/media/icons/duotune/general/gen027.svg'
-                className='svg-icon-3'
-              />
-            </button>
+            {auth?.user?.user_role !== UserType.EDITOR && (<>
+              <button
+                // className='btn btn-icon btn-light-primary btn-active-color-primary btn-active-icon-gray-100 btn-sm me-1' // btn-active-light-primary 
+                className='btn btn-active-icon-gray-100 btn-icon btn-light-twitter btn-sm me-1' // btn-active-light-primary 
+                onClick={() => { onEditRow(row) }}
+                disabled={(row.status === ArticleStatusType.PENDING || row.status === ArticleStatusType.PUBLISH)}
+              >
+                <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
+              </button>
+
+              < button
+                className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm' // btn-active-light-danger
+                onClick={() => { actionClick(row, true) }}
+                disabled={row.status === ArticleStatusType.PUBLISH}
+              >
+                <KTSVG
+                  path='/media/icons/duotune/general/gen027.svg'
+                  className='svg-icon-3'
+                />
+              </button>
+            </>)}
+            {auth?.user?.user_role === UserType.EDITOR && (<>
+              <button
+                // className='btn btn-icon btn-light-primary btn-active-color-primary btn-active-icon-gray-100 btn-sm me-1' // btn-active-light-primary 
+                className='btn btn-active-icon-gray-100 btn-icon btn-light-success btn-sm me-1' // btn-active-light-primary 
+                onClick={() => { onEditorAction(row) }}
+                disabled={(row.status === ArticleStatusType.PENDING || row.status === ArticleStatusType.PUBLISH)}
+              >
+                <KTSVG path='/media/icons/duotune/arrows/arr085.svg' className='svg-icon-3' />
+              </button>
+
+              < button
+                className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm' // btn-active-light-danger
+                onClick={() => { onEditorAction(row) }}
+                disabled={row.status === ArticleStatusType.PUBLISH}
+              >
+                <KTSVG
+                  path='/media/icons/duotune/arrows/arr061.svg'
+                  className='svg-icon-3'
+                />
+              </button>
+            </>)}
           </div>
 
           {/* <a
@@ -188,7 +231,13 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
               <thead>
                 <tr className='fw-bold text-muted'>
                   <th className='rounded-start'>No.</th>
-                  <th className='min-w-100'>Title</th>
+                  <th className='min-w-450px'>Title</th>
+                  {auth?.user?.user_role !== UserType.AUTHOR && (
+                    <>
+                      <th className='min-w-100px'>Author Id</th>
+                      <th className='min-w-150px'>Author Name</th>
+                    </>
+                  )}
                   <th>Category</th>
                   <th>Status</th>
                   <th>Views</th>
