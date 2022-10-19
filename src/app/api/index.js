@@ -1,5 +1,7 @@
 import axios from "axios"
 import client from "../Utils/client";
+import Constant from "../constants/constants";
+import Utils from "../Utils";
 
 /* ======================================= */
 /* *********** AUTHENTICATION ************ */
@@ -30,13 +32,9 @@ export const register = async (payload) => {
 }
 
 // logout user (POST)
-export const logoutApi = async ({ token }) => {
+export const logoutApi = async () => {
   try {
-    const { data } = await client().post('/logout', {}, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post('/logout');
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -51,17 +49,13 @@ export const logoutApi = async ({ token }) => {
 /* ============================== */
 
 // get users list all (POST)
-export const getUsersListApi = async ({ token, page = 1, limit = 100 }) => {
+export const getUsersListApi = async ({ page = 1, limit = 100 }) => {
   try {
     let payload = {
       "page_index": page,
       "page_size": limit
     }
-    const { data } = await client().post(`/users/list`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(`/users/list`, payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -71,13 +65,9 @@ export const getUsersListApi = async ({ token, page = 1, limit = 100 }) => {
 }
 
 // get single users list  (GET)
-export const getSingleUsersListApi = async ({ token, id }) => {
+export const getSingleUsersListApi = async ({ id }) => {
   try {
-    const { data } = await client().get(`/user/${id}`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().get(`/user/${id}`);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -99,13 +89,9 @@ export const addUserApi = async ({ payload }) => {
 }
 
 // update user api (POST)
-export const updateUserApi = async ({ token, payload, id }) => {
+export const updateUserApi = async ({ payload, id }) => {
   try {
-    const { data } = await client().post(`/user/${id}`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(`/user/${id}`, payload);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -115,14 +101,9 @@ export const updateUserApi = async ({ token, payload, id }) => {
 }
 
 // delete user (DELETE)
-export const deleteUserApi = async ({ token, id }) => {
+export const deleteUserApi = async ({ id }) => {
   try {
-    const { data } = await client().delete(`/user/${id}`, {
-      headers: {
-        Authorization: token
-      }
-    }
-    );
+    const { data } = await client().delete(`/user/${id}`);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -137,13 +118,10 @@ export const deleteUserApi = async ({ token, id }) => {
 /* ============================== */
 
 // get post list all (GET)
-export const getPostListApi = async ({ token, page = 1, limit = 10 }) => {
+export const getPostListApi = async ({ page = 1, limit = 10, status = '', after = '', before = '' }) => {
   try {
-    const { data } = await client().get(`/articles/list?page=${page}&limit=${limit}`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    let param = { page, limit, status, after, before }
+    const { data } = await client().get(Utils.Common.getApiEndPointFromQueryParams(Constant.API_ENDPOINTS.ARTICLE_LIST, param));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -153,14 +131,10 @@ export const getPostListApi = async ({ token, page = 1, limit = 10 }) => {
 }
 
 // get post list by month (GET)
-export const getPostListByMonthApi = async ({ token, after = '', before = '', status = 'any' }) => {
+export const getPostListByMonthApi = async ({ after = '', before = '', status = '' }) => {
   try {
-    const { data } = await client().get(`/articles/list?status=${status}&after=${after}&before=${before}`, {
-      headers: {
-        Authorization: token
-      }
-    }
-    );
+    let param = { status, after, before }
+    const { data } = await client().get(Utils.Common.getApiEndPointFromQueryParams(Constant.API_ENDPOINTS.ARTICLE_LIST, param));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -170,13 +144,9 @@ export const getPostListByMonthApi = async ({ token, after = '', before = '', st
 }
 
 // get single post (GET) 
-export const getSinglePostApi = async ({ token, id }) => {
+export const getSinglePostApi = async ({ id }) => {
   try {
-    const { data } = await client().get(`/article/${id}`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().get(Utils.Common.getApiEndPointFromReplaceBraces(Constant.API_ENDPOINTS.ARTICLE, { id }));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -186,13 +156,9 @@ export const getSinglePostApi = async ({ token, id }) => {
 }
 
 //  add post(POST)
-export const addPostApi = async ({ token, payload }) => {
+export const addPostApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(`/article/create`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(Utils.Common.getApiEndPointFromReplaceBraces(Constant.API_ENDPOINTS.ARTICLE_CREATE), payload);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -202,13 +168,9 @@ export const addPostApi = async ({ token, payload }) => {
 }
 
 //  update post(POST)
-export const updatePostApi = async ({ token, id, payload }) => {
+export const updatePostApi = async ({ id, payload }) => {
   try {
-    const { data } = await client().post(`/article/create/${id}`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(Utils.Common.getApiEndPointFromReplaceBraces(Constant.API_ENDPOINTS.ARTICLE_UPDATE, { id }), payload);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -218,13 +180,9 @@ export const updatePostApi = async ({ token, id, payload }) => {
 }
 
 //delete post by id (DELETE)
-export const deletePostApi = async ({ token, id }) => {
+export const deletePostApi = async ({ id }) => {
   try {
-    const { data } = await client().delete(`/article/${id}`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().delete(Utils.Common.getApiEndPointFromReplaceBraces(Constant.API_ENDPOINTS.ARTICLE, { id }));
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -239,13 +197,9 @@ export const deletePostApi = async ({ token, id }) => {
 /* ============================= */
 
 // file upload (POST)
-export const fileUploadApi = async ({ token, payload }) => {
+export const fileUploadApi = async ({ payload }) => {
   try {
-    const { data } = await client({ multipart: true }).post(`/upload`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client({ multipart: true }).post(`/upload`, payload);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -272,14 +226,9 @@ export const validateIFSC = async ({ ifsc }) => {
 /* ============================== */
 
 // get categorylist all (GET)
-export const getCategoriesListApi = async ({ token, page = 1, limit = 10 }) => {
+export const getCategoriesListApi = async ({ page = 1, limit = 10 }) => {
   try {
-    const { data } = await client().get(`/categories/list?page=${page}&limit=${limit}`, {
-      headers: {
-        Authorization: token
-      }
-    }
-    );
+    const { data } = await client().get(`/categories/list?page=${page}&limit=${limit}`);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -289,14 +238,9 @@ export const getCategoriesListApi = async ({ token, page = 1, limit = 10 }) => {
 }
 
 // get category list single (GET)
-export const getSingleCategoryApi = async ({ token, id }) => {
+export const getSingleCategoryApi = async ({ id }) => {
   try {
-    const { data } = await client().get(`/category/${id}`, {
-      headers: {
-        Authorization: token
-      }
-    }
-    );
+    const { data } = await client().get(`/category/${id}`);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -306,14 +250,9 @@ export const getSingleCategoryApi = async ({ token, id }) => {
 }
 
 // add category (POST)
-export const addCategoryApi = async ({ token, payload }) => {
+export const addCategoryApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(`/category/create`, payload, {
-      headers: {
-        Authorization: token
-      }
-    }
-    );
+    const { data } = await client().post(`/category/create`, payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -323,14 +262,9 @@ export const addCategoryApi = async ({ token, payload }) => {
 }
 
 // update category (POST)
-export const updateCategoryApi = async ({ token, payload, id }) => {
+export const updateCategoryApi = async ({ payload, id }) => {
   try {
-    const { data } = await client().post(`/category/create/${id}`, payload, {
-      headers: {
-        Authorization: token
-      }
-    }
-    );
+    const { data } = await client().post(`/category/create/${id}`, payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -340,17 +274,12 @@ export const updateCategoryApi = async ({ token, payload, id }) => {
 }
 
 //delete category by id (DELETE)
-export const deleteCategoryApi = async ({ token, id }) => {
+export const deleteCategoryApi = async ({ id }) => {
   try {
-    const { data } = await client().delete(`/category/${id}`, {
-      headers: {
-        Authorization: token
-      }
-    }
-    );
+    const { data } = await client().delete(`/category/${id}`);
     return data;
   } catch (error) {
-     // get axios errors from error.response
+    // get axios errors from error.response
     console.log(error);
     return error.response.data
   }
@@ -362,13 +291,9 @@ export const deleteCategoryApi = async ({ token, id }) => {
 /* ================================== */
 
 // get dashboard details (GET)
-export const getDashboardApi = async ({ token }) => {
+export const getDashboardApi = async () => {
   try {
-    const { data } = await client().get(`/dashboard`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().get(`/dashboard`);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -383,13 +308,9 @@ export const getDashboardApi = async ({ token }) => {
 /* ================================ */
 
 // get payment details if already added (GET)
-export const getPaymentDetailsApi = async ({ token }) => {
+export const getPaymentDetailsApi = async () => {
   try {
-    const { data } = await client().get(`/payment`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().get(`/payment`);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -399,13 +320,9 @@ export const getPaymentDetailsApi = async ({ token }) => {
 }
 
 // add payment details (POST)
-export const addPaymentDetailsApi = async ({ token, payload }) => {
+export const addPaymentDetailsApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(`/payment`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(`/payment`, payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -420,13 +337,9 @@ export const addPaymentDetailsApi = async ({ token, payload }) => {
 /* ================================= */
 
 // get current payout margin
-export const getPayoutMarginApi = async ({ token }) => {
+export const getPayoutMarginApi = async () => {
   try {
-    const { data } = await client().get(`/margin`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().get(`/margin`);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -436,13 +349,9 @@ export const getPayoutMarginApi = async ({ token }) => {
 }
 
 // add payout margin  (POST)
-export const addPayoutMarginApi = async ({ token, payload }) => {
+export const addPayoutMarginApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(`/margin/create`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(`/margin/create`, payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -452,13 +361,9 @@ export const addPayoutMarginApi = async ({ token, payload }) => {
 }
 
 // update tier  (POST)
-export const updateTierApi = async ({ token, payload, id }) => {
+export const updateTierApi = async ({ payload, id }) => {
   try {
-    const { data } = await client().post(`/tier/config/create/${id}`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(`/tier/config/create/${id}`, payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -468,13 +373,9 @@ export const updateTierApi = async ({ token, payload, id }) => {
 }
 
 // get wallet details for user (GET)
-export const getTierConfigApi = async ({ token }) => {
+export const getTierConfigApi = async () => {
   try {
-    const { data } = await client().get(`/tier/config`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().get(`/tier/config`);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -485,13 +386,9 @@ export const getTierConfigApi = async ({ token }) => {
 
 
 // get wallet details for user
-export const getWalletDetailsApi = async ({ token }) => {
+export const getWalletDetailsApi = async () => {
   try {
-    const { data } = await client().get(`/wallet`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().get(`/wallet`);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -501,13 +398,9 @@ export const getWalletDetailsApi = async ({ token }) => {
 }
 
 // get wallet details for user
-export const getTransactionsApi = async ({ token, page = 1, limit = 10 }) => {
+export const getTransactionsApi = async ({ page = 1, limit = 10 }) => {
   try {
-    const { data } = await client().get(`/transactions?page=${page}&limit=${limit}`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().get(`/transactions?page=${page}&limit=${limit}`);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -518,13 +411,9 @@ export const getTransactionsApi = async ({ token, page = 1, limit = 10 }) => {
 
 
 // add payout margin  (POST)
-export const addPayoffApi = async ({ token, payload }) => {
+export const addPayoffApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(`/payoff/create`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(`/payoff/create`, payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -534,13 +423,9 @@ export const addPayoffApi = async ({ token, payload }) => {
 }
 
 // update payout margin  (POST)
-export const updatePayoffApi = async ({ token, payload, id }) => {
+export const updatePayoffApi = async ({ payload, id }) => {
   try {
-    const { data } = await client().post(`/payoff/create/${id}`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(`/payoff/create/${id}`, payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -550,13 +435,9 @@ export const updatePayoffApi = async ({ token, payload, id }) => {
 }
 
 // get all payoff list (MONTHS)
-export const getPayoffAllApi = async ({ token, page = 1, limit = 10 }) => {
+export const getPayoffAllApi = async ({ page = 1, limit = 10 }) => {
   try {
-    const { data } = await client().get(`/payoff/all?page=${page}&limit=${limit}`, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().get(`/payoff/all?page=${page}&limit=${limit}`);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -566,17 +447,13 @@ export const getPayoffAllApi = async ({ token, page = 1, limit = 10 }) => {
 }
 
 // get all success payoff list (by users)
-export const getSuccessPayoffListApi = async ({ token, page = 1, limit = 10 }) => {
+export const getSuccessPayoffListApi = async ({ page = 1, limit = 10 }) => {
   try {
     let payload = {
       "page_index": page,
       "page_size": limit
     }
-    const { data } = await client().post(`/payoffs/list`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(`/payoffs/list`, payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -587,13 +464,9 @@ export const getSuccessPayoffListApi = async ({ token, page = 1, limit = 10 }) =
 
 
 // get all payoff list (monthwise user specific)
-export const getPayoffsByMonthApi = async ({ token, payload }) => {
+export const getPayoffsByMonthApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(`/payoff/users`, payload, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const { data } = await client().post(`/payoff/users`, payload);
     return data
   } catch (error) {
     // get axios errors from error.response

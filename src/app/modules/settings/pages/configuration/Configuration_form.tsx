@@ -4,7 +4,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { useLayout } from '../../../../../_metronic/layout/core';
-import { useAuth } from '../../../auth';
 
 import { getPaymentDetailsApi } from '../../../../api';
 
@@ -46,7 +45,6 @@ const paymentDetailsSchema = Yup.object().shape({
 
 const Configuration = () => {
 
-  const { auth } = useAuth();
   const { setLoader } = useLayout();
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
   const [confirmationInfo, setConfirmationInfo] = useState<any>();
@@ -68,7 +66,7 @@ const Configuration = () => {
   // }, [confirmationInfo])
 
   async function getPaymentDetails() {
-    const res = await getPaymentDetailsApi({ token: auth?.token })
+    const res = await getPaymentDetailsApi()
     if (res && res.status === 200) {
       let data = res.data[0];
       setInitialValues({
@@ -116,7 +114,7 @@ const Configuration = () => {
         "tier_pageviews": values.s_views,
         "tier_seo_score": values.s_seo_score,
         "tier_article": values.s_article_count,
-        "tier_fixed_pay": values.s_payment_type === 'fixed_variable' ? values.s_fixed_amount : null ,
+        "tier_fixed_pay": values.s_payment_type === 'fixed_variable' ? values.s_fixed_amount : null,
         "tier_paid_pay_rate": values.var_paid,
         "tier_organic_pay_rate": values.var_organic,
         "tier_social_pay_rate": values.var_social,

@@ -73,7 +73,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
         </td>
         <td>
           <a href='#' className='text-dark fw-bold fs-6'>
-            {decode(row.title.rendered)}
+            {decode(row.title)}
           </a>
         </td>
         {
@@ -85,7 +85,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
             </td>
             <td>
               <span className='fw-semibold d-block fs-7'>
-                {row['_embedded'].author[0].name}
+                {/* {row['_embedded'].author[0].name} */} -
               </span>
             </td>
           </>

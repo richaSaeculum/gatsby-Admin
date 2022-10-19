@@ -4,7 +4,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { useLayout } from '../../../../../_metronic/layout/core';
-import { useAuth } from '../../../auth';
 
 import { addPaymentDetailsApi, fileUploadApi, getPaymentDetailsApi, validateIFSC } from '../../../../api';
 
@@ -55,7 +54,6 @@ const paymentDetailsSchema = Yup.object().shape({
 
 const Payment = () => {
 
-  const { auth } = useAuth();
   const { setLoader } = useLayout();
   const [imgUrl, setImgUrl] = useState<any>({});
   // const [formValues, setFormValues] = useState<any>(PaymentInitValues);
@@ -80,7 +78,7 @@ const Payment = () => {
   }, [confirmationInfo])
 
   async function getPaymentDetails() {
-    const res = await getPaymentDetailsApi({ token: auth?.token })
+    const res = await getPaymentDetailsApi()
     if (res && res.status === 200) {
       let data = res.data[0];
       setInitialValues({
@@ -128,7 +126,7 @@ const Payment = () => {
       formAction.setFieldValue(e.target.name, e.target.value);
       const imgPayload = new FormData();
       imgPayload.append('file', e.target.files[0])
-      const res = await fileUploadApi({ token: auth?.token, payload: imgPayload });
+      const res = await fileUploadApi({ payload: imgPayload });
       if (res && res.status === 200) {
         let a = {
           ...imgUrl,
@@ -176,7 +174,7 @@ const Payment = () => {
     setLoader(true)
     let payload = generatePayload(values);
     try {
-      let response = await addPaymentDetailsApi({ token: auth?.token, payload })
+      let response = await addPaymentDetailsApi({ payload })
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Payment details successfully added' }
         toggleModal(info);

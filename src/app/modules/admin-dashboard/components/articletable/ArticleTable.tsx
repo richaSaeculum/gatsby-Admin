@@ -1,7 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { ReactElement } from 'react'
-import { KTSVG, toAbsoluteUrl } from '../../../../../_metronic/helpers'
-import Tabledata from './sample_article.json'
 import { decode } from 'html-entities';
 
 type Props = {

@@ -35,7 +35,7 @@ const Payoffs = () => {
   const getPayofflist = async ({ page }: any) => {
     setLoader(true);
     let limit = 5
-    const res = await getPayoffAllApi({ token: auth?.token, page, limit })
+    const res = await getPayoffAllApi({ page, limit })
     if (res && res.status === 200) {
       setTotalPage(parseInt(res.data.pageCount))
       let a = res?.data?.payoffs.map((item: any, index: number) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
@@ -53,7 +53,7 @@ const Payoffs = () => {
   }, [month, revenue, articleCount])
 
   const getTotalArticleOfMonth = async (after: string, before: string) => {
-    const response = await getPostListByMonthApi({ token: auth?.token, after, before, status: ArticleStatusType.PUBLISH });
+    const response = await getPostListByMonthApi({ after, before, status: ArticleStatusType.PUBLISH });
     if (response && response.status === 200) {
       setArticleCount(response.data.articlesCount);
     }
@@ -135,7 +135,7 @@ const Payoffs = () => {
     }
 
     if (editId) {
-      response = await updatePayoffApi({ token: auth?.token, payload, id: editId });
+      response = await updatePayoffApi({ payload, id: editId });
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Payoff successfully updated' }
         toggleModal(info);
@@ -145,7 +145,7 @@ const Payoffs = () => {
         toggleModal(info);
       }
     } else {
-      response = await addPayoffApi({ token: auth?.token, payload });
+      response = await addPayoffApi({ payload });
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Payoff successfully added' }
         toggleModal(info);
@@ -178,7 +178,7 @@ const Payoffs = () => {
   }
 
   const getPayoffMargin = async () => {
-    const res = await getPayoutMarginApi({ token: auth?.token });
+    const res = await getPayoutMarginApi();
     if (res && res.status === 200) {
       setMargin(res.data.payout_margin);
     }

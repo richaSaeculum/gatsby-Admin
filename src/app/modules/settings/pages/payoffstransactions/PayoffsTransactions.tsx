@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { useLayout } from '../../../../../_metronic/layout/core';
-import { useAuth } from '../../../auth';
 
 import { getSuccessPayoffListApi } from '../../../../api';
 
@@ -47,7 +46,6 @@ import TransactionTable from './TransactionTable';
 
 const PayoffsTransactions = () => {
 
-	const { auth } = useAuth();
 	const { setLoader } = useLayout();
 	const [data, setData] = useState<any>();
 
@@ -67,7 +65,7 @@ const PayoffsTransactions = () => {
 	const getSuccessPayoff = async ({ page }: any) => {
 		setLoader(true);
 		let limit = 10;
-		const res = await getSuccessPayoffListApi({ token: auth?.token, page, limit });
+		const res = await getSuccessPayoffListApi({ page, limit });
 		if (res && res.status === 200) {
 			setTotalPage(parseInt(res.data.pageCount));
 			let a = res.data.payoffs.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })

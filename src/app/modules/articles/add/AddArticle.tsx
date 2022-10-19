@@ -116,7 +116,7 @@ const AddArticle = () => {
 
   const getCategories = async () => {
     setLoader(true);
-    let response: any = await getCategoriesListApi({ token: auth?.token, page: 1, limit: 100 });
+    let response: any = await getCategoriesListApi({ page: 1, limit: 100 });
     if (response && response.status === 200) {
       let arr = response.data.categories;
       arr = arr.map((item: any) => ({ label: item.name, value: item.id }))
@@ -126,7 +126,7 @@ const AddArticle = () => {
   }
 
   const editId = async (id: any) => {
-    let response: any = await getSinglePostApi({ token: auth?.token, id });
+    let response: any = await getSinglePostApi({ id });
     if (response && response.status === 200) {
       const { content, id, title, status } = response.data;
       if (status !== ArticleStatusType.DRAFT && status !== ArticleStatusType.REJECTED) {
@@ -226,7 +226,7 @@ const AddArticle = () => {
     let payload = generatePayload(info);
     let response;
     if (id) {
-      response = await updatePostApi({ token: auth?.token, id, payload });
+      response = await updatePostApi({ id, payload });
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Article successfully updated' }
         toggleModal(info);
@@ -236,7 +236,7 @@ const AddArticle = () => {
         toggleModal(info);
       }
     } else {
-      response = await addPostApi({ token: auth?.token, payload });
+      response = await addPostApi({ payload });
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Article successfully added' }
         toggleModal(info);

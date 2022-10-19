@@ -22,7 +22,7 @@ const Wallet = () => {
   const getWalletDetails = async () => {
     try {
       setLoader(true);
-      const res = await getWalletDetailsApi({ token: auth?.token })
+      const res = await getWalletDetailsApi()
       if (res && res.status === 200) {
         setWallet(res.data);
       }
@@ -36,7 +36,7 @@ const Wallet = () => {
   const getTransactionsDetails = async ({ page }: any) => {
     try {
       setLoader(true);
-      const response = await getTransactionsApi({ token: auth?.token, page })
+      const response = await getTransactionsApi({ page })
       if (response && response.status === 200) {
         setTotalPage(parseInt(response.data.pageCount))
         let a = response?.data?.transactions.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * 10 + index + 1 }) })

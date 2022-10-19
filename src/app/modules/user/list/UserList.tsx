@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useLayout } from '../../../../_metronic/layout/core';
-import { useAuth } from '../../auth';
 
 import { deleteUserApi, getUsersListApi } from '../../../api';
 
@@ -10,7 +9,6 @@ import UserTable from './usertable/UserTable';
 
 const UserList = () => {
 
-  const { auth } = useAuth();
   const { setLoader } = useLayout();
   const [usersData, setUsersData] = useState<any>();
 
@@ -28,7 +26,7 @@ const UserList = () => {
   const getAllUsers = async ({ page }: any) => {
     setLoader(true);
     let limit = 10;
-    let response = await getUsersListApi({ token: auth?.token, page, limit: limitNo });
+    let response = await getUsersListApi({ page, limit: limitNo });
     if (response && response.status === 200) {
       setTotalPage(parseInt(response.data.pageCount))
       setTotalUsers(parseInt(response.data.userCount))
@@ -46,7 +44,7 @@ const UserList = () => {
 
   const onDeleteRow = async (row: any) => {
     setLoader(true)
-    const response = await deleteUserApi({ token: auth?.token, id: row.wp_user_id })
+    const response = await deleteUserApi({ id: row.wp_user_id })
     if (response && response.status === 200) {
       getAllUsers({ page: currentPage });
     }

@@ -82,7 +82,7 @@ const Configuration = () => {
   async function getTierConfigDetails() {
     setLoader(true);
     try {
-      const res = await getTierConfigApi({ token: auth?.token })
+      const res = await getTierConfigApi()
       if (res && res.status === 200) {
         let data = res.data;
         let bronze = data.find((item: any) => item.name === 'bronze');
@@ -168,7 +168,7 @@ const Configuration = () => {
     setLoader(true)
     let payload: any = generatePayload(values);
     try {
-      let response: any = await updateTierApi({ token: auth?.token, id: payload?.id, payload })// add api call
+      let response: any = await updateTierApi({ id: payload?.id, payload })// add api call
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Payment details successfully added' }
         toggleModal(info);

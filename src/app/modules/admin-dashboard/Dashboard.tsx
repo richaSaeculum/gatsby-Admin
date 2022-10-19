@@ -4,7 +4,6 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 
 import { useLayout } from '../../../_metronic/layout/core';
-import { useAuth } from '../auth';
 
 import { getDashboardApi, getPostListApi, getPostListByMonthApi } from '../../api';
 
@@ -15,7 +14,6 @@ import StatusCard from './components/statuscard/StatusCard';
 
 const Dashboard: FC = () => {
 
-  const { auth } = useAuth();
   const { setLoader } = useLayout();
   const [articleList, setArticleList] = useState<any>();
   const [dashboard, setDashboard] = useState<any>();
@@ -25,21 +23,21 @@ const Dashboard: FC = () => {
   const getData = async () => {
     try {
       setLoader(true);
-      const res = await getDashboardApi({ token: auth?.token });
+      const res = await getDashboardApi();
       if (res && res.status === 200) {
         setDashboard(res.data);
       }
-      const response = await getPostListApi({ token: auth?.token });
+      const response = await getPostListApi({});
       if (response && response.status === 200) {
         setArticleList(response.data.articles);
-        setTotalPost(response.data.articlesCount)
+        setTotalPost(response.data.totalCount)
       }
       const previousMonthLastDate = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD');
       const nextMonthFirstDate = moment().add(1, 'months').startOf('month').format('YYYY-MM-DD');
 
-      const currentRes = await getPostListByMonthApi({ token: auth?.token, after: previousMonthLastDate, before: nextMonthFirstDate })
+      const currentRes = await getPostListByMonthApi({ after: previousMonthLastDate, before: nextMonthFirstDate })
       if (currentRes && currentRes.status === 200) {
-        setPostCount(currentRes.data.articlesCount)
+        setPostCount(currentRes.data.totalCount)
       }
     } catch (err) {
       console.log(err)

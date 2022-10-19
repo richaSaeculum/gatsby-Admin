@@ -57,7 +57,7 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
   }
 
   const logout = async () => {
-    const res = await logoutApi({ token: auth?.token });
+    const res = await logoutApi();
     if (res && res.status === 200) {
       saveAuth(undefined);
       setCurrentUser(undefined);
@@ -73,7 +73,7 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
 }
 
 const AuthInit: FC<WithChildren> = ({ children }) => {
-  const { auth, logout, setCurrentUser } = useAuth()
+  const { auth,  setCurrentUser } = useAuth()
   const didRequest = useRef(false)
   const [showSplashScreen, setShowSplashScreen] = useState(true);
 

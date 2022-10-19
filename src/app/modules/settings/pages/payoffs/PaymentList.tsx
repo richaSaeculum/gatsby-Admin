@@ -2,7 +2,6 @@ import { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useLayout } from '../../../../../_metronic/layout/core';
-import { useAuth } from '../../../auth';
 
 import { getPayoffsByMonthApi } from '../../../../api';
 
@@ -58,7 +57,6 @@ import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 
 const PaymentList = () => {
 
-  const { auth } = useAuth();
   const { setLoader } = useLayout();
   const param = useParams();
   const [monthYear, setMonthYear] = useState();
@@ -85,7 +83,7 @@ const PaymentList = () => {
       "month": a[0],
       "year": a[1]
     }
-    const res = await getPayoffsByMonthApi({ token: auth?.token, payload });
+    const res = await getPayoffsByMonthApi({ payload });
     if (res && res.status === 200) {
       const a = res?.data.map((a: any) => ({ ...a, isSelected: false }))
       setData(a);

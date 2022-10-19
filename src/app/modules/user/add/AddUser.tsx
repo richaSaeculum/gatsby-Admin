@@ -5,7 +5,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { useLayout } from '../../../../_metronic/layout/core';
-import { useAuth } from '../../auth';
 
 import { addUserApi, getSingleUsersListApi, updateUserApi } from '../../../api';
 
@@ -50,9 +49,7 @@ const UserInitValues: UserFormFieldsTypes = {
 const AddUser = () => {
 
   const param = useParams()
-  const { wpAuth, auth } = useAuth();
   const navigate = useNavigate();
-  const wpAuthToken = wpAuth?.token;
   const { setLoader } = useLayout();
   const [initialValues, setInitialValues] = useState<any>(UserInitValues);
   const [editForm, setEditForm] = useState<boolean>(false)
@@ -80,7 +77,7 @@ const AddUser = () => {
   const editId = async (id: any) => {
     setLoader(true);
     setEditForm(true);
-    const response = await getSingleUsersListApi({ token: auth?.token, id })
+    const response = await getSingleUsersListApi({ id })
     if (response && response.status === 200) {
       const { user_name, user_email, user_first_name, user_last_name, user_role, user_website, wp_user_id } = response.data
       setLoader(false);
@@ -125,7 +122,7 @@ const AddUser = () => {
     try {
       if (values.id) {
         //edit user API call (POST)
-        response = await updateUserApi({ token: auth?.token, payload, id: values.id });
+        response = await updateUserApi({ payload, id: values.id });
         if (response && response.status === 200) {
           const info = { action: 'alert', message: 'User successfully updated' }
           toggleModal(info);

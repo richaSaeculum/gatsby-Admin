@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
-import { deletePostApi, getDashboardApi, getPostListApi } from '../../../api'
+import { deletePostApi, getPostListApi } from '../../../api'
 import { UserType } from '../../../constants/user/user_type'
 import { useAuth } from '../../auth'
 import ArticleTable from './articletable/ArticleTable'
@@ -24,11 +24,12 @@ const ArticleList = () => {
 
   const getAllPost = async ({ page }: any) => {
     setLoader(true);
-    let response = await getPostListApi({ token: auth?.token, page, limit: limitNo });
+    let response = await getPostListApi({ page, limit: limitNo });
     if (response && response.status === 200) {
       setTotalPage(parseInt(response.data.pageCount));
-      setTotalArticle(parseInt(response.data.articlesCount))
-      let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item), rowNo: (page - 1) * limitNo + index + 1 }) })
+      setTotalArticle(parseInt(response.data.totalCount))
+      // let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item), rowNo: (page - 1) * limitNo + index + 1 }) })
+      let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
       setArticleData(a)
       setLoader(false)
     }
@@ -46,7 +47,7 @@ const ArticleList = () => {
 
   const onDeleteRow = async (row: any) => {
     setLoader(true)
-    let response = await deletePostApi({ token: auth?.token, id: row.id });
+    let response = await deletePostApi({ id: row.id });
     if (response && response.status === 200) {
       getAllPost({ page: currentPage });
     }
@@ -73,7 +74,7 @@ const ArticleList = () => {
           <div>
             <h1 className='fs-2hx fw-bold text-dark mb-0'>Articles</h1>
           </div>
-          {auth?.user?.user_role !== UserType.EDITOR && (  <div className='d-flex justify-content-between align-items-center gap-3'>
+          {auth?.user?.user_role !== UserType.EDITOR && (<div className='d-flex justify-content-between align-items-center gap-3'>
             <Link to={'/articles/add-article'}>
               <button type='button' className='btn btn-secondary'>
                 Add Article

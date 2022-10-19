@@ -3,7 +3,6 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 
 import { useLayout } from '../../../../../_metronic/layout/core';
-import { useAuth } from '../../../auth';
 
 import { addCategoryApi, deleteCategoryApi, getCategoriesListApi, getSingleCategoryApi, updateCategoryApi } from '../../../../api';
 
@@ -12,7 +11,6 @@ import CategoryTable from './categorytable/CategoryTable';
 
 const Category = () => {
 
-  const { auth } = useAuth();
   const { setLoader } = useLayout();
   const [categories, setCategories] = useState();
   const [open, setOpen] = useState<boolean>(false);
@@ -53,7 +51,7 @@ const Category = () => {
   const getCategories = async ({ page }: any) => {
     setLoader(true);
     let limit = 5;
-    const response = await getCategoriesListApi({ token: auth?.token, page, limit });
+    const response = await getCategoriesListApi({ page, limit });
     if (response && response.status === 200) {
       setTotalPage(parseInt(response.data.categoriesPageCount))
       let a = response?.data?.categories.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
@@ -76,7 +74,7 @@ const Category = () => {
     if (title == '') { setIsError(true); return }
     let payload = { name: title }, response: any;
     if (category && category.id) {
-      response = await updateCategoryApi({ token: auth?.token, payload, id: category.id });
+      response = await updateCategoryApi({ payload, id: category.id });
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Category successfully updated' }
         toggleModal(info);
@@ -88,7 +86,7 @@ const Category = () => {
         toggleModal(info);
       }
     } else {
-      response = await addCategoryApi({ token: auth?.token, payload });
+      response = await addCategoryApi({ payload });
       if (response && response.status === 200) {
         const info = { action: 'alert', message: 'Category successfully added ' }
         toggleModal(info);
@@ -106,7 +104,7 @@ const Category = () => {
 
   const onEdit = async (row: any) => {
     setLoader(true);
-    const res = await getSingleCategoryApi({ token: auth?.token, id: row.id });
+    const res = await getSingleCategoryApi({ id: row.id });
     if (res && res.status === 200) {
       setEditId(res.data.id);
       setTitle(res.data.name);
@@ -118,7 +116,7 @@ const Category = () => {
 
   const onDelete = async (row: any) => {
     setLoader(true);
-    const res = await deleteCategoryApi({ token: auth?.token, id: row.id });
+    const res = await deleteCategoryApi({ id: row.id });
     if (res && res.status === 200 && res.data.deleted) {
       getCategories({ page: currentPage });
     }

@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 import { useLayout } from '../../../../../_metronic/layout/core';
-import { useAuth } from '../../../auth';
 
 import { addPayoutMarginApi, getPayoutMarginApi } from '../../../../api';
 
@@ -9,7 +8,6 @@ import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 
 const Configuration = () => {
 
-  const { auth } = useAuth();
   const { setLoader } = useLayout();
   const [margin, setMargin] = useState<string | undefined>(undefined);
   const [currentMargin, setCurrentMargin] = useState<string | ''>('');
@@ -30,7 +28,7 @@ const Configuration = () => {
   const getPayoutMargin = async () => {
     setLoader(true);
     try {
-      const response = await getPayoutMarginApi({ token: auth?.token });
+      const response = await getPayoutMarginApi();
       if (response && response.status === 200) {
         setCurrentMargin(response.data.payout_margin);
         setMargin(response.data?.payout_margin);
@@ -74,7 +72,7 @@ const Configuration = () => {
     let payload = {
       "payout_margin": margin
     }
-    const response = await addPayoutMarginApi({ token: auth?.token, payload });
+    const response = await addPayoutMarginApi({ payload });
     if (response && response.status === 200) {
       setMargin('');
       const info = { action: 'alert', message: 'Payout margin successfully added' }
