@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { Dispatch, ReactElement, SetStateAction, useState } from 'react';
 import { KTSVG } from '../../../../../_metronic/helpers';
 
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
@@ -7,6 +7,9 @@ import Pagination from '../../../../components/pagination/Pagination';
 type PaginationConfig = {
   totalPage: number
   handlePageChange: (page: number) => void
+  totalUsers: number
+  limitNo: number
+  setLimitNo: Dispatch<SetStateAction<number>>
 }
 
 type Props = {
@@ -142,21 +145,26 @@ const UserTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props) =>
             {/* end::Table */}
           </div>
           {/* end::Table container */}
-          <div className="card-footer d-flex justify-content-end align-items-center flex-wrap">
-            <Pagination
-              handlePageClick={handlePageClick}
-              totalPage={paginationConfig.totalPage}
-            />
-            {/* <div className="d-flex align-items-center py-3">
-              <select className="form-control form-select form-control-sm font-weight-bold mr-4 border-0 bg-light" style={{ width: '75px' }}>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </select>
-              <span className="text-muted ms-2">Displaying 10 of 230 records</span>
-            </div> */}
+          <div className="card-footer d-flex justify-content-between align-items-center flex-wrap">
+            <select
+              value={paginationConfig.limitNo}
+              onChange={(e: any) => { paginationConfig?.setLimitNo(e.target.value); }}
+              className="form-control form-select form-control-sm font-weight-bold mr-4 border-0 bg-light"
+              style={{ width: '75px' }}
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+            <div className="d-flex align-items-center py-3">
+              <Pagination
+                handlePageClick={handlePageClick}
+                totalPage={paginationConfig.totalPage}
+              />
+              <span className="text-muted ms-2">Displaying {(paginationConfig.limitNo > paginationConfig.totalUsers) ? paginationConfig.totalUsers : paginationConfig.limitNo} of {paginationConfig.totalUsers} records</span>
+            </div>
           </div>
         </div>
         {/* begin::Body */}

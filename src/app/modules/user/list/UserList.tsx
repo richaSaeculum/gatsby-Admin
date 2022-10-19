@@ -15,20 +15,23 @@ const UserList = () => {
   const [usersData, setUsersData] = useState<any>();
 
   const [totalPage, setTotalPage] = useState<number>(0);
+  const [totalUsers, setTotalUsers] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [limitNo, setLimitNo] = useState<number>(5);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllUsers({ page: currentPage });
-  }, [])
+    getAllUsers({ page: 1 });
+  }, [limitNo])
 
   const getAllUsers = async ({ page }: any) => {
     setLoader(true);
     let limit = 10;
-    let response = await getUsersListApi({ token: auth?.token, page, limit });
+    let response = await getUsersListApi({ token: auth?.token, page, limit: limitNo });
     if (response && response.status === 200) {
       setTotalPage(parseInt(response.data.pageCount))
+      setTotalUsers(parseInt(response.data.userCount))
       let a = response?.data?.users.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
       setUsersData(a);
       setLoader(false);
@@ -70,12 +73,19 @@ const UserList = () => {
         </div>
       </div>
 
-      <UserTable
+      {usersData?.length > 0 ? <UserTable
         onEditRow={onEditRow}
         onDeleteRow={onDeleteRow}
         data={usersData}
-        paginationConfig={{ totalPage, handlePageChange }}
-      />
+        paginationConfig={{ totalPage, handlePageChange, totalUsers, limitNo, setLimitNo }}
+      /> :
+        <div className={`card`}>
+          <div className='card-body py-3'>
+            <h4 className='mb-0 text-center'>No record found</h4>
+          </div>
+        </div>
+      }
+
     </div>
   )
 }
