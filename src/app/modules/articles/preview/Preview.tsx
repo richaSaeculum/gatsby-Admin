@@ -55,19 +55,9 @@ const Preview = () => {
 
   return (
     <div className='container'>
-      <div className='d-flex justify-content-between align-items-center'>
-        <h1 className='preview_title'>{decode(post?.title?.raw)}</h1>
-        {auth?.user?.user_role === UserType.EDITOR && (<div className='d-flex justify-content-between align-items-center gap-3'>
-          <button type='button' className='btn btn-success'>
-            Publish
-          </button>
-          <button type='button' className='btn btn-danger'>
-            Reject
-          </button>
-        </div>)}
-      </div>
-      <div className='row mt-3'>
+      <div className='row'>
         <div className="col-8">
+          <h1 className='preview_title'>{decode(post?.title?.raw)}</h1>
           {post?.date && <div style={{ display: 'flex', alignItems: 'center', marginTop: "16px" }}>
             <i className="fa-sharp fa-solid fa-calendar" style={{ fontSize: 20, marginRight: '10px', color: '#313B54' }}></i>
             <span className='preview_date'>{moment(post?.date).format('DD MMM, YYYY')}</span>
@@ -89,7 +79,14 @@ const Preview = () => {
           </div>
         </div>
         <div className='col-4'>
-
+          {auth?.user?.user_role === UserType.EDITOR && (<div className='d-flex justify-content-end align-items-center gap-3'>
+            <button type='button' className='btn btn-success'>
+              Publish
+            </button>
+            <button type='button' className='btn btn-danger'>
+              Reject
+            </button>
+          </div>)}
         </div>
       </div>
     </div>
