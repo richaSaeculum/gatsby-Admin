@@ -23,31 +23,45 @@ type Props = {
   onEditRow: (row: any) => void
   onDeleteRow: (row: any) => void
   onViewRow: (row: any) => void
+  onEditorAction: (row: any) => void
   paginationConfig: PaginationConfig
   data?: any
 }
 
-const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfig }: Props) => {
+const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, onEditorAction, data, paginationConfig }: Props) => {
 
   const { auth } = useAuth()
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
   const [deleteRow, setDeleteRow] = useState<any>();
-  const confirmationInfo = {
+  const [confirmationInfo, setConfirmationInfo] = useState({
     action: 'confirmation',
     message: 'Do you want to delete this post?'
   }
-
-  const confirmationCallback = (success: boolean) => {
-    if (success) {
+  )
+  const confirmationCallback = (success: boolean, a: any) => {
+    console.log(a)
+    if (success && a.type === 'delete') {
       onDeleteRow(deleteRow);
       setConfirmationOpen(false);
-    } else {
+    }
+    else if (success && (a.type === 'approve' || a.type === 'reject')) {
+      onEditorAction(a)
+      setConfirmationOpen(false);
+    }
+    else {
       setConfirmationOpen(!confirmationOpen);
     }
   }
 
-  const actionClick = (row: any, confirmation: boolean) => {
+  const actionClick = (type: any, row: any, confirmation: boolean) => {
     if (confirmation) {
+      let action = {
+        type,
+        action: 'confirmation',
+        message: `Do you want to ${type} this post?`,
+        data: row
+      }
+      setConfirmationInfo(action)
       toggleModal(row);
     }
   }
@@ -55,10 +69,6 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
   const toggleModal = (row?: any) => {
     setConfirmationOpen(!confirmationOpen);
     setDeleteRow(row);
-  }
-
-  const onEditorAction = (row?: any) => {
-    console.log(row)
   }
 
   const renderTablerow = () => {
@@ -85,7 +95,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
             </td>
             <td>
               <span className='fw-semibold d-block fs-7'>
-                {/* {row['_embedded'].author[0].name} */} 
+                {/* {row['_embedded'].author[0].name} */}
                 {row.authorName}
               </span>
             </td>
@@ -147,7 +157,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
             {/* Delete Button */}
             <button
               className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm me-1' // btn-active-light-danger
-              onClick={() => { actionClick(row, true) }}
+              onClick={() => { actionClick('delete', row, true) }}
               disabled={row.status === ArticleStatusType.PUBLISH}
             >
               <KTSVG
@@ -159,7 +169,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
               {/* Approve Button */}
               <button
                 className='btn btn-active-icon-gray-100 btn-icon btn-light-success btn-sm me-1' // btn-active-light-primary 
-                onClick={() => { onEditorAction(row) }}
+                onClick={() => { actionClick('approve', row, true) }}
                 disabled={row.status === ArticleStatusType.DRAFT || row.status === ArticleStatusType.PUBLISH}
               >
                 <KTSVG path='/media/icons/duotune/arrows/arr085.svg' className='svg-icon-3' />
@@ -168,7 +178,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
               {/* Reject Button */}
               < button
                 className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm' // btn-active-light-danger
-                onClick={() => { onEditorAction(row) }}
+                onClick={() => { actionClick('reject', row, true) }}
               >
                 <KTSVG
                   path='/media/icons/duotune/arrows/arr061.svg'

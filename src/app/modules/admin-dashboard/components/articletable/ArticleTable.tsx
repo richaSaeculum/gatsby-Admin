@@ -19,7 +19,7 @@ const ArticleTable = ({ data }: Props) => {
                 </td>
                 <td>
                     <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
-                        {decode(row.title.rendered)}
+                        {decode(row.title)}
                     </a>
                 </td>
                 <td>

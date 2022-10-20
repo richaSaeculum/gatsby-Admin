@@ -7,9 +7,10 @@ import moment from 'moment';
 import { useLayout } from '../../../../_metronic/layout/core';
 import { useAuth } from '../../auth';
 
-import { getSinglePostApi } from '../../../api';
+import { getCommentListApi, getSinglePostApi } from '../../../api';
 import { UserType } from '../../../constants/user/user_type';
 import DefaultComment from '../../../components/comment';
+
 
 const Preview = () => {
 
@@ -17,6 +18,7 @@ const Preview = () => {
   const { setLoader } = useLayout();
   const { auth } = useAuth();
   const [post, setPost] = useState<any>();
+  const [commentData, setCommentData] = useState<any>(data)
 
   useEffect(() => {
     const { id } = param;
@@ -48,6 +50,19 @@ const Preview = () => {
     } finally {
       setLoader(false);
     }
+  }
+
+  const getCommentsOnPost = async () => {
+    let payload;
+    try {
+      let response: any = await getCommentListApi({ payload });
+      if (response && response.status === 200) {
+        setCommentData(response.data);
+      }
+    } catch (err) {
+      console.log(err)
+    }
+
   }
 
   return (
@@ -84,34 +99,28 @@ const Preview = () => {
               Reject
             </button>
           </div>)}
-          <DefaultComment
-            currentUser={{
-              currentUserId: '01a',
-              currentUserImg:
-                'https://ui-avatars.com/api/name=Riya&background=random',
-              currentUserProfile:
-                'https://www.linkedin.com/in/riya-negi-8879631a9/',
-              currentUserFullName: 'Riya Negi'
-            }}
-            commentData={data}
-            logIn={{
-              loginLink: 'http://localhost:3001/',
-              signupLink: 'http://localhost:3001/'
-            }}
-            onSubmitAction={(data: {
-              userId: string
-              comId: string
-              avatarUrl: string
-              userProfile?: string
-              fullName: string
-              text: string
-              replies: any
-              commentId: string
-            }) => console.log('check submit, ', data)}
-            currentData={(data: any) => {
-              console.log('curent data', data)
-            }}
-            hideCommentInput={true} />
+          {
+            auth?.user?.user_role !== UserType.ADMINISTRATOR && (<DefaultComment
+              currentUser={{
+                currentUserId: '01a',
+                currentUserImg:
+                  'https://ui-avatars.com/api/name=Riya&background=random',
+                currentUserProfile:
+                  'https://www.linkedin.com/in/riya-negi-8879631a9/',
+                currentUserFullName: 'Riya Negi'
+              }}
+              commentData={commentData}
+              logIn={{
+                loginLink: 'http://localhost:3001/',
+                signupLink: 'http://localhost:3001/'
+              }}
+              onSubmitAction={(data: any) => console.log('check submit, ', data)}
+              currentData={(data: any) => {
+                console.log('curent data', data)
+              }}
+              hideCommentInput={auth?.user?.user_role === UserType.AUTHOR}
+            />)
+          }
         </div>
       </div>
     </div>

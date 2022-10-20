@@ -34,7 +34,8 @@ export const API_ENDPOINTS = {
   PAYOFF_LIST: '/payoffs/list',
 
   USER_LIST: '/users/list',
-  USER: '/user/{{id}}'
+  USER: '/user/{{id}}',
+  
 
 
 

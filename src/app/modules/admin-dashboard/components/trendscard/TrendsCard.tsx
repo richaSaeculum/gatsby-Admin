@@ -14,7 +14,7 @@ const TreandsCard = ({ data, title }: Props) => {
                 <li key={index} className="list-group-item bg-transparent d-flex justify-content-between align-items-center p-5">
                     <span className='text-truncate pe-5'>
                         <span className='fs-3 fw-bold'>{index + 1}. &nbsp;</span>
-                        <span className='fs-4 fw-semibold'>{row.title.rendered}</span>
+                        <span className='fs-4 fw-semibold'>{row.title}</span>
                     </span>
                     <small className='fw-bold fs-7'>{"-"}</small>
                 </li>)

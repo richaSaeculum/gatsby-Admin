@@ -117,7 +117,7 @@ const Category = () => {
   const onDelete = async (row: any) => {
     setLoader(true);
     const res = await deleteCategoryApi({ id: row.id });
-    if (res && res.status === 200 && res.data.deleted) {
+    if (res && res.status === 200) {
       getCategories({ page: currentPage });
     }
   }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
-import { deletePostApi, getPostListApi } from '../../../api'
+import { deletePostApi, getPostListApi, updatePostStatusApi } from '../../../api'
 import { UserType } from '../../../constants/user/user_type'
 import { useAuth } from '../../auth'
 import ArticleTable from './articletable/ArticleTable'
@@ -67,6 +67,21 @@ const ArticleList = () => {
     setCurrentPage(selectedPage);
   }
 
+  const onEditorAction = async (a: any) => {
+    setLoader(true)
+    try {
+      let payload = { id: a.data.id, status: a.type }
+      let response = await updatePostStatusApi({ payload })
+      if (response && response.status === 200) {
+        getAllPost({ page: currentPage });
+      }
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoader(false)
+    }
+  }
+
   return (
     <>
       <div>
@@ -90,6 +105,7 @@ const ArticleList = () => {
           onEditRow={onEditRow}
           onDeleteRow={onDeleteRow}
           onViewRow={onViewRow}
+          onEditorAction={onEditorAction}
           data={articleData}
           paginationConfig={{ totalPage, handlePageChange, totalArticle, limitNo, setLimitNo }}
         /> :

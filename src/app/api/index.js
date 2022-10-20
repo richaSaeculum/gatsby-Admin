@@ -180,6 +180,18 @@ export const updatePostApi = async ({ id, payload }) => {
   }
 }
 
+// update Post Status 
+export const updatePostStatusApi = async ({ payload }) => {
+  try {
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.ARTICLE_STATUS), payload);
+    return data;
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
 //delete post by id (DELETE)
 export const deletePostApi = async ({ id }) => {
   try {
@@ -256,7 +268,7 @@ export const getSingleCategoryApi = async ({ id }) => {
 export const addCategoryApi = async ({ payload }) => {
   try {
     // const { data } = await client().post(`/category/create`, payload);
-    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.CATEGORY_LIST), payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.CATEGORY_CREATE), payload);
     return data
   } catch (error) {
     // get axios errors from error.response
