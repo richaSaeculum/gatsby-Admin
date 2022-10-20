@@ -41,9 +41,7 @@ const Preview = () => {
         //     })
         //   }
         // }
-        setPost({
-          ...response.data[0],
-        });
+        setPost(response.data);
       }
     } catch (err) {
       console.log(err);
@@ -66,7 +64,7 @@ const Preview = () => {
               <i className="fa-solid fa-tags" style={{ fontSize: 20, marginRight: '10px', color: '#313B54' }}></i>
               {post?.categories.map((item: any, index: number) => (
                 <span>
-                  {item.label}&nbsp; &nbsp;
+                  {item.category}&nbsp; &nbsp;
                 </span>
               ))}
             </div>

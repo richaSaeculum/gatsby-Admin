@@ -37,7 +37,7 @@ const RegularInput = ({
 
   return (
     <form
-      className='form'
+      className='comment-form'
       style={globalStore.formStyle || formStyle}
       onSubmit={() => handleSubmit}
     >

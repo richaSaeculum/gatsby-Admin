@@ -74,7 +74,7 @@ const ArticleList = () => {
           <div>
             <h1 className='fs-2hx fw-bold text-dark mb-0'>Articles</h1>
           </div>
-          {auth?.user?.user_role !== UserType.EDITOR && (<div className='d-flex justify-content-between align-items-center gap-3'>
+          {auth?.user?.user_role === UserType.AUTHOR && (<div className='d-flex justify-content-between align-items-center gap-3'>
             <Link to={'/articles/add-article'}>
               <button type='button' className='btn btn-secondary'>
                 Add Article

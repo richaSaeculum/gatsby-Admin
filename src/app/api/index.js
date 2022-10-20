@@ -10,7 +10,7 @@ import Utils from "../Utils";
 // user login (POST)
 export const login = async (payload) => {
   try {
-    const { data } = await client().post('/login', payload);
+    const { data } = await client().post(Constant.API_ENDPOINTS.LOGIN, payload);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -22,7 +22,7 @@ export const login = async (payload) => {
 // user register as well add user from admin panel when user role is administrator (POST)
 export const register = async (payload) => {
   try {
-    const { data } = await client().post('/register', payload);
+    const { data } = await client().post(Constant.API_ENDPOINTS.REGISTER, payload);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -34,7 +34,7 @@ export const register = async (payload) => {
 // logout user (POST)
 export const logoutApi = async () => {
   try {
-    const { data } = await client().post('/logout');
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.LOGOUT));
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -55,7 +55,7 @@ export const getUsersListApi = async ({ page = 1, limit = 100 }) => {
       "page_index": page,
       "page_size": limit
     }
-    const { data } = await client().post(`/users/list`, payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.USER_LIST), payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -67,7 +67,8 @@ export const getUsersListApi = async ({ page = 1, limit = 100 }) => {
 // get single users list  (GET)
 export const getSingleUsersListApi = async ({ id }) => {
   try {
-    const { data } = await client().get(`/user/${id}`);
+    // const { data } = await client().get(`/user/${id}`);
+    const { data } = await client().get(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.USER, { id }));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -79,7 +80,7 @@ export const getSingleUsersListApi = async ({ id }) => {
 // add user api (POST)
 export const addUserApi = async ({ payload }) => {
   try {
-    const { data } = await client().post('/register', payload);
+    const { data } = await client().post(Constant.API_ENDPOINTS.REGISTER, payload);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -91,7 +92,7 @@ export const addUserApi = async ({ payload }) => {
 // update user api (POST)
 export const updateUserApi = async ({ payload, id }) => {
   try {
-    const { data } = await client().post(`/user/${id}`, payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.USER, { id }), payload);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -103,7 +104,7 @@ export const updateUserApi = async ({ payload, id }) => {
 // delete user (DELETE)
 export const deleteUserApi = async ({ id }) => {
   try {
-    const { data } = await client().delete(`/user/${id}`);
+    const { data } = await client().delete(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.USER, { id }));
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -146,7 +147,7 @@ export const getPostListByMonthApi = async ({ after = '', before = '', status = 
 // get single post (GET) 
 export const getSinglePostApi = async ({ id }) => {
   try {
-    const { data } = await client().get(Utils.Common.getApiEndPointFromReplaceBraces(Constant.API_ENDPOINTS.ARTICLE, { id }));
+    const { data } = await client().get(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.ARTICLE, { id }));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -158,7 +159,7 @@ export const getSinglePostApi = async ({ id }) => {
 //  add post(POST)
 export const addPostApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(Utils.Common.getApiEndPointFromReplaceBraces(Constant.API_ENDPOINTS.ARTICLE_CREATE), payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.ARTICLE_CREATE), payload);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -170,7 +171,7 @@ export const addPostApi = async ({ payload }) => {
 //  update post(POST)
 export const updatePostApi = async ({ id, payload }) => {
   try {
-    const { data } = await client().post(Utils.Common.getApiEndPointFromReplaceBraces(Constant.API_ENDPOINTS.ARTICLE_UPDATE, { id }), payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.ARTICLE_CREATE, { id }), payload);
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -182,7 +183,7 @@ export const updatePostApi = async ({ id, payload }) => {
 //delete post by id (DELETE)
 export const deletePostApi = async ({ id }) => {
   try {
-    const { data } = await client().delete(Utils.Common.getApiEndPointFromReplaceBraces(Constant.API_ENDPOINTS.ARTICLE, { id }));
+    const { data } = await client().delete(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.ARTICLE, { id }));
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -228,7 +229,8 @@ export const validateIFSC = async ({ ifsc }) => {
 // get categorylist all (GET)
 export const getCategoriesListApi = async ({ page = 1, limit = 10 }) => {
   try {
-    const { data } = await client().get(`/categories/list?page=${page}&limit=${limit}`);
+    // const { data } = await client().get(`/categories/list?page=${page}&limit=${limit}`);
+    const { data } = await client().get(Utils.Common.getApiEndPointFromQueryParams(Constant.API_ENDPOINTS.CATEGORY_LIST, { page, limit }));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -240,7 +242,8 @@ export const getCategoriesListApi = async ({ page = 1, limit = 10 }) => {
 // get category list single (GET)
 export const getSingleCategoryApi = async ({ id }) => {
   try {
-    const { data } = await client().get(`/category/${id}`);
+    // const { data } = await client().get(`/category/${id}`);
+    const { data } = await client().get(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.CATEGORY_LIST, { id }));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -252,7 +255,8 @@ export const getSingleCategoryApi = async ({ id }) => {
 // add category (POST)
 export const addCategoryApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(`/category/create`, payload);
+    // const { data } = await client().post(`/category/create`, payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.CATEGORY_LIST), payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -264,7 +268,8 @@ export const addCategoryApi = async ({ payload }) => {
 // update category (POST)
 export const updateCategoryApi = async ({ payload, id }) => {
   try {
-    const { data } = await client().post(`/category/create/${id}`, payload);
+    // const { data } = await client().post(`/category/create/${id}`, payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.CATEGORY_LIST, { id }), payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -276,7 +281,8 @@ export const updateCategoryApi = async ({ payload, id }) => {
 //delete category by id (DELETE)
 export const deleteCategoryApi = async ({ id }) => {
   try {
-    const { data } = await client().delete(`/category/${id}`);
+    // const { data } = await client().delete(`/category/${id}`);
+    const { data } = await client().delete(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.CATEGORY, { id }));
     return data;
   } catch (error) {
     // get axios errors from error.response
@@ -293,7 +299,7 @@ export const deleteCategoryApi = async ({ id }) => {
 // get dashboard details (GET)
 export const getDashboardApi = async () => {
   try {
-    const { data } = await client().get(`/dashboard`);
+    const { data } = await client().get(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.DASHBOARD));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -310,7 +316,7 @@ export const getDashboardApi = async () => {
 // get payment details if already added (GET)
 export const getPaymentDetailsApi = async () => {
   try {
-    const { data } = await client().get(`/payment`);
+    const { data } = await client().get(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.PAYMENT));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -322,7 +328,7 @@ export const getPaymentDetailsApi = async () => {
 // add payment details (POST)
 export const addPaymentDetailsApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(`/payment`, payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.PAYMENT), payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -331,6 +337,46 @@ export const addPaymentDetailsApi = async ({ payload }) => {
   }
 }
 
+
+/* ================================= */
+/* *********** COMMENTS ************ */
+/* ================================= */
+
+// list comment
+export const getCommentListApi = async ({ payload }) => {
+  try {
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.COMMENT_LIST), payload);
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// add edit comment
+export const addCommentApi = async ({ payload }) => {
+  try {
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.COMMENT_CREATE), payload);
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
+
+// delete comment
+export const deleteCommentApi = async ({ id }) => {
+  try {
+    const { data } = await client().delete(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.COMMENT_DELETE, { id }));
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
 
 /* ================================= */
 /* *********** SETTINGS ************ */
@@ -363,7 +409,8 @@ export const addPayoutMarginApi = async ({ payload }) => {
 // update tier  (POST)
 export const updateTierApi = async ({ payload, id }) => {
   try {
-    const { data } = await client().post(`/tier/config/create/${id}`, payload);
+    // const { data } = await client().post(`/tier/config/create/${id}`, payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.TIER_CREATE, { id }), payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -375,7 +422,7 @@ export const updateTierApi = async ({ payload, id }) => {
 // get wallet details for user (GET)
 export const getTierConfigApi = async () => {
   try {
-    const { data } = await client().get(`/tier/config`);
+    const { data } = await client().get(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.TIER_LIST));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -388,7 +435,7 @@ export const getTierConfigApi = async () => {
 // get wallet details for user
 export const getWalletDetailsApi = async () => {
   try {
-    const { data } = await client().get(`/wallet`);
+    const { data } = await client().get(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.WALLET));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -400,7 +447,8 @@ export const getWalletDetailsApi = async () => {
 // get wallet details for user
 export const getTransactionsApi = async ({ page = 1, limit = 10 }) => {
   try {
-    const { data } = await client().get(`/transactions?page=${page}&limit=${limit}`);
+    // const { data } = await client().get(`/transactions?page=${page}&limit=${limit}`);
+    const { data } = await client().get(Utils.Common.getApiEndPointFromQueryParams(Constant.API_ENDPOINTS.TRANSACTIONS, { page, limit }));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -413,7 +461,8 @@ export const getTransactionsApi = async ({ page = 1, limit = 10 }) => {
 // add payout margin  (POST)
 export const addPayoffApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(`/payoff/create`, payload);
+    // const { data } = await client().post(`/payoff/create`, payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.PAYOFF_CREATE), payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -425,7 +474,8 @@ export const addPayoffApi = async ({ payload }) => {
 // update payout margin  (POST)
 export const updatePayoffApi = async ({ payload, id }) => {
   try {
-    const { data } = await client().post(`/payoff/create/${id}`, payload);
+    // const { data } = await client().post(`/payoff/create/${id}`, payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.PAYOFF_CREATE, { id }), payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -437,7 +487,8 @@ export const updatePayoffApi = async ({ payload, id }) => {
 // get all payoff list (MONTHS)
 export const getPayoffAllApi = async ({ page = 1, limit = 10 }) => {
   try {
-    const { data } = await client().get(`/payoff/all?page=${page}&limit=${limit}`);
+    // const { data } = await client().get(`/payoff/all?page=${page}&limit=${limit}`);
+    const { data } = await client().get(Utils.Common.getApiEndPointFromQueryParams(Constant.API_ENDPOINTS.PAYOFF_ALL, { page, limit }));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -453,7 +504,8 @@ export const getSuccessPayoffListApi = async ({ page = 1, limit = 10 }) => {
       "page_index": page,
       "page_size": limit
     }
-    const { data } = await client().post(`/payoffs/list`, payload);
+    // const { data } = await client().post(`/payoffs/list`, payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.PAYOFF_LIST), payload);
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -466,7 +518,8 @@ export const getSuccessPayoffListApi = async ({ page = 1, limit = 10 }) => {
 // get all payoff list (monthwise user specific)
 export const getPayoffsByMonthApi = async ({ payload }) => {
   try {
-    const { data } = await client().post(`/payoff/users`, payload);
+    // const { data } = await client().post(`/payoff/users`, payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.PAYOFF_USERS), payload);
     return data
   } catch (error) {
     // get axios errors from error.response

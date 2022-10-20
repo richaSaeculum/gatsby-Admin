@@ -127,25 +127,20 @@ const AddArticle = () => {
 
   const editId = async (id: any) => {
     let response: any = await getSinglePostApi({ id });
+    console.log("response", response)
     if (response && response.status === 200) {
-      const { content, id, title, status } = response.data;
+      const { content, id, title, status, categories } = response.data;
       if (status !== ArticleStatusType.DRAFT && status !== ArticleStatusType.REJECTED) {
         setView(true);
       }
       let arr: any = [];
       //set category array from embed data in wp
-      if (response.data._embedded.hasOwnProperty('wp:term')) {
-        if (response.data._embedded['wp:term'].length > 0) {
-          response.data._embedded['wp:term'][0].forEach((item: any) => {
-            // uncategorized tag is not displayed when user edit articles (id=1 for uncategorized)
-            if (item.id != 1)
-              arr.push({ label: item.name, value: item.id });
-          })
-        }
-      }
+      categories.forEach((item: any) => {
+        arr.push({ label: item.category, value: item.categoryId });
+      })
       setCategory(arr);
-      setTitle(decode(title.rendered));
-      setContent(content.raw);
+      setTitle(decode(title));
+      setContent(content);
       // setContent(content.rendered);
     }
   }

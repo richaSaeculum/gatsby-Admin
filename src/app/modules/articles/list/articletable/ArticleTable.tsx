@@ -85,7 +85,8 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
             </td>
             <td>
               <span className='fw-semibold d-block fs-7'>
-                {/* {row['_embedded'].author[0].name} */} -
+                {/* {row['_embedded'].author[0].name} */} 
+                {row.authorName}
               </span>
             </td>
           </>
@@ -132,7 +133,8 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
                 className='svg-icon-3'
               />
             </button>
-            {auth?.user?.user_role !== UserType.EDITOR && (<>
+            {auth?.user?.user_role === UserType.AUTHOR && (<>
+              {/* Edit Button */}
               <button
                 // className='btn btn-icon btn-light-primary btn-active-color-primary btn-active-icon-gray-100 btn-sm me-1' // btn-active-light-primary 
                 className='btn btn-active-icon-gray-100 btn-icon btn-light-twitter btn-sm me-1' // btn-active-light-primary 
@@ -141,32 +143,32 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, data, paginationConfi
               >
                 <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
               </button>
-
-              < button
-                className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm' // btn-active-light-danger
-                onClick={() => { actionClick(row, true) }}
-                disabled={row.status === ArticleStatusType.PUBLISH}
-              >
-                <KTSVG
-                  path='/media/icons/duotune/general/gen027.svg'
-                  className='svg-icon-3'
-                />
-              </button>
             </>)}
-            {auth?.user?.user_role === UserType.EDITOR && (<>
+            {/* Delete Button */}
+            <button
+              className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm me-1' // btn-active-light-danger
+              onClick={() => { actionClick(row, true) }}
+              disabled={row.status === ArticleStatusType.PUBLISH}
+            >
+              <KTSVG
+                path='/media/icons/duotune/general/gen027.svg'
+                className='svg-icon-3'
+              />
+            </button>
+            {auth?.user?.user_role !== UserType.AUTHOR && (<>
+              {/* Approve Button */}
               <button
-                // className='btn btn-icon btn-light-primary btn-active-color-primary btn-active-icon-gray-100 btn-sm me-1' // btn-active-light-primary 
                 className='btn btn-active-icon-gray-100 btn-icon btn-light-success btn-sm me-1' // btn-active-light-primary 
                 onClick={() => { onEditorAction(row) }}
-                disabled={(row.status === ArticleStatusType.PENDING || row.status === ArticleStatusType.PUBLISH)}
+                disabled={row.status === ArticleStatusType.DRAFT || row.status === ArticleStatusType.PUBLISH}
               >
                 <KTSVG path='/media/icons/duotune/arrows/arr085.svg' className='svg-icon-3' />
               </button>
 
+              {/* Reject Button */}
               < button
                 className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm' // btn-active-light-danger
                 onClick={() => { onEditorAction(row) }}
-                disabled={row.status === ArticleStatusType.PUBLISH}
               >
                 <KTSVG
                   path='/media/icons/duotune/arrows/arr061.svg'

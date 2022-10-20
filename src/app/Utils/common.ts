@@ -9,7 +9,7 @@ export const getApiEndPointFromQueryParams = (api: string, param: any) => {
   }
 
   if (auth.user.user_role === UserType.AUTHOR)
-    return addQueryParams(api, param)
+    return UserType.AUTHOR + addQueryParams(api, param)
 
   if (auth.user.user_role === UserType.ADMINISTRATOR)
     return UserType.ADMINISTRATOR + addQueryParams(api, param)
@@ -19,15 +19,15 @@ export const getApiEndPointFromQueryParams = (api: string, param: any) => {
 
 }
 
-export const getApiEndPointFromReplaceBraces = (api: string, param: any) => {
+export const getApiEndPoint = (api: string, param: any = {}) => {
   let AuthJson: string | null = localStorage.getItem('kt-auth-react-v')
   let auth;
   if (AuthJson) {
     auth = JSON.parse(AuthJson)
   }
 
-  if (auth.user.user_role === UserType.AUTHOR) 
-    return replaceDoubleBraces(api, param)
+  if (auth.user.user_role === UserType.AUTHOR)
+    return UserType.AUTHOR + replaceDoubleBraces(api, param)
 
   if (auth.user.user_role === UserType.ADMINISTRATOR)
     return UserType.ADMINISTRATOR + replaceDoubleBraces(api, param)
@@ -55,6 +55,6 @@ export const addQueryParams = (str: string, param: any) => {
 
 export default {
   getApiEndPointFromQueryParams,
-  getApiEndPointFromReplaceBraces,
+  getApiEndPoint,
   replaceDoubleBraces,
 }

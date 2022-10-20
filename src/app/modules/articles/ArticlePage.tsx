@@ -51,7 +51,7 @@ const ArticlePage = () => {
               </>
             }
           />
-          {auth?.user?.user_role !== UserType.EDITOR && (
+          {auth?.user?.user_role === UserType.AUTHOR && (
             <>
               <Route
                 path='add-article'
