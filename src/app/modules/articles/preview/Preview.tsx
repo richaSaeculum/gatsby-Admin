@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { decode } from 'html-entities';
 import moment from 'moment';
 
@@ -19,6 +19,7 @@ const Preview = () => {
   const param = useParams();
   const { setLoader } = useLayout();
   const { auth } = useAuth();
+  const navigate = useNavigate();
   const [post, setPost] = useState<any>();
   const [commentData, setCommentData] = useState<any>([]);
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
@@ -191,7 +192,7 @@ const Preview = () => {
             </div>
           </div>
           <div className='col-4'>
-            {auth?.user?.user_role === UserType.EDITOR && post?.status === ArticleStatusType.PENDING  && (<div className='d-flex justify-content-end align-items-center gap-3'>
+            {auth?.user?.user_role === UserType.EDITOR && post?.status === ArticleStatusType.PENDING && (<div className='d-flex justify-content-end align-items-center gap-3'>
               <button type='button' className='btn btn-success' onClick={() => toggleModal('approve')}>
                 Approve
               </button>
@@ -225,6 +226,9 @@ const Preview = () => {
             }
           </div>
         </div>
+        <button className='btn btn-secondary' onClick={() => { navigate(-1) }}>
+          Back
+        </button>
       </div>
     </>
 
