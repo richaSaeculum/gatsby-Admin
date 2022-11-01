@@ -23,12 +23,12 @@ type Props = {
   onEditRow: (row: any) => void
   onDeleteRow: (row: any) => void
   onViewRow: (row: any) => void
-  onEditorAction: (row: any) => void
+  handlePostStatus: (row: any) => void
   paginationConfig: PaginationConfig
   data?: any
 }
 
-const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, onEditorAction, data, paginationConfig }: Props) => {
+const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, data, paginationConfig }: Props) => {
 
   const { auth } = useAuth()
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
@@ -36,16 +36,14 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, onEditorAction, data,
   const [confirmationInfo, setConfirmationInfo] = useState({
     action: 'confirmation',
     message: 'Do you want to delete this post?'
-  }
-  )
+  })
   const confirmationCallback = (success: boolean, a: any) => {
-    console.log(a)
     if (success && a.type === 'delete') {
       onDeleteRow(deleteRow);
       setConfirmationOpen(false);
     }
     else if (success && (a.type === 'approve' || a.type === 'reject')) {
-      onEditorAction(a)
+      handlePostStatus(a)
       setConfirmationOpen(false);
     }
     else {

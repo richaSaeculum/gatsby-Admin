@@ -25,12 +25,11 @@ const UserList = () => {
 
   const getAllUsers = async ({ page }: any) => {
     setLoader(true);
-    let limit = 10;
     let response = await getUsersListApi({ page, limit: limitNo });
     if (response && response.status === 200) {
       setTotalPage(parseInt(response.data.pageCount))
       setTotalUsers(parseInt(response.data.userCount))
-      let a = response?.data?.users.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
+      let a = response?.data?.users.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
       setUsersData(a);
       setLoader(false);
     }

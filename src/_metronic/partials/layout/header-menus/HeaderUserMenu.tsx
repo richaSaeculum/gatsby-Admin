@@ -22,7 +22,7 @@ const HeaderUserMenu: FC = () => {
             <div className='fw-bolder d-flex align-items-center fs-5'>
               {currentUser?.user?.user_first_name} {currentUser?.user?.user_last_name}
             </div>
-            <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
+            <a href='#' className='fw-bold text-muted text-hover-primary fs-7 text-break'>
               {currentUser?.user?.user_email}
             </a>
           </div>

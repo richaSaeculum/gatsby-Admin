@@ -4,7 +4,6 @@ import './CommentSection.css'
 import { useContext } from 'react'
 import { GlobalContext } from '../../context/Provider'
 import _ from 'lodash'
-import React from 'react'
 import LoginSection from '../LoginSection/LoginSection'
 import NoComments from './NoComments'
 
@@ -46,12 +45,11 @@ const CommentSection = ({
     })
     return count
   }
-  console.log("hideCommentInput", hideCommentInput)
   return (
     <div className='overlay' style={overlayStyle}>
       <span className='comment-title' style={titleStyle}>
         {globalStore.commentsCount || totalComments()}{' '}
-        {totalComments() === 1 ? 'Comment233' : 'Comments122'}
+        {totalComments() === 1 ? 'Comment' : 'Comments'}
       </span>
       <hr className='hr-style' style={hrStyle} />
       {globalStore.currentUserData === null ? (

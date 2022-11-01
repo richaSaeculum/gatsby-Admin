@@ -67,7 +67,7 @@ const ArticleList = () => {
     setCurrentPage(selectedPage);
   }
 
-  const onEditorAction = async (a: any) => {
+  const handlePostStatus = async (a: any) => {
     setLoader(true)
     try {
       let payload = { id: a.data.id, status: a.type }
@@ -105,7 +105,7 @@ const ArticleList = () => {
           onEditRow={onEditRow}
           onDeleteRow={onDeleteRow}
           onViewRow={onViewRow}
-          onEditorAction={onEditorAction}
+          handlePostStatus={handlePostStatus}
           data={articleData}
           paginationConfig={{ totalPage, handlePageChange, totalArticle, limitNo, setLimitNo }}
         /> :

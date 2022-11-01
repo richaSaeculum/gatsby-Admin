@@ -127,11 +127,11 @@ export const GlobalProvider = ({
     }
   }
 
-  const onSubmit = (text: string, uuid: string) => {
+  const onSubmit = (text: string) => {
     let copyData = [...data]
     copyData.push({
       userId: currentUserData!.currentUserId,
-      comId: uuid,
+      comId: '',
       avatarUrl: currentUserData!.currentUserImg,
       userProfile: currentUserData!.currentUserProfile
         ? currentUserData!.currentUserProfile
@@ -140,7 +140,7 @@ export const GlobalProvider = ({
       text: text,
       replies: []
     })
-    setData(copyData)
+    // setData(copyData)
   }
 
   const onEdit = (text: string, comId: string, parentId: string) => {
@@ -151,12 +151,12 @@ export const GlobalProvider = ({
         comId: comId
       })
       copyData[indexOfParent].replies![indexOfId].text = text
-      setData(copyData)
+      // setData(copyData)
       handleAction(comId, true)
     } else {
       const indexOfId = _.findIndex(copyData, { comId: comId })
       copyData[indexOfId].text = text
-      setData(copyData)
+      // setData(copyData)
       handleAction(comId, true)
     }
   }
@@ -165,14 +165,13 @@ export const GlobalProvider = ({
     text: string,
     comId: string,
     parentId: string,
-    uuid: string
   ) => {
     let copyData = [...data]
     if (parentId) {
       const indexOfParent = _.findIndex(copyData, { comId: parentId })
       copyData[indexOfParent].replies!.push({
         userId: currentUserData!.currentUserId,
-        comId: uuid,
+        comId: '',
         avatarUrl: currentUserData!.currentUserImg,
         userProfile: currentUserData!.currentUserProfile
           ? currentUserData!.currentUserProfile
@@ -180,7 +179,7 @@ export const GlobalProvider = ({
         fullName: currentUserData!.currentUserFullName,
         text: text
       })
-      setData(copyData)
+      // setData(copyData)
       handleAction(comId, false)
     } else {
       const indexOfId = _.findIndex(copyData, {
@@ -188,7 +187,7 @@ export const GlobalProvider = ({
       })
       copyData[indexOfId].replies!.push({
         userId: currentUserData!.currentUserId,
-        comId: uuid,
+        comId: '',
         avatarUrl: currentUserData!.currentUserImg,
         userProfile: currentUserData!.currentUserProfile
           ? currentUserData!.currentUserProfile
@@ -196,7 +195,7 @@ export const GlobalProvider = ({
         fullName: currentUserData!.currentUserFullName,
         text: text
       })
-      setData(copyData)
+      // setData(copyData)
       handleAction(comId, false)
     }
   }
@@ -209,11 +208,11 @@ export const GlobalProvider = ({
         comId: comId
       })
       copyData[indexOfParent].replies!.splice(indexOfId, 1)
-      setData(copyData)
+      // setData(copyData)
     } else {
       const indexOfId = _.findIndex(copyData, { comId: comId })
       copyData.splice(indexOfId, 1)
-      setData(copyData)
+      // setData(copyData)
     }
   }
 

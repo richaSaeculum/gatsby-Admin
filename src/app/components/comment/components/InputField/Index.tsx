@@ -63,11 +63,11 @@ const InputField = ({
     )
   }
 
-  const replyMode = async (replyUuid: string, advText?: string) => {
+  const replyMode = async (advText?: string) => {
     const textToSend = advText ? advText : text
 
     return (
-      await globalStore.onReply(textToSend, comId, parentId, replyUuid),
+      await globalStore.onReply(textToSend, comId, parentId),
       globalStore.onReplyAction &&
       (await globalStore.onReplyAction({
         userId: globalStore.currentUserData.currentUserId,
@@ -78,20 +78,19 @@ const InputField = ({
           : null,
         fullName: globalStore.currentUserData.currentUserFullName,
         text: textToSend,
-        parentOfRepliedCommentId: parentId,
-        comId: replyUuid
+        parentOfRepliedCommentId: parentId
       }))
     )
   }
-  const submitMode = async (createUuid: string, advText?: string) => {
+  const submitMode = async (advText?: string) => {
     const textToSend = advText ? advText : text
 
     return (
-      await globalStore.onSubmit(textToSend, createUuid),
+      await globalStore.onSubmit(textToSend),
       globalStore.onSubmitAction &&
       (await globalStore.onSubmitAction({
         userId: globalStore.currentUserData.currentUserId,
-        comId: createUuid,
+        comId: '',
         avatarUrl: globalStore.currentUserData.currentUserImg,
         userProfile: globalStore.currentUserData.currentUserProfile
           ? globalStore.currentUserData.currentUserProfile
@@ -110,8 +109,8 @@ const InputField = ({
     mode === 'editMode'
       ? editMode(advText)
       : mode === 'replyMode'
-        ? replyMode(replyUuid, advText)
-        : submitMode(createUuid, advText)
+        ? replyMode(advText)
+        : submitMode(advText)
     setText('')
   }
 

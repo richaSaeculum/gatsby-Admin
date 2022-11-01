@@ -14,8 +14,8 @@ const userDetailsSchema = Yup.object().shape({
   id: Yup.string(),
   username: Yup.string().required('Userame is required'),
   email: Yup.string().email("Invalid email address format").required('Email is required'),
-  firstName: Yup.string(),
-  lastName: Yup.string(),
+  firstName: Yup.string().required('Firstname is required'),
+  lastName: Yup.string().required('Lastname is required'),
   website: Yup.string(),
   role: Yup.string(),
   password: Yup.string().when("id", {
@@ -281,7 +281,7 @@ const AddUser = () => {
           <div className="row row-cols-1 row-cols-sm-2 rol-cols-md-1 row-cols-lg-2">
             <div className="col">
               <div className="fv-row mb-7 fv-plugins-icon-container">
-                <label className="fs-3 fw-semibold form-label mt-3">First Name</label>
+                <label className="fs-3 fw-semibold form-label mt-3 required">First Name</label>
                 <input
                   type="text"
                   className="form-control"
@@ -297,7 +297,7 @@ const AddUser = () => {
             </div>
             <div className="col">
               <div className="fv-row mb-7">
-                <label className="fs-3 fw-semibold form-label mt-3">Last Name</label>
+                <label className="fs-3 fw-semibold form-label mt-3 required">Last Name</label>
                 <input
                   type="text"
                   className="form-control"

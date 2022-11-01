@@ -3,6 +3,7 @@ import './InputField.scss'
 import { useContext } from 'react'
 import { GlobalContext } from '../../context/Provider'
 import EmojiInput from './EmojiInput'
+import { KTSVG } from '../../../../../_metronic/helpers'
 
 interface RegularInputProps {
   formStyle?: object
@@ -79,29 +80,56 @@ const RegularInput = ({
           inputStyle={inputStyle}
         />
       )}
-
+      {/* Cancel button removed */}
       {mode && (
+        // <button
+        //   className='cancelBtn'
+        //   style={globalStore.cancelBtnStyle || cancelBtnStyle}
+        //   type='button'
+        //   onClick={() =>
+        //     mode === 'editMode'
+        //       ? globalStore.handleAction(comId, true)
+        //       : globalStore.handleAction(comId, false)
+        //   }
+        // >
+        //   Cancel
+        // </button>
+
         <button
-          className='cancelBtn'
-          style={globalStore.cancelBtnStyle || cancelBtnStyle}
-          type='button'
+          className='btn btn-icon btn-sm me-4' // btn-active-light-info
           onClick={() =>
             mode === 'editMode'
               ? globalStore.handleAction(comId, true)
               : globalStore.handleAction(comId, false)
           }
         >
-          Cancel
+          <KTSVG
+            path='/media/icons/duotune/arrows/arr061.svg'
+            className='svg-icon-1 svg-icon-gray-600 svg-icon-2x'
+          />
         </button>
+
       )}
-      <button
-        className='postBtn'
+      {/* <button
+        className='btn btn-secondary'
         type='submit'
         disabled={text != '' ? false : true}
         style={globalStore.submitBtnStyle || submitBtnStyle}
         onClick={(e) => (text ? handleSubmit(e) : null)}
       >
-        Post
+        <KTSVG path="/media/icons/duotune/general/gen016.svg" className="svg-icon-muted" />
+      </button> */}
+
+      <button
+        type='submit'
+        disabled={text != '' ? false : true}
+        className='btn btn-icon btn-sm me-1' // btn-active-light-info
+        onClick={(e) => (text ? handleSubmit(e) : null)}
+      >
+        <KTSVG
+          path='/media/icons/duotune/arrows/sendMsg.svg'
+          className='svg-icon-2 svg-icon-gray-600'
+        />
       </button>
     </form>
   )

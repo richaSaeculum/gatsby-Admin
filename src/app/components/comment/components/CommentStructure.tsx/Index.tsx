@@ -50,7 +50,7 @@ const CommentStructure = ({
             <MenuItem
               onClick={() => globalStore.handleAction(info.comId, true)}
             >
-              edit
+              Edit
             </MenuItem>
             <MenuItem>
               <DeleteModal comId={info.comId} parentId={parentId} />
