@@ -17,7 +17,7 @@ const AuthLayout = () => {
         {/* begin::Logo */}
         <a href='#' className='mb-5'>
           {/* <img alt='Logo' src={toAbsoluteUrl('/media/logos/default.svg')} className='h-45px' /> */}
-          <h1 className='text-light'>Logo</h1>
+          <h1 className='text-light'>The Common Logic</h1>
         </a>
         {/* end::Logo */}
         {/* begin::Wrapper */}

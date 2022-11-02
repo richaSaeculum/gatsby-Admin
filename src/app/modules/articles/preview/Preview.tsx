@@ -190,6 +190,9 @@ const Preview = () => {
               dangerouslySetInnerHTML={{ __html: decode(post?.content) }}
             >
             </div>
+            <button className='btn btn-secondary' onClick={() => { navigate(-1) }}>
+              Back
+            </button>
           </div>
           <div className='col-4'>
             {auth?.user?.user_role === UserType.EDITOR && post?.status === ArticleStatusType.PENDING && (<div className='d-flex justify-content-end align-items-center gap-3'>
@@ -226,9 +229,6 @@ const Preview = () => {
             }
           </div>
         </div>
-        <button className='btn btn-secondary' onClick={() => { navigate(-1) }}>
-          Back
-        </button>
       </div>
     </>
 

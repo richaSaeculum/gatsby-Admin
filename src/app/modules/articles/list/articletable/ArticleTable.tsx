@@ -177,7 +177,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, dat
               < button
                 className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm' // btn-active-light-danger
                 onClick={() => { actionClick('reject', row, true) }}
-                disabled={row.status === ArticleStatusType.PUBLISH}
+                disabled={row.status === ArticleStatusType.DRAFT || row.status === ArticleStatusType.PUBLISH}
               >
                 <KTSVG
                   path='/media/icons/duotune/arrows/arr061.svg'

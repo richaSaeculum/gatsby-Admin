@@ -24,15 +24,21 @@ const ArticleList = () => {
 
   const getAllPost = async ({ page }: any) => {
     setLoader(true);
-    let response = await getPostListApi({ page, limit: limitNo });
-    if (response && response.status === 200) {
-      setTotalPage(parseInt(response.data.pageCount));
-      setTotalArticle(parseInt(response.data.totalCount))
-      // let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item), rowNo: (page - 1) * limitNo + index + 1 }) })
-      let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
-      setArticleData(a)
-      setLoader(false)
+    try{
+      let response = await getPostListApi({ page, limit: limitNo });
+      if (response && response.status === 200) {
+        setTotalPage(parseInt(response.data.pageCount));
+        setTotalArticle(parseInt(response.data.totalCount))
+        // let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, categoryName: getCategoryNameForDisplay(item), rowNo: (page - 1) * limitNo + index + 1 }) })
+        let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
+        setArticleData(a);
+      }
+    }catch(err){
+      console.log(err)
+    }finally {
+      setLoader(false);
     }
+  
   }
 
   function getCategoryNameForDisplay(item: any) {
