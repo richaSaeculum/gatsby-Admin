@@ -130,7 +130,7 @@ const AddArticle = () => {
     console.log("response", response)
     if (response && response.status === 200) {
       const { content, id, title, status, categories } = response.data;
-      if (status !== ArticleStatusType.DRAFT && status !== ArticleStatusType.REJECTED) {
+      if (status !== ArticleStatusType.DRAFT && status !== ArticleStatusType.REJECT) {
         setView(true);
       }
       let arr: any = [];

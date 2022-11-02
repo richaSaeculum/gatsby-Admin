@@ -42,7 +42,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, dat
       onDeleteRow(deleteRow);
       setConfirmationOpen(false);
     }
-    else if (success && (a.type === 'approve' || a.type === 'reject')) {
+    else if (success && (a.type === 'publish' || a.type === 'reject')) {
       handlePostStatus(a)
       setConfirmationOpen(false);
     }
@@ -111,7 +111,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, dat
             'badge-light-success': row.status === ArticleStatusType.PUBLISH,
             'badge-light-primary': row.status === ArticleStatusType.DRAFT,
             'badge-light-warning': row.status === ArticleStatusType.PENDING,
-            'badge-light-danger': row.status === ArticleStatusType.REJECTED,
+            'badge-light-danger': row.status === ArticleStatusType.REJECT,
           })}>
             {row.status}
           </span>
@@ -167,7 +167,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, dat
               {/* Approve Button */}
               <button
                 className='btn btn-active-icon-gray-100 btn-icon btn-light-success btn-sm me-1' // btn-active-light-primary 
-                onClick={() => { actionClick('approve', row, true) }}
+                onClick={() => { actionClick('publish', row, true) }}
                 disabled={row.status === ArticleStatusType.DRAFT || row.status === ArticleStatusType.PUBLISH}
               >
                 <KTSVG path='/media/icons/duotune/arrows/arr085.svg' className='svg-icon-3' />
@@ -177,6 +177,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, dat
               < button
                 className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm' // btn-active-light-danger
                 onClick={() => { actionClick('reject', row, true) }}
+                disabled={row.status === ArticleStatusType.PUBLISH}
               >
                 <KTSVG
                   path='/media/icons/duotune/arrows/arr061.svg'

@@ -1,6 +1,6 @@
 export enum ArticleStatusType {
   DRAFT = 'draft',
   PUBLISH = 'publish',
-  REJECTED = 'rejected',
+  REJECT = 'reject',
   PENDING = 'pending'
 }

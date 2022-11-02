@@ -44,16 +44,16 @@ const Preview = () => {
 
   const toggleModal = (status?: any) => {
     setConfirmationOpen(!confirmationOpen);
-    if (status === 'approve') {
+    if (status === 'publish') {
       setConfirmationInfo({
         action: 'confirmation',
         message: 'Do you want to approve this post? Once you approve this post it will be published.',
-        status: 'approve'
+        status: 'publish'
       })
     } else if (status === 'reject') {
       setConfirmationInfo({
         action: 'confirmation',
-        message: 'Do you want to reject this post? Once you approve this post it will be changed to draft.',
+        message: 'Do you want to reject this post? Once you reject this post it will be changed to draft.',
         status: 'reject'
       })
     }
@@ -179,7 +179,7 @@ const Preview = () => {
               <div className='preview_tags'>
                 <i className="fa-solid fa-tags" style={{ fontSize: 20, marginRight: '10px', color: '#313B54' }}></i>
                 {post?.categories.map((item: any, index: number) => (
-                  <span>
+                  <span key={index}>
                     {item.category}&nbsp; &nbsp;
                   </span>
                 ))}
@@ -193,7 +193,7 @@ const Preview = () => {
           </div>
           <div className='col-4'>
             {auth?.user?.user_role === UserType.EDITOR && post?.status === ArticleStatusType.PENDING && (<div className='d-flex justify-content-end align-items-center gap-3'>
-              <button type='button' className='btn btn-success' onClick={() => toggleModal('approve')}>
+              <button type='button' className='btn btn-success' onClick={() => toggleModal('publish')}>
                 Approve
               </button>
               <button type='button' className='btn btn-danger' onClick={() => toggleModal('reject')}>
@@ -201,7 +201,7 @@ const Preview = () => {
               </button>
             </div>)}
             {
-              auth?.user?.user_role !== UserType.ADMINISTRATOR && post?.status === ArticleStatusType.PENDING && (<DefaultComment
+              auth?.user?.user_role !== UserType.ADMINISTRATOR && (post?.status === ArticleStatusType.PENDING || post?.status === ArticleStatusType.REJECT) && (<DefaultComment
                 currentUser={{
                   currentUserId: auth?.user?.user_id || '',
                   currentUserImg: `https://ui-avatars.com/api/name=${auth?.user?.user_name}&background=random`,
