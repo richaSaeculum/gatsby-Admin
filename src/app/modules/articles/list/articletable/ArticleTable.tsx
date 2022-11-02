@@ -102,7 +102,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, dat
         <td>
           <span className='fw-semibold d-block fs-7 mw-100'>
             <ul className='list-unstyled mb-0'>
-              {row.categoryName && row.categoryName.map((item: string, index: number) => (<li key={item + index}>{item}</li>))}
+              {row.categories && row.categories.map((item: any, index: number) => (<li key={index}>{item.category}</li>))}
             </ul>
           </span>
         </td>
