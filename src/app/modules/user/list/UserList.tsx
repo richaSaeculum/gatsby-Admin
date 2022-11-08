@@ -25,12 +25,17 @@ const UserList = () => {
 
   const getAllUsers = async ({ page }: any) => {
     setLoader(true);
-    let response = await getUsersListApi({ page, limit: limitNo });
-    if (response && response.status === 200) {
-      setTotalPage(parseInt(response.data.pageCount))
-      setTotalUsers(parseInt(response.data.userCount))
-      let a = response?.data?.users.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
-      setUsersData(a);
+    try {
+      let response = await getUsersListApi({ page, limit: limitNo });
+      if (response && response.status === 200) {
+        setTotalPage(parseInt(response.data.pageCount))
+        setTotalUsers(parseInt(response.data.userCount))
+        let a = response?.data?.users.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
+        setUsersData(a);
+      }
+    } catch (err) {
+      console.log(err)
+    } finally {
       setLoader(false);
     }
   }
@@ -43,7 +48,7 @@ const UserList = () => {
 
   const onDeleteRow = async (row: any) => {
     setLoader(true)
-    const response = await deleteUserApi({ id: row.wp_user_id })
+    const response = await deleteUserApi({ id: row.user_id }) // changed from wp_user_id
     if (response && response.status === 200) {
       getAllUsers({ page: currentPage });
     }

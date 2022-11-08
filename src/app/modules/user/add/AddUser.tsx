@@ -79,7 +79,7 @@ const AddUser = () => {
     setEditForm(true);
     const response = await getSingleUsersListApi({ id })
     if (response && response.status === 200) {
-      const { user_name, user_email, user_first_name, user_last_name, user_role, user_website, wp_user_id } = response.data
+      const { user_name, user_email, user_first_name, user_last_name, user_role, user_website, user_id } = response.data
       setLoader(false);
       let editData = {
         username: user_name,
@@ -88,7 +88,7 @@ const AddUser = () => {
         lastName: user_last_name,
         website: user_website === null ? "" : user_website,
         role: user_role,
-        id: wp_user_id,
+        id: user_id, // changed from wp_user_id
         password: ""
       }
       setInitialValues(editData)
