@@ -53,7 +53,7 @@ const Category = () => {
     let limit = 5;
     const response = await getCategoriesListApi({ page, limit });
     if (response && response.status === 200) {
-      setTotalPage(parseInt(response.data.categoriesPageCount))
+      setTotalPage(parseInt(response.data.pageCount))
       let a = response?.data?.categories.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
       setCategories(a);
       setLoader(false);

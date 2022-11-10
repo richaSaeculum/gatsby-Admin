@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { ReactElement, useState } from 'react';
+import { KTSVG } from '../../../../../../_metronic/helpers';
 
 import ConfirmationModal from '../../../../../components/modal/ConfirmationModal';
 import Pagination from '../../../../../components/pagination/Pagination';
@@ -60,13 +61,13 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props
                         {row.name}
                     </a>
                 </td>
-                <td className='text-end'>
-                    {/* <a
+                {/* <td className='text-end'>
+                    <a
                         href='#'
                         className='btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4 me-2'
                     >
                         View
-                    </a> */}
+                    </a>
                     <button
                         className='btn btn-secondary btn-sm px-4 me-2'
                         onClick={() => { onEditRow(row) }}
@@ -80,6 +81,25 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props
                     >
                         Delete
                     </button>
+                </td> */}
+                <td className='text-end'>
+                    <button
+                        className='btn btn-active-icon-gray-100 btn-icon btn-light-twitter btn-sm me-1'
+                        onClick={() => { onEditRow(row) }}
+                    >
+                        <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
+                    </button>
+
+                    < button
+                        className='btn btn-icon btn-light-danger btn-active-color-danger btn-active-icon-gray-100 btn-sm'
+                        onClick={() => { actionClick(row, true) }}
+                    >
+                        <KTSVG
+                            path='/media/icons/duotune/general/gen027.svg'
+                            className='svg-icon-3'
+                        />
+                    </button>
+
                 </td>
             </tr>)
         })

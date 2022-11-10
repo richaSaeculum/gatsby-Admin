@@ -255,7 +255,7 @@ export const getCategoriesListApi = async ({ page = 1, limit = 10 }) => {
 export const getSingleCategoryApi = async ({ id }) => {
   try {
     // const { data } = await client().get(`/category/${id}`);
-    const { data } = await client().get(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.CATEGORY_LIST, { id }));
+    const { data } = await client().get(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.CATEGORY, { id }));
     return data
   } catch (error) {
     // get axios errors from error.response
@@ -281,7 +281,7 @@ export const addCategoryApi = async ({ payload }) => {
 export const updateCategoryApi = async ({ payload, id }) => {
   try {
     // const { data } = await client().post(`/category/create/${id}`, payload);
-    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.CATEGORY_LIST, { id }), payload);
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.CATEGORY_CREATE, { id }), payload);
     return data
   } catch (error) {
     // get axios errors from error.response
