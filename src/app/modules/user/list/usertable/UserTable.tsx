@@ -5,6 +5,7 @@ import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 import Pagination from '../../../../components/pagination/Pagination';
 
 type PaginationConfig = {
+  currentPage: number
   totalPage: number
   handlePageChange: (page: number) => void
   totalUsers: number
@@ -160,6 +161,7 @@ const UserTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props) =>
             </select>
             <div className="d-flex align-items-center py-3">
               <Pagination
+                currentPage={paginationConfig.currentPage}
                 handlePageClick={handlePageClick}
                 totalPage={paginationConfig.totalPage}
               />

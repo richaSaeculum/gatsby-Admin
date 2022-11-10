@@ -2,29 +2,38 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLayout } from '../../../../_metronic/layout/core'
 import { deletePostApi, getPostListApi, updatePostStatusApi } from '../../../api'
+import { LocalStorageKeys } from '../../../constants/localstorage'
 import { UserType } from '../../../constants/user/user_type'
+import { getItem, removeItem, setItem } from '../../../Utils/storage'
 import { useAuth } from '../../auth'
 import ArticleTable from './articletable/ArticleTable'
 
 const ArticleList = () => {
+  let p = getItem(LocalStorageKeys.ARTCILE_PAGE);
 
   const { auth } = useAuth();
   const { setLoader } = useLayout()
   const [articleData, setArticleData] = useState<any>();
   const [totalPage, setTotalPage] = useState<number>(0);
   const [totalArticle, setTotalArticle] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(p || 1);
   const [limitNo, setLimitNo] = useState<number>(5);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllPost({ page: 1 });
+    setCurrentPage(currentPage)
+    getAllPost({ page: currentPage });
+    removeItem(LocalStorageKeys.ARTCILE_PAGE);
+  }, [])
+
+  useEffect(() => {
+    getAllPost({ page: currentPage });
   }, [limitNo])
 
   const getAllPost = async ({ page }: any) => {
     setLoader(true);
-    try{
+    try {
       let response = await getPostListApi({ page, limit: limitNo });
       if (response && response.status === 200) {
         setTotalPage(parseInt(response.data.pageCount));
@@ -33,12 +42,11 @@ const ArticleList = () => {
         let a = response?.data?.articles.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
         setArticleData(a);
       }
-    }catch(err){
+    } catch (err) {
       console.log(err)
-    }finally {
+    } finally {
       setLoader(false);
     }
-  
   }
 
   function getCategoryNameForDisplay(item: any) {
@@ -60,16 +68,19 @@ const ArticleList = () => {
   }
 
   const onEditRow = (row: any) => {
+    setItem(LocalStorageKeys.ARTCILE_PAGE, currentPage)
     navigate(`/articles/edit-article/${row.id}`);
   }
 
   const onViewRow = (row: any) => {
+    setItem(LocalStorageKeys.ARTCILE_PAGE, currentPage)
     navigate(`/articles/preview/${row.id}`);
   }
 
   const handlePageChange = async (selectedPage: number) => {
     // return
     await getAllPost({ page: selectedPage });
+    setItem(LocalStorageKeys.ARTCILE_PAGE, selectedPage);
     setCurrentPage(selectedPage);
   }
 
@@ -113,7 +124,7 @@ const ArticleList = () => {
           onViewRow={onViewRow}
           handlePostStatus={handlePostStatus}
           data={articleData}
-          paginationConfig={{ totalPage, handlePageChange, totalArticle, limitNo, setLimitNo }}
+          paginationConfig={{ currentPage, totalPage, handlePageChange, totalArticle, limitNo, setLimitNo }}
         /> :
           <div className={`card`}>
             <div className='card-body py-3'>

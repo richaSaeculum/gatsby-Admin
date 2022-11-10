@@ -97,7 +97,7 @@ const Wallet = () => {
             <h1 className='fs-2hx fw-bold text-dark my-6'>Transactions</h1>
             {transactionList?.length > 0 ? <PaymentTable
               data={transactionList}
-              paginationConfig={{ totalPage, handlePageChange }}
+              paginationConfig={{ currentPage, totalPage, handlePageChange }}
             /> : <div className={`card`}>
               <div className='card-body py-3'>
                 <h4 className='mb-0 text-center'>No record found</h4>

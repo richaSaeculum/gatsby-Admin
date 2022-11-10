@@ -4,6 +4,7 @@ import { ReactElement } from 'react';
 import Pagination from '../../../../components/pagination/Pagination';
 
 type PaginationConfig = {
+    currentPage: number
     totalPage: number
     handlePageChange: (page: number) => void
 }
@@ -84,6 +85,7 @@ const TransactionTable = ({ data, paginationConfig }: Props) => {
                     {/* end::Table container */}
                     <div className="card-footer d-flex justify-content-end align-items-center flex-wrap">
                         <Pagination
+                            currentPage={paginationConfig.currentPage}
                             handlePageClick={handlePageClick}
                             totalPage={paginationConfig.totalPage}
                         />

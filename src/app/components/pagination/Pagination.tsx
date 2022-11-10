@@ -2,15 +2,18 @@ import React from 'react'
 import ReactPaginate from 'react-paginate'
 
 type Props = {
+    currentPage: number
     totalPage: number
     handlePageClick: (a: any) => void
 }
-const Pagination = ({ totalPage, handlePageClick }: Props) => {
+
+const Pagination = ({ currentPage, totalPage, handlePageClick }: Props) => {
     return (
         <div>
             <ReactPaginate
                 pageCount={totalPage}
                 // pageCount={12}
+                forcePage={currentPage - 1}
                 previousLabel="<"
                 nextLabel=">"
                 breakLabel="..."

@@ -4,23 +4,33 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useLayout } from '../../../../_metronic/layout/core';
 
 import { deleteUserApi, getUsersListApi } from '../../../api';
+import { LocalStorageKeys } from '../../../constants/localstorage';
+import { getItem, removeItem, setItem } from '../../../Utils/storage';
 
 import UserTable from './usertable/UserTable';
 
 const UserList = () => {
+
+  let p = getItem(LocalStorageKeys.USER_PAGE);
 
   const { setLoader } = useLayout();
   const [usersData, setUsersData] = useState<any>();
 
   const [totalPage, setTotalPage] = useState<number>(0);
   const [totalUsers, setTotalUsers] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(p || 1);
   const [limitNo, setLimitNo] = useState<number>(5);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllUsers({ page: 1 });
+    setCurrentPage(currentPage)
+    getAllUsers({ page: currentPage });
+    removeItem(LocalStorageKeys.USER_PAGE);
+  }, [])
+
+  useEffect(() => {
+    getAllUsers({ page: currentPage });
   }, [limitNo])
 
   const getAllUsers = async ({ page }: any) => {
@@ -42,6 +52,7 @@ const UserList = () => {
 
   const onEditRow = (row: any) => {
     if (row.user_id) {
+      setItem(LocalStorageKeys.USER_PAGE, currentPage);
       navigate(`/users/edit-user/${row.user_id}`);
     }
   }
@@ -79,7 +90,7 @@ const UserList = () => {
         onEditRow={onEditRow}
         onDeleteRow={onDeleteRow}
         data={usersData}
-        paginationConfig={{ totalPage, handlePageChange, totalUsers, limitNo, setLimitNo }}
+        paginationConfig={{ currentPage, totalPage, handlePageChange, totalUsers, limitNo, setLimitNo }}
       /> :
         <div className={`card`}>
           <div className='card-body py-3'>

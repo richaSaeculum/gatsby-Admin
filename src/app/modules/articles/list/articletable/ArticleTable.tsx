@@ -12,6 +12,7 @@ import { useAuth } from '../../../auth';
 import { UserType } from '../../../../constants/user/user_type';
 
 type PaginationConfig = {
+  currentPage: number
   totalPage: number
   handlePageChange: (page: number) => void
   totalArticle: number
@@ -281,6 +282,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, dat
             </select>
             <div className="d-flex align-items-center py-3">
               <Pagination
+                currentPage={paginationConfig.currentPage}
                 handlePageClick={handlePageClick}
                 totalPage={paginationConfig.totalPage}
               />

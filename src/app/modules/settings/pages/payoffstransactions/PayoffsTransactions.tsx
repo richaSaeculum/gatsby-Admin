@@ -78,7 +78,7 @@ const PayoffsTransactions = () => {
 		<div>
 			<TransactionTable
 				data={data}
-				paginationConfig={{ totalPage, handlePageChange }}
+				paginationConfig={{ currentPage, totalPage, handlePageChange }}
 			/>
 		</div>
 	)

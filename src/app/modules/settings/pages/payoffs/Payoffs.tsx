@@ -284,7 +284,7 @@ const Payoffs = () => {
         onDeleteRow={onDeleteRow}
         onShowPaymentList={onShowPaymentList}
         data={payoffsList}
-        paginationConfig={{ totalPage, handlePageChange }}
+        paginationConfig={{ currentPage, totalPage, handlePageChange }}
       />
     </>
   )

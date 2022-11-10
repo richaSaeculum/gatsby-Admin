@@ -12,7 +12,7 @@ import CategoryTable from './categorytable/CategoryTable';
 const Category = () => {
 
   const { setLoader } = useLayout();
-  const [categories, setCategories] = useState();
+  const [categories, setCategories] = useState<any>();
   const [open, setOpen] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [title, setTitle] = useState<string | ''>('');
@@ -204,12 +204,18 @@ const Category = () => {
         </div>
       </Modal>
 
-      <CategoryTable
+      {categories?.length > 0 ? <CategoryTable
         onEditRow={onEdit}
         onDeleteRow={onDelete}
         data={categories}
-        paginationConfig={{ totalPage, handlePageChange }}
-      />
+        paginationConfig={{ currentPage, totalPage, handlePageChange }}
+      /> :
+        <div className={`card`}>
+          <div className='card-body py-3'>
+            <h4 className='mb-0 text-center'>No record found</h4>
+          </div>
+        </div>
+      }
     </>
   )
 }
