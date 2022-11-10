@@ -165,7 +165,6 @@ const Configuration = () => {
       formActions: actions,
       values: values
     }
-    console.log(values)
     // submitForm(info)
     toggleModal(info);
   }

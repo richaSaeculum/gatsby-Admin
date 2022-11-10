@@ -100,7 +100,6 @@ export function setupAxios(axios: any) {
     (config: { headers: { Authorization: string } }) => {
       const auth = getAuth()
       if (auth && auth.token) {
-        console.log(auth.token)
         config.headers.Authorization = auth.token
       }
 

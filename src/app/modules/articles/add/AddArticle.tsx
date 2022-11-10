@@ -127,7 +127,6 @@ const AddArticle = () => {
 
   const editId = async (id: any) => {
     let response: any = await getSinglePostApi({ id });
-    console.log("response", response)
     if (response && response.status === 200) {
       const { content, id, title, status, categories } = response.data;
       if (status !== ArticleStatusType.DRAFT && status !== ArticleStatusType.REJECT) {

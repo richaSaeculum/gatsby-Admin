@@ -60,7 +60,6 @@ export function Registration() {
     initialValues,
     validationSchema: registrationSchema,
     onSubmit: async (values, { setStatus, setSubmitting, resetForm }) => {
-      console.log("register payload", values)
       setLoading(true)
       try {
         let payload = {
