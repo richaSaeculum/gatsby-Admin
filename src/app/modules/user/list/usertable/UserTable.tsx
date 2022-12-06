@@ -66,6 +66,16 @@ const UserTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props) =>
         </td>
         <td>
           <span className='fw-semibold d-block fs-7'>
+            {row.user_first_name} 
+          </span>
+        </td>
+        <td>
+          <span className='fw-semibold d-block fs-7'>
+            {row.user_last_name} 
+          </span>
+        </td>
+        <td>
+          <span className='fw-semibold d-block fs-7'>
             {row.user_email}
           </span>
         </td>
@@ -131,6 +141,8 @@ const UserTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props) =>
                 <tr className='fw-bold text-muted'>
                   <th>No.</th>
                   <th>Username</th>
+                  <th>Firstname</th>
+                  <th>Lastname</th>
                   <th>Email id</th>
                   <th>Role</th>
                   <th className='text-end'>Actions</th>

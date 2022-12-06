@@ -89,7 +89,7 @@ const Wallet = () => {
             valueColor='dark'
             titleColor='dark'
             layout='col-xl-6 col-md-12'
-            summery={moment(wallet?.getLastTransaction.txn_created_on).format("DD MMM YYYY - hh:mm A")}
+            summery={wallet?.getLastTransaction.txn_created_on && moment(wallet?.getLastTransaction.txn_created_on).format("DD MMM YYYY - hh:mm A")}
           />
         </div>
         <div className='row my-5'>

@@ -87,11 +87,11 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, dat
         </td>
         {
           auth?.user?.user_role !== UserType.AUTHOR && <>
-            <td>
+            {/* <td>
               <span className='fw-semibold d-block fs-7'>
                 {row.author}
               </span>
-            </td>
+            </td> */}
             <td>
               <span className='fw-semibold d-block fs-7'>
                 {/* {row['_embedded'].author[0].name} */}
@@ -246,7 +246,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, dat
                   <th className='min-w-450px'>Title</th>
                   {auth?.user?.user_role !== UserType.AUTHOR && (
                     <>
-                      <th className='min-w-100px'>Author Id</th>
+                      {/* <th className='min-w-100px'>Author Id</th> */}
                       <th className='min-w-150px'>Author Name</th>
                     </>
                   )}
