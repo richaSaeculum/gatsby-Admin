@@ -94,9 +94,7 @@ const ArticleList = () => {
       }
     } catch (err) {
       console.log(err)
-    } finally {
-      setLoader(false)
-    }
+    } 
   }
 
   return (
