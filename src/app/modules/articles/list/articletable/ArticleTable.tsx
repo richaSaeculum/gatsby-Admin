@@ -95,7 +95,7 @@ const ArticleTable = ({ onEditRow, onDeleteRow, onViewRow, handlePostStatus, dat
             <td>
               <span className='fw-semibold d-block fs-7'>
                 {/* {row['_embedded'].author[0].name} */}
-                {row.authorName}
+                {row.user_first_name + ' ' + row.user_last_name}
               </span>
             </td>
           </>
