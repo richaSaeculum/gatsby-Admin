@@ -30,8 +30,8 @@ export const API_ENDPOINTS = {
   PAYOUT: '/payout',
   PAYOFF_USERS: '/payoff/users',
   PAYOFF_ALL: '/payoff/all?',
+  PAYOFF_LIST: '/payoffs/list',   // completed trasaction list
   PAYOFF_CREATE: '/payoff/create/{{id}}',
-  PAYOFF_LIST: '/payoffs/list',
 
   USER_LIST: '/users/list',
   USER: '/user/{{id}}',

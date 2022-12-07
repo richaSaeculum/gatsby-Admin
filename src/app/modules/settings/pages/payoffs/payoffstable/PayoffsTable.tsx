@@ -10,14 +10,12 @@ type PaginationConfig = {
 }
 
 type Props = {
-  onEditRow: (row: any) => void
-  onDeleteRow: (row: any) => void
   onShowPaymentList: (row: any) => void
   data: Array<any> | undefined
   paginationConfig: PaginationConfig
 }
 
-const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data, paginationConfig }: Props) => {
+const PayoffsTable = ({ onShowPaymentList, data, paginationConfig }: Props) => {
 
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
   const [deleteRow, setDeleteRow] = useState<any>()
@@ -28,7 +26,6 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data, paginat
 
   const confirmationCallback = (success: boolean) => {
     if (success) {
-      onDeleteRow(deleteRow)
       setConfirmationOpen(false)
     } else {
       setConfirmationOpen(!confirmationOpen)
@@ -67,7 +64,7 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data, paginat
         </td>
         <td>
           <span className='fw-semibold d-block fs-7 text-center'>
-            {row.perArticleRevenue}
+            {row.payAmount}
           </span>
         </td>
         <td className='text-end'>
@@ -77,24 +74,18 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data, paginat
           >
             View
           </a> */}
-          <button
+          {/* <button
             className='btn btn-secondary btn-sm px-4 me-2'
             onClick={() => { onEditRow(row) }}
             disabled={row.is_payment_done}
           >
             Edit
-          </button>
+          </button> */}
           <button
             className='btn btn-primary btn-sm px-4 me-2'
             onClick={() => { onShowPaymentList(row) }}
           >
             Complete Payment
-          </button>
-          <button
-            className='btn btn-light btn-sm px-4'
-            onClick={() => { actionClick(row, true) }}
-          >
-            Delete
           </button>
         </td>
       </tr>)
@@ -126,7 +117,7 @@ const PayoffsTable = ({ onEditRow, onDeleteRow, onShowPaymentList, data, paginat
                   <th className='rounded-start'>No.</th>
                   <th>Month</th>
                   <th className='text-center'>Total Revenue</th>
-                  <th className='text-center'>Amount Per Article</th>
+                  <th className='text-center'>Pay Amount</th>
                   <th className='text-center'>Actions</th>
                 </tr>
               </thead>

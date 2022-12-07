@@ -539,3 +539,16 @@ export const getPayoffsByMonthApi = async ({ payload }) => {
     return error.response.data
   }
 }
+
+
+// make payment to user
+export const makePayoutApi = async ({ payload }) => {
+  try {
+    const { data } = await client().post(Utils.Common.getApiEndPoint(Constant.API_ENDPOINTS.PAYOUT), payload);
+    return data
+  } catch (error) {
+    // get axios errors from error.response
+    console.log(error);
+    return error.response.data
+  }
+}
