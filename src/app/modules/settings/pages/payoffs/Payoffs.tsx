@@ -8,33 +8,46 @@ import { useLayout } from '../../../../../_metronic/layout/core';
 import { getPayoffAllApi } from '../../../../api';
 
 import PayoffsTable from './payoffstable/PayoffsTable';
+import { LocalStorageKeys } from '../../../../constants/localstorage';
+import { getItem, removeItem, setItem } from '../../../../Utils/storage';
 
 const Payoffs = () => {
+
+  let p = getItem(LocalStorageKeys.PAYOFFS_PAGE);
 
   const { setLoader } = useLayout()
   const navigate = useNavigate();
   const [totalPage, setTotalPage] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [payoffsList, setPayoffsList] = useState<any>();
+  const [totalPayoffs, setTotalPayoffs] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(p || 1);
+  const [payoffsList, setPayoffsList] = useState<any>([]);
+  const [limitNo, setLimitNo] = useState<number>(10);
+
+  useEffect(() => {
+    setCurrentPage(currentPage);
+    getPayofflist({ page: currentPage });
+    removeItem(LocalStorageKeys.PAYOFFS_PAGE);
+  }, [])
+
+  useEffect(() => {
+    getPayofflist({ page: currentPage });
+  }, [limitNo])
 
   const getPayofflist = async ({ page }: any) => {
     setLoader(true);
-    let limit = 5
-    const res = await getPayoffAllApi({ page, limit })
+    const res = await getPayoffAllApi({ page, limit: limitNo })
     if (res && res.status === 200) {
       setTotalPage(parseInt(res.data.pageCount))
-      let a = res?.data?.payoffs.map((item: any, index: number) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
+      setTotalPayoffs(parseInt(res.data.totalCount))
+      let a = res?.data?.payoffs.map((item: any, index: number) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
       setPayoffsList(a);
       setLoader(false);
     }
   }
 
-  useEffect(() => {
-    getPayofflist({ page: currentPage });
-  }, [])
-
   const onShowPaymentList = (row: any) => {
     if (row.month && row.year) {
+      setItem(LocalStorageKeys.PAYOFFS_PAGE, currentPage);
       navigate(`/settings/payoffs/${row.month}-${row.year}`);
     }
   }
@@ -53,11 +66,17 @@ const Payoffs = () => {
         </div>
       </div>
 
-      <PayoffsTable
+      {payoffsList.length > 0 ? <PayoffsTable
         onShowPaymentList={onShowPaymentList}
         data={payoffsList}
-        paginationConfig={{ currentPage, totalPage, handlePageChange }}
-      />
+        paginationConfig={{ currentPage, totalPage, handlePageChange, totalPayoffs, limitNo, setLimitNo }}
+      /> :
+        <div className={`card`}>
+          <div className='card-body py-3'>
+            <h4 className='mb-0 text-center'>No record found</h4>
+          </div>
+        </div>
+      }
     </>
   )
 }

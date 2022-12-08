@@ -19,7 +19,7 @@ const UserList = () => {
   const [totalPage, setTotalPage] = useState<number>(0);
   const [totalUsers, setTotalUsers] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(p || 1);
-  const [limitNo, setLimitNo] = useState<number>(5);
+  const [limitNo, setLimitNo] = useState<number>(10);
 
   const navigate = useNavigate();
 

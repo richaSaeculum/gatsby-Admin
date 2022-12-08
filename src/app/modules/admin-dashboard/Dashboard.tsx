@@ -11,9 +11,12 @@ import ArticleTable from './components/articletable/ArticleTable';
 import EarnersCard from './components/earnerscard/EarnersCard';
 import TreandsCard from './components/trendscard/TrendsCard';
 import StatusCard from './components/statuscard/StatusCard';
+import { UserType } from '../../constants/user/user_type';
+import { useAuth } from '../auth';
 
 const Dashboard: FC = () => {
 
+  const { auth } = useAuth();
   const { setLoader } = useLayout();
   const [articleList, setArticleList] = useState<any>();
   const [dashboard, setDashboard] = useState<any>();
@@ -109,11 +112,13 @@ const Dashboard: FC = () => {
             <div>
               <h1 className='fs-2hx fw-bold text-dark'>Top Articles</h1>
             </div>
-            <Link to={'/articles/add-article'}>
-              <button type='button' className='btn btn-secondary'>
-                Add Article
-              </button>
-            </Link>
+            {auth?.user?.user_role === UserType.AUTHOR && (
+              <Link to={'/articles/add-article'}>
+                <button type='button' className='btn btn-secondary'>
+                  Add Article
+                </button>
+              </Link>
+            )}
           </div>
           <ArticleTable
             data={articleList}

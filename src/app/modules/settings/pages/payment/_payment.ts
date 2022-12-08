@@ -1,7 +1,7 @@
 export interface PaymentFormFieldsTypes {
-    name: string
-    address: string
-    aadharcard: string 
+    name: string | null
+    address: string | null
+    aadharcard: string
     pancard: string
     bankAccNo: string
     ifsc: string

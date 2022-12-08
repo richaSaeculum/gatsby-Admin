@@ -47,28 +47,29 @@ import TransactionTable from './TransactionTable';
 const PayoffsTransactions = () => {
 
 	const { setLoader } = useLayout();
-	const [data, setData] = useState<any>();
+	const [data, setData] = useState<any>([]);
 
 	const [totalPage, setTotalPage] = useState<number>(0);
+	const [totalPayoffs, setTotalPayoffs] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [limitNo, setLimitNo] = useState<number>(10);
 
 	const handlePageChange = async (selectedPage: number) => {
 		await getSuccessPayoff({ page: selectedPage });
 		setCurrentPage(selectedPage);
 	}
 
-
 	useEffect(() => {
 		getSuccessPayoff({ page: currentPage });
-	}, [])
+	}, [limitNo])
 
 	const getSuccessPayoff = async ({ page }: any) => {
 		setLoader(true);
-		let limit = 10;
-		const res = await getSuccessPayoffListApi({ page, limit });
+		const res = await getSuccessPayoffListApi({ page, limit: limitNo });
 		if (res && res.status === 200) {
 			setTotalPage(parseInt(res.data.pageCount));
-			let a = res.data.payoffs.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
+			setTotalPayoffs(parseInt(res.data.payoffsTotal));
+			let a = res.data.payoffs.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
 			setData(a);
 			setLoader(false);
 		}
@@ -76,10 +77,16 @@ const PayoffsTransactions = () => {
 
 	return (
 		<div>
-			<TransactionTable
+			{data.length > 0 ? <TransactionTable
 				data={data}
-				paginationConfig={{ currentPage, totalPage, handlePageChange }}
-			/>
+				paginationConfig={{ currentPage, totalPage, handlePageChange, totalPayoffs, limitNo, setLimitNo }}
+			/> :
+				<div className={`card`}>
+					<div className='card-body py-3'>
+						<h4 className='mb-0 text-center'>No record found</h4>
+					</div>
+				</div>
+			}
 		</div>
 	)
 }

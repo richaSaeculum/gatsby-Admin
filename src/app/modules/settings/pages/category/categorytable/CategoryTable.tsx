@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { ReactElement, useState } from 'react';
+import { Dispatch, ReactElement, SetStateAction, useState } from 'react';
 import { KTSVG } from '../../../../../../_metronic/helpers';
 
 import ConfirmationModal from '../../../../../components/modal/ConfirmationModal';
@@ -9,6 +9,9 @@ type PaginationConfig = {
     currentPage: number
     totalPage: number
     handlePageChange: (page: number) => void
+    totalCategories: number
+    limitNo: number
+    setLimitNo: Dispatch<SetStateAction<number>>
 }
 
 type Props = {
@@ -143,12 +146,27 @@ const CategoryTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props
                         {/* end::Table */}
                     </div>
                     {/* end::Table container */}
-                    <div className="card-footer d-flex justify-content-end align-items-center flex-wrap">
-                        <Pagination
-                            currentPage={paginationConfig.currentPage}
-                            handlePageClick={handlePageClick}
-                            totalPage={paginationConfig.totalPage}
-                        />
+                    <div className="card-footer d-flex justify-content-between align-items-center flex-wrap">
+                        <select
+                            value={paginationConfig.limitNo}
+                            onChange={(e: any) => { paginationConfig?.setLimitNo(e.target.value); }}
+                            className="form-control form-select form-control-sm font-weight-bold mr-4 border-0 bg-light"
+                            style={{ width: '75px' }}
+                        >
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                        <div className="d-flex align-items-center py-3">
+                            <Pagination
+                                currentPage={paginationConfig.currentPage}
+                                handlePageClick={handlePageClick}
+                                totalPage={paginationConfig.totalPage}
+                            />
+                            <span className="text-muted ms-2">Displaying {(paginationConfig.limitNo > paginationConfig.totalCategories) ? paginationConfig.totalCategories : paginationConfig.limitNo} of {paginationConfig.totalCategories} records</span>
+                        </div>
                         {/* <div className="d-flex align-items-center py-3">
                             <select className="form-control form-select form-control-sm font-weight-bold mr-4 border-0 bg-light" style={{ width: '75px' }}>
                                 <option value="10">10</option>

@@ -20,12 +20,14 @@ const Category = () => {
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
   const [confirmationInfo, setConfirmationInfo] = useState<any>();
   const [totalPage, setTotalPage] = useState<number>(0);
+  const [totalCategories, setTotalCategories] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [editId, setEditId] = useState<string | null>(null);
+  const [limitNo, setLimitNo] = useState<number>(10);
 
   useEffect(() => {
     getCategories({ page: currentPage });
-  }, [])
+  }, [limitNo])
 
   const confirmationCallback = (success: boolean, info: any) => {
     if (success && info.action === 'confirmation') {
@@ -50,11 +52,11 @@ const Category = () => {
 
   const getCategories = async ({ page }: any) => {
     setLoader(true);
-    let limit = 5;
-    const response = await getCategoriesListApi({ page, limit });
+    const response = await getCategoriesListApi({ page, limit: limitNo });
     if (response && response.status === 200) {
-      setTotalPage(parseInt(response.data.pageCount))
-      let a = response?.data?.categories.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limit + index + 1 }) })
+      setTotalPage(parseInt(response.data.pageCount));
+      setTotalCategories(parseInt(response.data.totalCount));
+      let a = response?.data?.categories.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
       setCategories(a);
       setLoader(false);
     }
@@ -208,7 +210,7 @@ const Category = () => {
         onEditRow={onEdit}
         onDeleteRow={onDelete}
         data={categories}
-        paginationConfig={{ currentPage, totalPage, handlePageChange }}
+        paginationConfig={{ currentPage, totalPage, handlePageChange, totalCategories, limitNo, setLimitNo }}
       /> :
         <div className={`card`}>
           <div className='card-body py-3'>

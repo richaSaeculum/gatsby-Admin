@@ -13,16 +13,16 @@ const ArticleList = () => {
 
   const { auth } = useAuth();
   const { setLoader } = useLayout()
-  const [articleData, setArticleData] = useState<any>();
+  const [articleData, setArticleData] = useState<any>([]);
   const [totalPage, setTotalPage] = useState<number>(0);
   const [totalArticle, setTotalArticle] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(p || 1);
-  const [limitNo, setLimitNo] = useState<number>(5);
+  const [limitNo, setLimitNo] = useState<number>(10);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    setCurrentPage(currentPage)
+    setCurrentPage(currentPage);
     getAllPost({ page: currentPage });
     removeItem(LocalStorageKeys.ARTCILE_PAGE);
   }, [])
@@ -46,16 +46,6 @@ const ArticleList = () => {
       console.log(err)
     } finally {
       setLoader(false);
-    }
-  }
-
-  function getCategoryNameForDisplay(item: any) {
-    if (item._embedded.hasOwnProperty('wp:term')) {
-      let arr: any = [];
-      if (item._embedded['wp:term'].length > 0) {
-        item._embedded['wp:term'][0].forEach((item: any) => arr.push(item.name));
-      }
-      return arr
     }
   }
 

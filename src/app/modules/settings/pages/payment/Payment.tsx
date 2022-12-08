@@ -82,8 +82,8 @@ const Payment = () => {
     if (res && res.status === 200) {
       let data = res.data[0];
       setInitialValues({
-        name: data.user_pay_name,
-        address: data.user_pay_address,
+        name: data.user_pay_name || '',
+        address: data.user_pay_address || '',
         bankAccNo: data.user_pay_account === null ? '' : data.user_pay_account,
         aadharcard: "",
         pancard: "",
@@ -91,7 +91,7 @@ const Payment = () => {
         bankName: data.user_pay_bank === null ? '' : data.user_pay_bank,
         upi: data.user_pay_upi === null ? '' : data.user_pay_upi,
         isUpi: data.user_pay_type === 'bank-transfer' ? false : true,
-        isEdit: true,
+        isEdit: false,
       })
       setImgUrl({
         aadharcard: data.user_pay_aadhar,
@@ -127,6 +127,7 @@ const Payment = () => {
       const imgPayload = new FormData();
       imgPayload.append('file', e.target.files[0])
       const res = await fileUploadApi({ payload: imgPayload });
+      console.log(res)
       if (res && res.status === 200) {
         let a = {
           ...imgUrl,
@@ -278,7 +279,7 @@ const Payment = () => {
                       <div className='fv-help-block'>{props.errors.aadharcard}</div>
                     </div>
                   )}
-                  {(props.values.isEdit || props.values.aadharcard) && <img src={imgUrl.aadharcard} alt="" className='img-fluid img-thumb mt-2' />}
+                  {(props.values.isEdit && props.values.aadharcard) && <img src={imgUrl.aadharcard} alt="" className='img-fluid img-thumb mt-2' />}
                 </div>
               </div>
               <div className="col">
@@ -297,7 +298,7 @@ const Payment = () => {
                       <div className='fv-help-block'>{props.errors.pancard}</div>
                     </div>
                   )}
-                  {(props.values.isEdit || props.values.pancard) && <img src={imgUrl.pancard} alt="" className='img-fluid img-thumb mt-2' />}
+                  {(props.values.isEdit && props.values.pancard) && <img src={imgUrl.pancard} alt="" className='img-fluid img-thumb mt-2' />}
                 </div>
               </div>
 
