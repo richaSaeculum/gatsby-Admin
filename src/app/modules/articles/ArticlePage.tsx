@@ -74,7 +74,7 @@ const ArticlePage = () => {
             </>
           )}
           <Route index element={<Navigate to={'/articles/list'} />} />
-          {/* <Route path="*" element={<Navigate to={'/articles/list'}/>}/> */}
+          <Route path="*" element={<Navigate to={'/articles/list'}/>}/>
         </Route>
       </Routes>
     </>
