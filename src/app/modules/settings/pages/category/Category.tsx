@@ -143,7 +143,7 @@ const Category = () => {
       {confirmationOpen && <ConfirmationModal
         open={confirmationOpen}
         confirmationInfo={confirmationInfo}
-        onClose={() => { setConfirmationOpen(false) }}
+        onClose={() => { setConfirmationOpen(false); setLoader(false); }}
         handleConfirmationMessage={confirmationCallback}
       />}
       <div className='d-flex justify-content-between align-items-center mb-5'>

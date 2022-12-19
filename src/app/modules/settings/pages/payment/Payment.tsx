@@ -225,7 +225,7 @@ const Payment = () => {
         {confirmationOpen && <ConfirmationModal
           open={confirmationOpen}
           confirmationInfo={confirmationInfo}
-          onClose={() => { setConfirmationOpen(false) }}
+          onClose={() => { setConfirmationOpen(false); }}
           handleConfirmationMessage={confirmationCallback}
         />}
         <Formik

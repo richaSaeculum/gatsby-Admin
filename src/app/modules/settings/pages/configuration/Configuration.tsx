@@ -207,7 +207,7 @@ const Configuration = () => {
         {confirmationOpen && <ConfirmationModal
           open={confirmationOpen}
           confirmationInfo={confirmationInfo}
-          onClose={() => { setConfirmationOpen(false) }}
+          onClose={() => { setConfirmationOpen(false); setLoader(false); }}
           handleConfirmationMessage={confirmationCallback}
         />}
 

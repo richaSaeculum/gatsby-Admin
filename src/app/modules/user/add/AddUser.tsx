@@ -238,7 +238,7 @@ const AddUser = () => {
       {confirmationOpen && <ConfirmationModal
         open={confirmationOpen}
         confirmationInfo={confirmationInfo}
-        onClose={() => { setConfirmationOpen(false) }}
+        onClose={() => { setConfirmationOpen(false); navigate('/users/list'); }}
         handleConfirmationMessage={confirmationCallback}
       />}
       <Formik

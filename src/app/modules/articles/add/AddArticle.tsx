@@ -284,7 +284,7 @@ const AddArticle = () => {
       {confirmationOpen && <ConfirmationModal
         open={confirmationOpen}
         confirmationInfo={confirmationInfo}
-        onClose={() => { setConfirmationOpen(false) }}
+        onClose={() => { setConfirmationOpen(false); navigate('/articles/list'); }}
         handleConfirmationMessage={confirmationCallback}
       />}
       <div className="card-header d-flex justify-content-between align-items-center mb-7">
