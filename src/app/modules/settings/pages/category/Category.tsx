@@ -148,7 +148,7 @@ const Category = () => {
       />}
       <div className='d-flex justify-content-between align-items-center mb-5'>
         <div>
-          <h1 className='fs-2hx fw-bold text-dark mb-0'>Category</h1>
+          {/* <h1 className='fs-2hx fw-bold text-dark mb-0'>Category</h1> */}
         </div>
         <button type='button' className='btn btn-secondary' onClick={() => {
           setOpen(true);

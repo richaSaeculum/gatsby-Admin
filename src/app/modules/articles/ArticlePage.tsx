@@ -37,7 +37,8 @@ const ArticlePage = () => {
             path='list'
             element={
               <>
-                <PageTitle breadcrumbs={ArticleBreadcrumb}>Articles</PageTitle>
+                {/* breadcrumbs={ArticleBreadcrumb} */}
+                <PageTitle >Articles</PageTitle>
                 <ArticleList />
               </>
             }
@@ -46,7 +47,8 @@ const ArticlePage = () => {
             path='preview/:id'
             element={
               <>
-                <PageTitle breadcrumbs={ArticleBreadcrumb}>Preview</PageTitle>
+                {/* breadcrumbs={ArticleBreadcrumb} */}
+                <PageTitle >Preview</PageTitle>
                 <Preview />
               </>
             }
@@ -57,7 +59,8 @@ const ArticlePage = () => {
                 path='add-article'
                 element={
                   <>
-                    <PageTitle breadcrumbs={AddEditArticleBreadcrumb}>Add Article</PageTitle>
+                    {/* breadcrumbs={AddEditArticleBreadcrumb} */}
+                    <PageTitle >Add Article</PageTitle>
                     <AddArticle />
                   </>
                 }
@@ -66,7 +69,8 @@ const ArticlePage = () => {
                 path='edit-article/:id'
                 element={
                   <>
-                    <PageTitle breadcrumbs={AddEditArticleBreadcrumb}>Edit Article</PageTitle>
+                    {/* breadcrumbs={AddEditArticleBreadcrumb} */}
+                    <PageTitle >Edit Article</PageTitle>
                     <AddArticle />
                   </>
                 }
@@ -74,7 +78,7 @@ const ArticlePage = () => {
             </>
           )}
           <Route index element={<Navigate to={'/articles/list'} />} />
-          <Route path="*" element={<Navigate to={'/articles/list'}/>}/>
+          <Route path="*" element={<Navigate to={'/articles/list'} />} />
         </Route>
       </Routes>
     </>

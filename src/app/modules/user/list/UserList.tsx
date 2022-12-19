@@ -75,7 +75,7 @@ const UserList = () => {
     <div>
       <div className='d-flex justify-content-between align-items-center mb-5'>
         <div>
-          <h1 className='fs-2hx fw-bold text-dark mb-0'>Users</h1>
+          {/* <h1 className='fs-2hx fw-bold text-dark mb-0'>Users</h1> */}
         </div>
         <div className='d-flex justify-content-between align-items-center'>
           <Link to={'/users/add-user'}>

@@ -62,7 +62,7 @@ const Payoffs = () => {
     <>
       <div className='d-flex justify-content-between align-items-center mb-5'>
         <div>
-          <h1 className='fs-2hx fw-bold text-dark mb-0'>Payoffs</h1>
+          {/* <h1 className='fs-2hx fw-bold text-dark mb-0'>Payoffs</h1> */}
         </div>
       </div>
 

@@ -92,7 +92,7 @@ const ArticleList = () => {
       <div>
         <div className='d-flex justify-content-between align-items-center mb-5'>
           <div>
-            <h1 className='fs-2hx fw-bold text-dark mb-0'>Articles</h1>
+            {/* <h1 className='fs-2hx fw-bold text-dark mb-0'>Articles</h1> */}
           </div>
           {auth?.user?.user_role === UserType.AUTHOR && (<div className='d-flex justify-content-between align-items-center gap-3'>
             <Link to={'/articles/add-article'}>

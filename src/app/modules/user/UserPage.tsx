@@ -32,7 +32,8 @@ const UserPage = () => {
 						path='list'
 						element={
 							<>
-								<PageTitle breadcrumbs={ArticleBreadcrumb}>Users</PageTitle>
+								{/* breadcrumbs={ArticleBreadcrumb} */}
+								<PageTitle >Users</PageTitle>
 								<UserList />
 							</>
 						}
@@ -41,7 +42,8 @@ const UserPage = () => {
 						path='add-user'
 						element={
 							<>
-								<PageTitle breadcrumbs={AddEditArticleBreadcrumb}>Add User</PageTitle>
+								{/* breadcrumbs={AddEditArticleBreadcrumb} */}
+								<PageTitle >Add User</PageTitle>
 								<AddUser />
 							</>
 						}
@@ -50,7 +52,8 @@ const UserPage = () => {
 						path='edit-user/:id'
 						element={
 							<>
-								<PageTitle breadcrumbs={AddEditArticleBreadcrumb}>Edit User</PageTitle>
+								{/* breadcrumbs={AddEditArticleBreadcrumb} */}
+								<PageTitle >Edit User</PageTitle>
 								<AddUser />
 							</>
 						}

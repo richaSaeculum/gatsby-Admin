@@ -31,7 +31,8 @@ const SettingsPage = () => {
             path='payment'
             element={
               <>
-                <PageTitle breadcrumbs={SettingsBreadcrumb}>Payment</PageTitle>
+                {/* breadcrumbs={SettingsBreadcrumb} */}
+                <PageTitle >Payment</PageTitle>
                 <Payment />
               </>
             }
@@ -40,7 +41,8 @@ const SettingsPage = () => {
             path='wallet'
             element={
               <>
-                <PageTitle breadcrumbs={SettingsBreadcrumb}>Wallet</PageTitle>
+                {/* breadcrumbs={SettingsBreadcrumb} */}
+                <PageTitle >Wallet</PageTitle>
                 <Wallet />
               </>
             }
@@ -52,7 +54,8 @@ const SettingsPage = () => {
                   path='category'
                   element={
                     <>
-                      <PageTitle breadcrumbs={SettingsBreadcrumb}>Category</PageTitle>
+                      {/* breadcrumbs={SettingsBreadcrumb} */}
+                      <PageTitle >Category</PageTitle>
                       <Category />
                     </>
                   }
@@ -61,7 +64,8 @@ const SettingsPage = () => {
                   path='config'
                   element={
                     <>
-                      <PageTitle breadcrumbs={SettingsBreadcrumb}>Configuration</PageTitle>
+                      {/* breadcrumbs={SettingsBreadcrumb} */}
+                      <PageTitle >Configuration</PageTitle>
                       <Configuration />
                     </>
                   }
@@ -70,7 +74,8 @@ const SettingsPage = () => {
                   path='payoffs'
                   element={
                     <>
-                      <PageTitle breadcrumbs={SettingsBreadcrumb}>Monthly Payoffs</PageTitle>
+                      {/* breadcrumbs={SettingsBreadcrumb} */}
+                      <PageTitle >Monthly Payoffs</PageTitle>
                       <Payoffs />
                     </>
                   }
@@ -79,7 +84,8 @@ const SettingsPage = () => {
                   path='payoffs/:id'
                   element={
                     <>
-                      <PageTitle breadcrumbs={SettingsBreadcrumb}>Monthly Payoffs</PageTitle>
+                      {/* breadcrumbs={SettingsBreadcrumb} */}
+                      <PageTitle >Monthly Payoffs</PageTitle>
                       <PaymentList />
                     </>
                   }
@@ -88,7 +94,8 @@ const SettingsPage = () => {
                   path='transactions'
                   element={
                     <>
-                      <PageTitle breadcrumbs={SettingsBreadcrumb}>User Payoffs Transactions</PageTitle>
+                      {/* breadcrumbs={SettingsBreadcrumb} */}
+                      <PageTitle >User Payoffs Transactions</PageTitle>
                       <PayoffsTransactions />
                     </>
                   }

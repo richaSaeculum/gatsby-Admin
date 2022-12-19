@@ -14,7 +14,7 @@ const AdminDashboardBreadcrumb: Array<PageLink> = [
 const AdminDashboardPage = () => {
     return (
         <>
-            <PageTitle breadcrumbs={AdminDashboardBreadcrumb}>Dashboard</PageTitle>
+            <PageTitle>Dashboard</PageTitle>
             <Dashboard />
         </>
     )
