@@ -126,21 +126,26 @@ const AddArticle = () => {
   }
 
   const editId = async (id: any) => {
-    let response: any = await getSinglePostApi({ id });
-    if (response && response.status === 200) {
-      const { content, id, title, status, categories } = response.data;
-      if (status !== ArticleStatusType.DRAFT && status !== ArticleStatusType.REJECT) {
-        setView(true);
+    setLoader(true);
+    try {
+      let response: any = await getSinglePostApi({ id });
+      if (response && response.status === 200) {
+        const { content, id, title, status, categories } = response.data;
+        if (status !== ArticleStatusType.DRAFT && status !== ArticleStatusType.REJECT) {
+          setView(true);
+        }
+        let arr: any = [];
+        //set category array from embed data in wp
+        categories.forEach((item: any) => {
+          arr.push({ label: item.category, value: item.categoryId });
+        })
+        setCategory(arr);
+        setTitle(decode(title));
+        setContent(content);
+        // setContent(content.rendered);
       }
-      let arr: any = [];
-      //set category array from embed data in wp
-      categories.forEach((item: any) => {
-        arr.push({ label: item.category, value: item.categoryId });
-      })
-      setCategory(arr);
-      setTitle(decode(title));
-      setContent(content);
-      // setContent(content.rendered);
+    } finally {
+      setLoader(false);
     }
   }
 

@@ -65,12 +65,17 @@ const PayoffsTransactions = () => {
 
 	const getSuccessPayoff = async ({ page }: any) => {
 		setLoader(true);
-		const res = await getSuccessPayoffListApi({ page, limit: limitNo });
+		try{const res = await getSuccessPayoffListApi({ page, limit: limitNo });
 		if (res && res.status === 200) {
 			setTotalPage(parseInt(res.data.pageCount));
 			setTotalPayoffs(parseInt(res.data.payoffsTotal));
 			let a = res.data.payoffs.map((item: any, index: any) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
 			setData(a);
+			setLoader(false);
+			}
+		} catch (err) {
+			console.log(err)
+		} finally {
 			setLoader(false);
 		}
 	}

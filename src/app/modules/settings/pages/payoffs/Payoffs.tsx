@@ -35,12 +35,18 @@ const Payoffs = () => {
 
   const getPayofflist = async ({ page }: any) => {
     setLoader(true);
-    const res = await getPayoffAllApi({ page, limit: limitNo })
-    if (res && res.status === 200) {
-      setTotalPage(parseInt(res.data.pageCount))
-      setTotalPayoffs(parseInt(res.data.totalCount))
-      let a = res?.data?.payoffs.map((item: any, index: number) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
-      setPayoffsList(a);
+    try {
+      const res = await getPayoffAllApi({ page, limit: limitNo })
+      if (res && res.status === 200) {
+        setTotalPage(parseInt(res.data.pageCount))
+        setTotalPayoffs(parseInt(res.data.totalCount))
+        let a = res?.data?.payoffs.map((item: any, index: number) => { return ({ ...item, rowNo: (page - 1) * limitNo + index + 1 }) })
+        setPayoffsList(a);
+        setLoader(false);
+      }
+    } catch (err) {
+      console.log(err)
+    } finally {
       setLoader(false);
     }
   }
