@@ -3,6 +3,7 @@ import { KTSVG } from '../../../../../_metronic/helpers';
 
 import ConfirmationModal from '../../../../components/modal/ConfirmationModal';
 import Pagination from '../../../../components/pagination/Pagination';
+import { UserType } from '../../../../constants/user/user_type';
 
 type PaginationConfig = {
   currentPage: number
@@ -84,6 +85,11 @@ const UserTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props) =>
             {row.user_role}
           </span>
         </td>
+        <td>
+          <span className='fw-semibold d-block fs-7'>
+            {row.user_role === UserType.AUTHOR  ?  row.user_type : '-'}
+          </span>
+        </td>
         {/* <td>
           <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
             {row.name}
@@ -145,6 +151,7 @@ const UserTable = ({ onEditRow, onDeleteRow, data, paginationConfig }: Props) =>
                   <th>Lastname</th>
                   <th>Email id</th>
                   <th>Role</th>
+                  <th>Tier</th>
                   <th className='text-end'>Actions</th>
                 </tr>
               </thead>
