@@ -12,19 +12,13 @@ import { UserType } from '../constants/user/user_type'
 
 const PrivateRoutes = () => {
   const { auth } = useAuth();
-  const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
-  const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
-  const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
-  const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
-  const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
-  const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
-
-
+  
   const AdminDashboardPage = lazy(() => import('../modules/admin-dashboard/AdminDashboardPage'))
   const ArticlePage = lazy(() => import('../modules/articles/ArticlePage'))
   const UserPage = lazy(() => import('../modules/user/UserPage'))
   const SettingsPage = lazy(() => import('../modules/settings/SettingsPage'))
-
+  const MyProfilePage = lazy(() => import('../modules/my-profile/MyProfilePage'))
+  
   return (
     <Routes>
       <Route element={<MasterLayout />}>
@@ -95,6 +89,15 @@ const PrivateRoutes = () => {
             </SuspensedView>
           }
         />}
+
+        <Route
+          path='my-profile/*'
+          element={
+            <SuspensedView>
+              <MyProfilePage />
+            </SuspensedView>
+          }
+        />
 
         <Route
           path='articles/*'

@@ -14,6 +14,8 @@ import Editor from './editor/Editor';
 
 import '../style.scss';
 import { ArticleStatusType } from '../../../constants/articles/article_status_type';
+import { KTSVG } from '../../../../_metronic/helpers';
+import { InboxCompose } from '../../../../_metronic/partials';
 
 const customStyles = {
   menu: (provided: any, state: any) => ({
@@ -82,6 +84,7 @@ const AddArticle = () => {
   const [category, setCategory] = useState<any>();
   const [categoryList, setCategoryList] = useState<any>();
   const [title, setTitle] = useState<string | undefined>('');
+  const [excerpt, setExcerpt] = useState<string | undefined>('');
   const [keyword, setKeyword] = useState<string | undefined>('');
   const [content, setContent] = useState<any>()
   const [seoScore, setSeoScore] = useState<number | undefined>();
@@ -89,6 +92,7 @@ const AddArticle = () => {
   const [id, setId] = useState<string>();
   const ref = useRef(false);
   const [titleError, setTitleError] = useState<Boolean>(false);
+  const [excerptError, setExcerptError] = useState<Boolean>(false);
   const [contentError, setContentError] = useState<Boolean>(false);
   const [view, setView] = useState<boolean>(false);
 
@@ -130,7 +134,7 @@ const AddArticle = () => {
     try {
       let response: any = await getSinglePostApi({ id });
       if (response && response.status === 200) {
-        const { content, id, title, status, categories } = response.data;
+        const { content, id, title, status, categories, excerpt } = response.data;
         if (status !== ArticleStatusType.DRAFT && status !== ArticleStatusType.REJECT) {
           setView(true);
         }
@@ -140,7 +144,9 @@ const AddArticle = () => {
           arr.push({ label: item.category, value: item.categoryId });
         })
         setCategory(arr);
+        setExcerpt(excerpt);
         setTitle(decode(title));
+        console.log(excerpt)
         setContent(content);
         // setContent(content.rendered);
       }
@@ -174,6 +180,9 @@ const AddArticle = () => {
     if (name == 'title' && value !== '') {
       setTitleError(false)
     }
+    if (name == 'excerpt' && value !== '') {
+      setExcerptError(false)
+    }
 
     if (name == 'content' && value !== '<p><br></p>') {
       setContentError(false)
@@ -185,6 +194,9 @@ const AddArticle = () => {
         break;
       case 'title':
         setTitle(value);
+        break;
+      case 'excerpt':
+        setExcerpt(value);
         break;
       case 'keyword':
         setKeyword(value);
@@ -208,6 +220,10 @@ const AddArticle = () => {
     let valid = true
     if (title == '') {
       setTitleError(true);
+      valid = false;
+    }
+    if (excerpt == '') {
+      setExcerptError(true);
       valid = false;
     }
     if (content.toString('html') === "<p><br></p>") {
@@ -293,23 +309,10 @@ const AddArticle = () => {
         handleConfirmationMessage={confirmationCallback}
       />}
       <div className="card-header d-flex justify-content-between align-items-center mb-7">
-        <h1 className='mb-0'>Title</h1>
+        <h1 className='mb-0'></h1>
         {id && <button type='button' className='btn btn-secondary' onClick={onPreviewClick}>Preview</button>}
       </div>
       <form>
-        <div className="row mb-3">
-          <label className="col-sm-2 fs-4 col-form-label" htmlFor="Category">Category</label>
-          <div className='col-sm-10'>
-            <Select
-              isMulti
-              value={category}
-              options={categoryList}
-              onChange={value => onChange({ target: { name: 'category', value: value } })}
-              styles={customStyles}
-              isDisabled={view}
-            />
-          </div>
-        </div>
         {/* <div className="row mb-3">
           <label className="col-sm-2 fs-4 col-form-label" htmlFor="Category">Category</label>
           <div className='col-sm-10'>
@@ -320,6 +323,12 @@ const AddArticle = () => {
             </select>
           </div>
         </div> */}
+        <div className="row mb-3">
+          <label htmlFor="title" className="col-sm-2 fs-4 col-form-label">Feature Image</label>
+          <div className="col-sm-10">
+         
+          </div>
+        </div>
         <div className="row mb-3">
           <label htmlFor="title" className="col-sm-2 fs-4 col-form-label">Title</label>
           <div className="col-sm-10">
@@ -334,6 +343,34 @@ const AddArticle = () => {
             {titleError && (<div className='fv-plugins-message-container'>
               <div className='fv-help-block'>Title is required</div>
             </div>)}
+          </div>
+        </div>
+        <div className="row mb-3">
+          <label htmlFor="title" className="col-sm-2 fs-4 col-form-label">Excerpt</label>
+          <div className="col-sm-10">
+            <textarea
+              name='excerpt'
+              className="form-control"
+              id="excerpt"
+              value={excerpt}
+              onChange={onChange}
+            />
+            {excerptError && (<div className='fv-plugins-message-container'>
+              <div className='fv-help-block'>Excerpt is required</div>
+            </div>)}
+          </div>
+        </div>
+        <div className="row mb-3">
+          <label className="col-sm-2 fs-4 col-form-label" htmlFor="Category">Category</label>
+          <div className='col-sm-10'>
+            <Select
+              isMulti
+              value={category}
+              options={categoryList}
+              onChange={value => onChange({ target: { name: 'category', value: value } })}
+              styles={customStyles}
+              isDisabled={view}
+            />
           </div>
         </div>
         <div className="row mb-3">
